@@ -1,0 +1,7 @@
+﻿Id: YearInReview_a22a7611-3023-4ca8-907e-47f883acd1b2
+Name: Generic Plugin
+Author: John Doe
+Version: 1.0
+Module: YearInReview.dll
+Type: GenericPlugin
+Icon: icon.png
