@@ -56,6 +56,7 @@
     <Compile Include="Extensions\GameActivity\Session.cs" />
     <Compile Include="Infrastructure\Services\DateTimeProvider.cs" />
     <Compile Include="Infrastructure\Services\IDateTimeProvider.cs" />
+    <Compile Include="Model\Filters\SpecificYearActivityFilter.cs" />
     <Compile Include="Settings\MVVM\YearInReviewSettingsViewModel.cs" />
     <Compile Include="YearInReview.cs" />
     <Compile Include="Settings\YearInReviewSettings.cs" />
@@ -90,6 +91,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Model\Reports\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
