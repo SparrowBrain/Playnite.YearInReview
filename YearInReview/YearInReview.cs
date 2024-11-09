@@ -45,11 +45,10 @@ namespace YearInReview
 		{
 			yield return new SidebarItem
 			{
-				Title = ResourceProvider.GetString("LOC_PlayNext_PluginName"),
+				Title = ResourceProvider.GetString("LOC_YearInReview_PluginName"),
 				Icon = new TextBlock
 				{
 					Text = char.ConvertFromUtf32(0xeffe),
-					FontSize = 20,
 					FontFamily = ResourceProvider.GetResource("FontIcoFont") as FontFamily
 				},
 				Type = SiderbarItemType.View,
