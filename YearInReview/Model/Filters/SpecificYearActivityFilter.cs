@@ -4,7 +4,7 @@ using YearInReview.Extensions.GameActivity;
 
 namespace YearInReview.Model.Filters
 {
-	public class SpecificYearActivityFilter
+	public class SpecificYearActivityFilter : ISpecificYearActivityFilter
 	{
 		public IReadOnlyCollection<Activity> GetActivityForYear(int year, IReadOnlyCollection<Activity> allActivities)
 		{
@@ -12,7 +12,7 @@ namespace YearInReview.Model.Filters
 			{
 				Id = x.Id,
 				Name = x.Name,
-				Items = x.Items.Select(i => new Session()
+				Items = x.Items.Where(s => s.DateSession.Year == year).Select(i => new Session()
 				{
 					DateSession = i.DateSession,
 					ElapsedSeconds = i.ElapsedSeconds,
@@ -20,7 +20,7 @@ namespace YearInReview.Model.Filters
 					PlatformIDs = i.PlatformIDs,
 					PlatfromId = i.PlatfromId,
 					SourceId = i.SourceId
-				}).Where(s => s.DateSession.Year == year).ToList()
+				}).ToList()
 			}).Where(x => x.Items.Any()).ToList();
 		}
 	}

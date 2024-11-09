@@ -41,7 +41,7 @@ namespace YearInReview.Model.Aggregators
 			return orderedActivities.Select(x => new GameWithTime()
 			{
 				Game = _playniteApi.Database.Games.FirstOrDefault(g => g.Id == x.Id),
-				TimePlayed = (ulong)x.Items.Sum(i => (long)i.ElapsedSeconds)
+				TimePlayed = x.Items.Sum(i => i.ElapsedSeconds)
 			}).ToList();
 		}
 	}

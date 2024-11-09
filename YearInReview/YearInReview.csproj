@@ -53,20 +53,43 @@
   <ItemGroup>
     <Compile Include="Extensions\GameActivity\Activity.cs" />
     <Compile Include="Extensions\GameActivity\GameActivityExtension.cs" />
+    <Compile Include="Extensions\GameActivity\IGameActivityExtension.cs" />
     <Compile Include="Extensions\GameActivity\Session.cs" />
+    <Compile Include="Infrastructure\Converters\BaseConverter.cs" />
+    <Compile Include="Infrastructure\Converters\SecondsToReadableTextConverter.cs" />
+    <Compile Include="Infrastructure\Converters\UriToBitmapImageConverter.cs" />
     <Compile Include="Infrastructure\Services\DateTimeProvider.cs" />
     <Compile Include="Infrastructure\Services\IDateTimeProvider.cs" />
+    <Compile Include="Infrastructure\Services\ReadableTimeFormatter.cs" />
     <Compile Include="Model\Aggregators\Data\GameWithTime.cs" />
     <Compile Include="Model\Aggregators\IMetadataProvider.cs" />
     <Compile Include="Model\Aggregators\IMostPlayedGamesAggregator.cs" />
     <Compile Include="Model\Aggregators\MetadataProvider.cs" />
     <Compile Include="Model\Aggregators\MostPlayedGamesAggregator.cs" />
+    <Compile Include="Model\Filters\ISpecificYearActivityFilter.cs" />
     <Compile Include="Model\Filters\SpecificYearActivityFilter.cs" />
     <Compile Include="Model\Aggregators\Data\Metadata.cs" />
+    <Compile Include="Model\Reports\1970\Composer1970.cs" />
+    <Compile Include="Model\Reports\1970\IComposer1970.cs" />
+    <Compile Include="Model\Reports\1970\MVVM\Report1970View.xaml.cs">
+      <DependentUpon>Report1970View.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Reports\1970\MVVM\Report1970ViewModel.cs" />
     <Compile Include="Model\Reports\1970\Report1970.cs" />
+    <Compile Include="Model\Reports\ReportGameWithTime.cs" />
+    <Compile Include="Model\Reports\MVVM\GameViewModel.cs" />
+    <Compile Include="Model\Reports\MVVM\MainView.xaml.cs">
+      <DependentUpon>MainView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Reports\MVVM\MainViewModel.cs" />
+    <Compile Include="Model\Reports\MVVM\YearButtonViewModel.cs" />
+    <Compile Include="Model\Reports\ReportManager.cs" />
     <Compile Include="Settings\IPluginSettingsPersistence.cs" />
+    <Compile Include="Settings\IVersionedSettings.cs" />
     <Compile Include="Settings\MVVM\YearInReviewSettingsViewModel.cs" />
     <Compile Include="Settings\PluginSettingsPersistence.cs" />
+    <Compile Include="Settings\StartupSettingsValidator.cs" />
+    <Compile Include="Settings\VersionedSettings.cs" />
     <Compile Include="YearInReview.cs" />
     <Compile Include="Settings\YearInReviewSettings.cs" />
     <Compile Include="Settings\MVVM\YearInReviewSettingsView.xaml.cs">
@@ -89,6 +112,14 @@
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Model\Reports\1970\MVVM\Report1970View.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Model\Reports\MVVM\MainView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Settings\MVVM\YearInReviewSettingsView.xaml">
       <SubType>Designer</SubType>

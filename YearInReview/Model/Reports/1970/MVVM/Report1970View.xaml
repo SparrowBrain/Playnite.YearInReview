@@ -1,0 +1,118 @@
+﻿<PluginUserControl x:Class="YearInReview.Model.Reports._1970.MVVM.Report1970View"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                   xmlns:local="clr-namespace:YearInReview.Model.Reports._1970.MVVM"
+                   xmlns:converters="clr-namespace:YearInReview.Infrastructure.Converters"
+                   mc:Ignorable="d"
+                   d:DesignHeight="450" d:DesignWidth="800">
+    <PluginUserControl.Resources>
+        <ResourceDictionary>
+            <Style  TargetType="Control">
+                <Setter Property="FontSize" Value="{DynamicResource FontSize}" />
+                <Setter Property="FontFamily" Value="{DynamicResource FontFamily}" />
+                <Style.Triggers>
+                    <Trigger Property="IsEnabled" Value="False">
+                        <Setter Property="Opacity" Value="0.5" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style TargetType="TextBlock">
+                <Setter Property="FontSize" Value="{DynamicResource FontSize}" />
+                <Setter Property="FontFamily" Value="{DynamicResource FontFamily}" />
+                <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+                <Setter Property="TextAlignment" Value="Center"></Setter>
+                <Setter Property="Margin" Value="10"></Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsEnabled" Value="False">
+                        <Setter Property="Opacity" Value="0.5" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style TargetType="Border">
+                <Setter Property="Background" Value="{DynamicResource PopupBackgroundBrush}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource PopupBorderBrush}" />
+                <Setter Property="BorderThickness" Value="{DynamicResource PopupBorderThickness}" />
+            </Style>
+            <converters:UriToBitmapImageConverter x:Key="UriToBitmapImageConverter" />
+            <converters:SecondsToReadableTextConverter x:Key="SecondsToReadableTextConverter" />
+        </ResourceDictionary>
+    </PluginUserControl.Resources>
+
+    <StackPanel Orientation="Vertical">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="2*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="1" Text="{Binding IntroMessage}" FontSize="25"></TextBlock>
+        </Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="2*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Button Grid.Row="0" Grid.Column="1" Command="{Binding OpenMostPlayedDetails}" Background="Transparent">
+                <Image Height="400" Source="{Binding MostPlayedGame.CoverImage,
+                    Converter={StaticResource UriToBitmapImageConverter},
+                    ConverterParameter=400,
+                    Mode=OneWay,
+                    FallbackValue={StaticResource DefaultGameCover},
+                    TargetNullValue={StaticResource DefaultGameCover}}">
+                </Image>
+            </Button>
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding MostPlayedGame.Name}" FontSize="25"></TextBlock>
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding MostPlayedGameMessage}"></TextBlock>
+        </Grid>
+        <TextBlock Text="{Binding Top10Header}" FontSize="25" TextAlignment="Left"></TextBlock>
+        <ListBox ItemsSource="{Binding MostPlayedGames}" PreviewMouseWheel="HandlePreviewMouseWheel" Margin="0,0,0,0" Background="Transparent">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                    <Setter Property="Focusable" Value="False" />
+                    <Setter Property="Padding" Value="0"/>
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Button Command="{Binding OpenDetails}" Background="Transparent" HorizontalAlignment="Left" HorizontalContentAlignment="Left">
+                        <Grid Margin="0,2.5,0,2.5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="25" />
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="300" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{Binding Position}" VerticalAlignment="Center" />
+                            <Image Grid.Column="1" Width="75" Source="{Binding CoverImage,
+                                 Converter={StaticResource UriToBitmapImageConverter},
+                                 ConverterParameter=75,
+                                 Mode=OneWay,
+                                 FallbackValue={StaticResource DefaultGameIcon},
+                                 TargetNullValue={StaticResource DefaultGameIcon}}">
+                            </Image>
+                            <TextBlock Grid.Column="2" Text="{Binding Name}" VerticalAlignment="Center" />
+                            <StackPanel Grid.Column="3" Orientation="Horizontal">
+                                <Rectangle  Fill="Red" Height="50" Width="{Binding BarWidth}"/>
+                                <TextBlock Text="{Binding TimePlayed, Converter={StaticResource SecondsToReadableTextConverter}}" VerticalAlignment="Center" Margin="10, 0" />
+                            </StackPanel>
+                            
+                        </Grid>
+                    </Button>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ListBox>
+        <Grid>
+
+        </Grid>
+    </StackPanel>
+</PluginUserControl>

@@ -66,7 +66,7 @@ namespace YearInReview.IntegrationTests.Extensions.GameActivity
 			Assert.Equal(gameWithActivity.Id, foundActivity.Id);
 			var item = Assert.Single(foundActivity.Items);
 			Assert.Equal(DateTime.Parse("2023-02-12T13:40:18.2429471Z").ToUniversalTime(), item.DateSession);
-			Assert.Equal((ulong)67, item.ElapsedSeconds);
+			Assert.Equal(67, item.ElapsedSeconds);
 		}
 
 		private static void CleanUpExtensionsDataPath()

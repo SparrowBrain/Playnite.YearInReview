@@ -1,5 +1,12 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
-
+    <sys:String x:Key="LOC_YearInReview_PluginName">Year in Review</sys:String>
+    <sys:String x:Key="LOC_YearInReview_Report1970_Intro">Here goes another year, {0}! Let's see what you've played in {1}.</sys:String>
+    <sys:String x:Key="LOC_YearInReview_Report1970_MostPlayedGameMessage">It looks like you could not get enough of {0}. You've spent {1} playing it.</sys:String>
+    <sys:String x:Key="LOC_YearInReview_Report1970_Top10Header">Now let's look at your overall top {0}</sys:String>
+    <sys:String x:Key="LOC_YearInReview_ReadableTime_SecondsOnly">{0} s</sys:String>
+    <sys:String x:Key="LOC_YearInReview_ReadableTime_DayPart">{0} d</sys:String>
+    <sys:String x:Key="LOC_YearInReview_ReadableTime_HourPart">{0} h</sys:String>
+    <sys:String x:Key="LOC_YearInReview_ReadableTime_MinutePart">{0} min</sys:String>
 </ResourceDictionary>
