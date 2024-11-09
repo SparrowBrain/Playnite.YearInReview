@@ -7,6 +7,8 @@ namespace YearInReview.Model.Reports._1970
 	{
 		public Metadata Metadata { get; set; }
 
+		public int TotalPlaytime { get; set; }
+
 		public IReadOnlyList<ReportGameWithTime> MostPlayedGames { get; set; }
 	}
 }

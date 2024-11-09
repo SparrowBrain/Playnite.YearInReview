@@ -8,13 +8,16 @@ namespace YearInReview.Model.Reports._1970
 	public class Composer1970 : IComposer1970
 	{
 		private readonly IMetadataProvider _metadataProvider;
+		private readonly ITotalPlaytimeAggregator _totalPlaytimeAggregator;
 		private readonly IMostPlayedGamesAggregator _mostPlayedGameAggregator;
 
 		public Composer1970(
 			IMetadataProvider metadataProvider,
+			ITotalPlaytimeAggregator totalPlaytimeAggregator,
 			IMostPlayedGamesAggregator mostPlayedGameAggregator)
 		{
 			_metadataProvider = metadataProvider;
+			_totalPlaytimeAggregator = totalPlaytimeAggregator;
 			_mostPlayedGameAggregator = mostPlayedGameAggregator;
 		}
 
@@ -25,7 +28,7 @@ namespace YearInReview.Model.Reports._1970
 			return new Report1970()
 			{
 				Metadata = _metadataProvider.Get(year),
-
+				TotalPlaytime = _totalPlaytimeAggregator.GetTotalPlaytime(activities),
 				MostPlayedGames = mostPlayedGames.Select(x => new ReportGameWithTime()
 				{
 					Id = x.Game.Id,

@@ -21,14 +21,6 @@ namespace YearInReview.Extensions.GameActivity
 			_activityPath = dataPath;
 		}
 
-		public static GameActivityExtension Create(string extensionsDataPath)
-		{
-			var dataPath = Path.Combine(extensionsDataPath, _extensionId.ToString(), "GameActivity");
-			return Directory.Exists(dataPath)
-				? new GameActivityExtension(dataPath)
-				: new GameActivityExtension(null);
-		}
-
 		public async Task<IReadOnlyCollection<Activity>> GetActivityForGames(IEnumerable<Game> games)
 		{
 			try

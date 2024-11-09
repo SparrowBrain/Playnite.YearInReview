@@ -77,7 +77,7 @@ namespace YearInReview.UnitTests.Model.Aggregators
 		{
 			// Arrange
 			var mostPlayedGame = activities.Last();
-			mostPlayedGame.Items.Add(new Session { ElapsedSeconds = int.MaxValue });
+			mostPlayedGame.Items.Add(new Session { ElapsedSeconds = int.MaxValue / 2 });
 			var games = activities.Select(x => new Game { Id = x.Id }).ToList();
 
 			gameDatabaseApiFake.CallsTo(x => x.Games).Returns(new TestableItemCollection<Game>(games));
@@ -103,8 +103,6 @@ namespace YearInReview.UnitTests.Model.Aggregators
 		{
 			// Arrange
 			var gameCount = 2;
-			var mostPlayedGame = activities.Last();
-			mostPlayedGame.Items.Add(new Session { ElapsedSeconds = int.MaxValue });
 			var games = activities.Select(x => new Game { Id = x.Id }).ToList();
 
 			gameDatabaseApiFake.CallsTo(x => x.Games).Returns(new TestableItemCollection<Game>(games));

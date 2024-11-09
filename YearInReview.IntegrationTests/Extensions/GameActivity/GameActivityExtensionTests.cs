@@ -26,7 +26,7 @@ namespace YearInReview.IntegrationTests.Extensions.GameActivity
 		{
 			// Arrange
 			CleanUpExtensionsDataPath();
-			var sut = GameActivityExtension.Create(ExtensionsDataPath);
+			var sut = new GameActivityExtension(ExtensionsDataPath);
 
 			// Act
 			var activity = await sut.GetActivityForGames(games);
@@ -40,7 +40,7 @@ namespace YearInReview.IntegrationTests.Extensions.GameActivity
 			IEnumerable<Game> games)
 		{
 			// Arrange
-			var sut = GameActivityExtension.Create(ExtensionsDataPath);
+			var sut = new GameActivityExtension(ExtensionsDataPath);
 
 			// Act
 			var activity = await sut.GetActivityForGames(games);
@@ -54,7 +54,7 @@ namespace YearInReview.IntegrationTests.Extensions.GameActivity
 			IEnumerable<Game> games)
 		{
 			// Arrange
-			var sut = GameActivityExtension.Create(ExtensionsDataPath);
+			var sut = new GameActivityExtension(ExtensionsDataPath);
 			var gameWithActivity = games.Last();
 			gameWithActivity.Id = Guid.Parse("f1044699-4b97-4968-868b-e871e37ae1f3");
 

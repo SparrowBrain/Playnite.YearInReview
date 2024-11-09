@@ -38,7 +38,6 @@ namespace YearInReview.UnitTests.Model.Reports._1970
 		[AutoFakeItEasyData]
 		public void Compose_AssignsMostPlayedGames(
 			[Frozen] IMostPlayedGamesAggregator mostPlayedGameAggregatorFake,
-			Metadata metadata,
 			List<GameWithTime> mostPlayedGames,
 			int year,
 			List<Activity> activities,
@@ -53,6 +52,26 @@ namespace YearInReview.UnitTests.Model.Reports._1970
 			// Assert
 			Assert.NotNull(result);
 			Assert.Equal(mostPlayedGames.Count, result.MostPlayedGames.Count);
+		}
+
+		[Theory]
+		[AutoFakeItEasyData]
+		public void Compose_AssignsTotalPlaytime(
+			[Frozen] ITotalPlaytimeAggregator totalPlaytimeAggregator,
+			int totalPlaytime,
+			int year,
+			List<Activity> activities,
+			Composer1970 sut)
+		{
+			// Arrange
+			A.CallTo(() => totalPlaytimeAggregator.GetTotalPlaytime(A<IReadOnlyCollection<Activity>>._)).Returns(totalPlaytime);
+
+			// Act
+			var result = sut.Compose(year, activities);
+
+			// Assert
+			Assert.NotNull(result);
+			Assert.Equal(totalPlaytime, result.TotalPlaytime);
 		}
 	}
 }
