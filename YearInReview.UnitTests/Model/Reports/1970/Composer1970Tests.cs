@@ -2,6 +2,7 @@
 using FakeItEasy;
 using Playnite.SDK.Models;
 using System.Collections.Generic;
+using System.Linq;
 using TestTools.Shared;
 using Xunit;
 using YearInReview.Extensions.GameActivity;
@@ -37,35 +38,35 @@ namespace YearInReview.UnitTests.Model.Reports._1970
 		[Theory]
 		[AutoFakeItEasyData]
 		public void Compose_AssignsMostPlayedGame(
-			[Frozen] IMostPlayedGameAggregator mostPlayedGameAggregatorFake,
+			[Frozen] IMostPlayedGamesAggregator mostPlayedGameAggregatorFake,
 			Metadata metadata,
-			Game mostPlayedGame,
+			GameWithTime mostPlayedGame,
 			int year,
 			List<Activity> activities,
 			Composer1970 sut)
 		{
 			// Arrange
-			A.CallTo(() => mostPlayedGameAggregatorFake.GetMostPlayedGame(A<IReadOnlyCollection<Activity>>._)).Returns(mostPlayedGame);
+			A.CallTo(() => mostPlayedGameAggregatorFake.GetMostPlayedGame(A<IReadOnlyCollection<Activity>>._, A<int>._)).Returns(new List<GameWithTime> { mostPlayedGame });
 
 			// Act
 			var result = sut.Compose(year, activities);
 
 			// Assert
 			Assert.NotNull(result);
-			Assert.Equal(mostPlayedGame.Id, result.MostPlayedGame.Id);
-			Assert.Equal(mostPlayedGame.Name, result.MostPlayedGame.Name);
-			Assert.Equal(mostPlayedGame.CoverImage, result.MostPlayedGame.CoverImage);
+			Assert.Equal(mostPlayedGame.Game.Id, result.MostPlayedGame.Id);
+			Assert.Equal(mostPlayedGame.Game.Name, result.MostPlayedGame.Name);
+			Assert.Equal(mostPlayedGame.Game.CoverImage, result.MostPlayedGame.CoverImage);
 		}
 	}
 
 	public class Composer1970
 	{
 		private readonly IMetadataProvider _metadataProvider;
-		private readonly IMostPlayedGameAggregator _mostPlayedGameAggregator;
+		private readonly IMostPlayedGamesAggregator _mostPlayedGameAggregator;
 
 		public Composer1970(
 			IMetadataProvider metadataProvider,
-			IMostPlayedGameAggregator mostPlayedGameAggregator)
+			IMostPlayedGamesAggregator mostPlayedGameAggregator)
 		{
 			_metadataProvider = metadataProvider;
 			_mostPlayedGameAggregator = mostPlayedGameAggregator;
@@ -73,7 +74,7 @@ namespace YearInReview.UnitTests.Model.Reports._1970
 
 		public Report1970 Compose(int year, IReadOnlyCollection<Activity> activities)
 		{
-			var mostPlayedGame = _mostPlayedGameAggregator.GetMostPlayedGame(activities);
+			var mostPlayedGames = _mostPlayedGameAggregator.GetMostPlayedGame(activities, 10);
 
 			return new Report1970()
 			{
@@ -81,9 +82,9 @@ namespace YearInReview.UnitTests.Model.Reports._1970
 
 				MostPlayedGame = new MostPlayedGame()
 				{
-					Id = mostPlayedGame.Id,
-					Name = mostPlayedGame.Name,
-					CoverImage = mostPlayedGame.CoverImage,
+					Id = mostPlayedGames.First().Game.Id,
+					Name = mostPlayedGames.First().Game.Name,
+					CoverImage = mostPlayedGames.First().Game.CoverImage,
 					FlavourText = "Most played game of the year"
 				}
 			};
