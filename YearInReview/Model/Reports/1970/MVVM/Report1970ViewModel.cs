@@ -17,6 +17,12 @@ namespace YearInReview.Model.Reports._1970.MVVM
 			_api = api;
 			Year = report.Metadata.Year;
 			Username = report.Metadata.Username;
+
+			IntroMessage = string.Format(ResourceProvider.GetString("LOC_YearInReview_Report1970_Intro"), Username);
+			IntroMessageSubtext = string.Format(ResourceProvider.GetString("LOC_YearInReview_Report1970_IntroSubtext"),
+				ReadableTimeFormatter.FormatTime(report.TotalPlaytime),
+				Year);
+
 			MostPlayedGame = report.MostPlayedGames.First();
 
 			MostPlayedGames = report.MostPlayedGames
@@ -28,7 +34,9 @@ namespace YearInReview.Model.Reports._1970.MVVM
 
 		public string Username { get; set; }
 
-		public string IntroMessage => string.Format(ResourceProvider.GetString("LOC_YearInReview_Report1970_Intro"), Username, Year);
+		public string IntroMessage { get; set; }
+
+		public string IntroMessageSubtext { get; set; }
 
 		public ReportGameWithTime MostPlayedGame { get; set; }
 

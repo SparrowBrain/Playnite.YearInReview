@@ -25,6 +25,7 @@
                 <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
                 <Setter Property="TextAlignment" Value="Center"></Setter>
                 <Setter Property="Margin" Value="10"></Setter>
+                <Setter Property="TextWrapping" Value="Wrap"></Setter>
                 <Style.Triggers>
                     <Trigger Property="IsEnabled" Value="False">
                         <Setter Property="Opacity" Value="0.5" />
@@ -49,7 +50,12 @@
                 <ColumnDefinition Width="2*"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="1" Text="{Binding IntroMessage}" FontSize="25"></TextBlock>
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding IntroMessage}" FontSize="25"></TextBlock>
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding IntroMessageSubtext}"></TextBlock>
         </Grid>
         <Grid>
             <Grid.ColumnDefinitions>
