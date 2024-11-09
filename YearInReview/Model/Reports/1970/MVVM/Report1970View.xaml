@@ -98,7 +98,7 @@
                                 <ColumnDefinition Width="300" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="{Binding Position}" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="0" Text="{Binding Position}" VerticalAlignment="Center" HorizontalAlignment="Center" />
                             <Image Grid.Column="1" Width="75" Source="{Binding CoverImage,
                                  Converter={StaticResource UriToBitmapImageConverter},
                                  ConverterParameter=75,
@@ -108,7 +108,7 @@
                             </Image>
                             <TextBlock Grid.Column="2" Text="{Binding Name}" VerticalAlignment="Center" />
                             <StackPanel Grid.Column="3" Orientation="Horizontal">
-                                <Rectangle  Fill="Red" Height="50" Width="{Binding BarWidth}"/>
+                                <Rectangle  Fill="{DynamicResource GlyphBrush}" Height="50" Width="{Binding BarWidth}"/>
                                 <TextBlock Text="{Binding TimePlayed, Converter={StaticResource SecondsToReadableTextConverter}}" VerticalAlignment="Center" Margin="10, 0" />
                             </StackPanel>
                             

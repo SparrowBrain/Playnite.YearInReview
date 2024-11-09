@@ -3,7 +3,7 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
     <sys:String x:Key="LOC_YearInReview_PluginName">Year in Review</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_Intro">Here goes another year, {0}!</sys:String>
-    <sys:String x:Key="LOC_YearInReview_Report1970_IntroSubtext">I hope it was a happy and fruitful one for you. In total, you've spent {0} playing. Time well spent, I say! Now let's see what you've played in {1}.</sys:String>
+    <sys:String x:Key="LOC_YearInReview_Report1970_IntroSubtext">In total, you've spent {0} playing. Time well spent, I say! Now let's see what you've played in {1}.</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_MostPlayedGameMessage">It looks like you could not get enough of {0}. You've spent {1} playing it.</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_Top10Header">And here's a look at your overall top {0}</sys:String>
     <sys:String x:Key="LOC_YearInReview_ReadableTime_SecondsOnly">{0} s</sys:String>
