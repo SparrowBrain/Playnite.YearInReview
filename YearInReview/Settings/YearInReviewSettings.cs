@@ -15,5 +15,7 @@ namespace YearInReview.Settings
         // If you want to exclude some property from being saved then use `JsonDontSerialize` ignore attribute.
         [DontSerialize]
         public bool OptionThatWontBeSaved { get => optionThatWontBeSaved; set => SetValue(ref optionThatWontBeSaved, value); }
+
+        public string Username { get; set; }
     }
 }

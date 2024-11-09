@@ -56,8 +56,16 @@
     <Compile Include="Extensions\GameActivity\Session.cs" />
     <Compile Include="Infrastructure\Services\DateTimeProvider.cs" />
     <Compile Include="Infrastructure\Services\IDateTimeProvider.cs" />
+    <Compile Include="Model\Aggregators\IMetadataProvider.cs" />
+    <Compile Include="Model\Aggregators\IMostPlayedGameAggregator.cs" />
+    <Compile Include="Model\Aggregators\MetadataProvider.cs" />
+    <Compile Include="Model\Aggregators\MostPlayedGameAggregator.cs" />
     <Compile Include="Model\Filters\SpecificYearActivityFilter.cs" />
+    <Compile Include="Model\Aggregators\Data\Metadata.cs" />
+    <Compile Include="Model\Reports\1970\Report1970.cs" />
+    <Compile Include="Settings\IPluginSettingsPersistence.cs" />
     <Compile Include="Settings\MVVM\YearInReviewSettingsViewModel.cs" />
+    <Compile Include="Settings\PluginSettingsPersistence.cs" />
     <Compile Include="YearInReview.cs" />
     <Compile Include="Settings\YearInReviewSettings.cs" />
     <Compile Include="Settings\MVVM\YearInReviewSettingsView.xaml.cs">
@@ -91,8 +99,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Model\Reports\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
