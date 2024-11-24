@@ -10,20 +10,23 @@ namespace YearInReview.Model.Reports._1970
 		private readonly IMetadataProvider _metadataProvider;
 		private readonly ITotalPlaytimeAggregator _totalPlaytimeAggregator;
 		private readonly IMostPlayedGamesAggregator _mostPlayedGameAggregator;
+		private readonly IMostPlayedSourcesAggregator _mostPlayedSourcesAggregator;
 
 		public Composer1970(
 			IMetadataProvider metadataProvider,
 			ITotalPlaytimeAggregator totalPlaytimeAggregator,
-			IMostPlayedGamesAggregator mostPlayedGameAggregator)
+			IMostPlayedGamesAggregator mostPlayedGameAggregator,
+			IMostPlayedSourcesAggregator mostPlayedSourcesAggregator)
 		{
 			_metadataProvider = metadataProvider;
 			_totalPlaytimeAggregator = totalPlaytimeAggregator;
 			_mostPlayedGameAggregator = mostPlayedGameAggregator;
+			_mostPlayedSourcesAggregator = mostPlayedSourcesAggregator;
 		}
 
 		public Report1970 Compose(int year, IReadOnlyCollection<Activity> activities)
 		{
-			var mostPlayedGames = _mostPlayedGameAggregator.GetMostPlayedGames(activities, 10);
+			var mostPlayedGames = _mostPlayedGameAggregator.GetMostPlayedGames(activities, 25);
 
 			return new Report1970()
 			{
@@ -36,7 +39,13 @@ namespace YearInReview.Model.Reports._1970
 					CoverImage = x.Game.CoverImage,
 					TimePlayed = x.TimePlayed,
 					FlavourText = "Most played game of the year"
-				}).ToList()
+				}).ToList(),
+				MostPlayedSources = _mostPlayedSourcesAggregator.GetMostPlayedSources(activities).Select(x => new ReportSourceWithTime()
+				{
+					Id = x.Source.Id,
+					Name = x.Source.Name,
+					TimePlayed = x.TimePlayed,
+				}).ToList(),
 			};
 		}
 	}

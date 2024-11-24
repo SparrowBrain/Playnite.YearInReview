@@ -28,6 +28,10 @@ namespace YearInReview.Model.Reports._1970.MVVM
 			MostPlayedGames = report.MostPlayedGames
 				.Select((t, i) => new GameViewModel(api, i + 1, t, 500, MostPlayedGame.TimePlayed)).ToList()
 				.ToObservable();
+
+			var totalSourcePlaytime = report.MostPlayedSources.Sum(x => x.TimePlayed);
+			MostPlayedSources = report.MostPlayedSources
+				.Select(x => new SourceViewModel(x, totalSourcePlaytime)).ToObservable();
 		}
 
 		public int Year { get; set; }
@@ -41,6 +45,8 @@ namespace YearInReview.Model.Reports._1970.MVVM
 		public ReportGameWithTime MostPlayedGame { get; set; }
 
 		public ObservableCollection<GameViewModel> MostPlayedGames { get; set; }
+
+		public ObservableCollection<SourceViewModel> MostPlayedSources { get; set; }
 
 		public string MostPlayedGameMessage => string.Format(ResourceProvider.GetString("LOC_YearInReview_Report1970_MostPlayedGameMessage"), MostPlayedGame.Name, ReadableTimeFormatter.FormatTime(MostPlayedGame.TimePlayed));
 

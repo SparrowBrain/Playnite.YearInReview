@@ -73,5 +73,25 @@ namespace YearInReview.UnitTests.Model.Reports._1970
 			Assert.NotNull(result);
 			Assert.Equal(totalPlaytime, result.TotalPlaytime);
 		}
+
+		[Theory]
+		[AutoFakeItEasyData]
+		public void Compose_AssignsMostPlayedSources(
+			[Frozen] IMostPlayedSourcesAggregator mostPlayedSourcesAggregatorFake,
+			List<SourceWithTime> mostPlayedSources,
+			int year,
+			List<Activity> activities,
+			Composer1970 sut)
+		{
+			// Arrange
+			A.CallTo(() => mostPlayedSourcesAggregatorFake.GetMostPlayedSources(A<IReadOnlyCollection<Activity>>._)).Returns(mostPlayedSources);
+
+			// Act
+			var result = sut.Compose(year, activities);
+
+			// Assert
+			Assert.NotNull(result);
+			Assert.Equal(mostPlayedSources.Count, result.MostPlayedSources.Count);
+		}
 	}
 }

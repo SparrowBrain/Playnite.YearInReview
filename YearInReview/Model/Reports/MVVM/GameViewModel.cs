@@ -1,6 +1,7 @@
 ﻿using Playnite.SDK;
 using System;
 using System.Collections.Generic;
+using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace YearInReview.Model.Reports.MVVM

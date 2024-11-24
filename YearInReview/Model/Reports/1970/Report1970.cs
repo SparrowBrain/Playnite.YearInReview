@@ -10,5 +10,7 @@ namespace YearInReview.Model.Reports._1970
 		public int TotalPlaytime { get; set; }
 
 		public IReadOnlyList<ReportGameWithTime> MostPlayedGames { get; set; }
+
+		public IReadOnlyList<ReportSourceWithTime> MostPlayedSources { get; set; }
 	}
 }

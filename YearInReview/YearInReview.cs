@@ -67,8 +67,9 @@ namespace YearInReview
 					var pluginSettingsPersistence = new PluginSettingsPersistence(this);
 					var metadataProvider = new MetadataProvider(dateTimeProvider, pluginSettingsPersistence);
 					var mostPlayedGamesAggregator = new MostPlayedGamesAggregator(Api);
+					var mostPlayedSourcesAggregator = new MostPlayedSourcesAggregator(Api);
 					var totalPlaytimeAggregator = new TotalPlaytimeAggregator();
-					var composer = new Composer1970(metadataProvider, totalPlaytimeAggregator, mostPlayedGamesAggregator);
+					var composer = new Composer1970(metadataProvider, totalPlaytimeAggregator, mostPlayedGamesAggregator, mostPlayedSourcesAggregator);
 					var gameActivityExtension = new GameActivityExtension(Api.Paths.ExtensionsDataPath);
 					var specificYearActivityFilter = new SpecificYearActivityFilter();
 					var reportManager = new ReportManager(Api, composer, gameActivityExtension, specificYearActivityFilter);

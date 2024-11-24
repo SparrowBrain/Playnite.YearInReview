@@ -17,12 +17,12 @@ namespace YearInReview.UnitTests.Model.Aggregators
 	{
 		[Theory]
 		[AutoFakeItEasyData]
-		public void GetMostPlayedLibraries_ReturnsLibraryWithMostElapsedTimeAsFirst_WhenActivitiesProvided(
+		public void GetMostPlayedSources_ReturnsLibraryWithMostElapsedTimeAsFirst_WhenActivitiesProvided(
 			[Frozen] IGameDatabaseAPI gameDatabaseApiFake,
 			[Frozen] IPlayniteAPI playniteApiFake,
 			Guid mostPlayedSourceId,
 			List<Activity> activities,
-			MostPlayedLibrariesAggregator sut)
+			MostPlayedSourcesAggregator sut)
 		{
 			// Arrange
 			var mostPlayedGame = activities.Last();
@@ -34,7 +34,7 @@ namespace YearInReview.UnitTests.Model.Aggregators
 			gameDatabaseApiFake.CallsTo(x => x.Sources).Returns(new TestableItemCollection<GameSource>(sources));
 
 			// Act
-			var result = sut.GetMostPlayedLibraries(activities);
+			var result = sut.GetMostPlayedSources(activities);
 
 			// Assert
 			Assert.NotNull(result);
@@ -45,12 +45,12 @@ namespace YearInReview.UnitTests.Model.Aggregators
 
 		[Theory]
 		[AutoFakeItEasyData]
-		public void GetMostPlayedLibraries_SkipsSource_WhenSourceDoesNotExistInDatabase(
+		public void GetMostPlayedSources_SkipsSource_WhenSourceDoesNotExistInDatabase(
 			List<Activity> activities,
-			MostPlayedLibrariesAggregator sut)
+			MostPlayedSourcesAggregator sut)
 		{
 			// Act
-			var result = sut.GetMostPlayedLibraries(activities);
+			var result = sut.GetMostPlayedSources(activities);
 
 			// Assert
 			Assert.NotNull(result);
