@@ -15,7 +15,7 @@ namespace YearInReview.UnitTests.Model.Aggregators
 	{
 		[Theory]
 		[AutoFakeItEasyData]
-		public void GetMostPlayedGame_ThrowsArgumentException_WhenNoActivities(
+		public void GetMostPlayedGames_ThrowsArgumentException_WhenNoActivities(
 			int gameCount,
 			MostPlayedGamesAggregator sut)
 		{
@@ -23,7 +23,7 @@ namespace YearInReview.UnitTests.Model.Aggregators
 			var activities = new List<Activity>();
 
 			// Act
-			var exception = Record.Exception(() => sut.GetMostPlayedGame(activities, gameCount));
+			var exception = Record.Exception(() => sut.GetMostPlayedGames(activities, gameCount));
 
 			// Assert
 			Assert.NotNull(exception);
@@ -32,7 +32,7 @@ namespace YearInReview.UnitTests.Model.Aggregators
 
 		[Theory]
 		[AutoFakeItEasyData]
-		public void GetMostPlayedGame_ThrowsArgumentException_WhenActivitiesDoNotHaveSessions(
+		public void GetMostPlayedGames_ThrowsArgumentException_WhenActivitiesDoNotHaveSessions(
 			int gameCount,
 			List<Activity> activities,
 			MostPlayedGamesAggregator sut)
@@ -41,7 +41,7 @@ namespace YearInReview.UnitTests.Model.Aggregators
 			activities.ForEach(x => x.Items.Clear());
 
 			// Act
-			var exception = Record.Exception(() => sut.GetMostPlayedGame(activities, gameCount));
+			var exception = Record.Exception(() => sut.GetMostPlayedGames(activities, gameCount));
 
 			// Assert
 			Assert.NotNull(exception);
@@ -50,7 +50,7 @@ namespace YearInReview.UnitTests.Model.Aggregators
 
 		[Theory]
 		[AutoFakeItEasyData]
-		public void GetMostPlayedGame_ThrowsArgumentException_WhenHaveZeroTime(
+		public void GetMostPlayedGames_ThrowsArgumentException_WhenHaveZeroTime(
 			int gameCount,
 			List<Activity> activities,
 			MostPlayedGamesAggregator sut)
@@ -59,7 +59,7 @@ namespace YearInReview.UnitTests.Model.Aggregators
 			activities.ForEach(x => x.Items.ForEach(s => s.ElapsedSeconds = 0));
 
 			// Act
-			var exception = Record.Exception(() => sut.GetMostPlayedGame(activities, gameCount));
+			var exception = Record.Exception(() => sut.GetMostPlayedGames(activities, gameCount));
 
 			// Assert
 			Assert.NotNull(exception);
@@ -68,7 +68,7 @@ namespace YearInReview.UnitTests.Model.Aggregators
 
 		[Theory]
 		[AutoFakeItEasyData]
-		public void GetMostPlayedGame_ReturnsGameWithMostElapsedTimeAsFirst_WhenActivitiesProvided(
+		public void GetMostPlayedGames_ReturnsGameWithMostElapsedTimeAsFirst_WhenActivitiesProvided(
 			[Frozen] Fake<IGameDatabaseAPI> gameDatabaseApiFake,
 			[Frozen] Fake<IPlayniteAPI> playniteApiFake,
 			int gameCount,
@@ -84,7 +84,7 @@ namespace YearInReview.UnitTests.Model.Aggregators
 			playniteApiFake.CallsTo(x => x.Database).Returns(gameDatabaseApiFake.FakedObject);
 
 			// Act
-			var result = sut.GetMostPlayedGame(activities, gameCount);
+			var result = sut.GetMostPlayedGames(activities, gameCount);
 
 			// Assert
 			Assert.NotNull(result);
@@ -95,7 +95,7 @@ namespace YearInReview.UnitTests.Model.Aggregators
 
 		[Theory]
 		[AutoFakeItEasyData]
-		public void GetMostPlayedGame_ReturnsAtMostGameCountOfGames_WhenMoreGamesHaveActivities(
+		public void GetMostPlayedGames_ReturnsAtMostGameCountOfGames_WhenMoreGamesHaveActivities(
 			[Frozen] Fake<IGameDatabaseAPI> gameDatabaseApiFake,
 			[Frozen] Fake<IPlayniteAPI> playniteApiFake,
 			List<Activity> activities,
@@ -109,7 +109,7 @@ namespace YearInReview.UnitTests.Model.Aggregators
 			playniteApiFake.CallsTo(x => x.Database).Returns(gameDatabaseApiFake.FakedObject);
 
 			// Act
-			var result = sut.GetMostPlayedGame(activities, gameCount);
+			var result = sut.GetMostPlayedGames(activities, gameCount);
 
 			// Assert
 			Assert.Equal(gameCount, result.Count);

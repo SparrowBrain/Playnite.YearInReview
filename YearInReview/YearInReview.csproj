@@ -62,11 +62,13 @@
     <Compile Include="Infrastructure\Services\IDateTimeProvider.cs" />
     <Compile Include="Infrastructure\Services\ReadableTimeFormatter.cs" />
     <Compile Include="Model\Aggregators\Data\GameWithTime.cs" />
+    <Compile Include="Model\Aggregators\Data\SourceWithTime.cs" />
     <Compile Include="Model\Aggregators\IMetadataProvider.cs" />
     <Compile Include="Model\Aggregators\IMostPlayedGamesAggregator.cs" />
     <Compile Include="Model\Aggregators\ITotalPlaytimeAggregator.cs" />
     <Compile Include="Model\Aggregators\MetadataProvider.cs" />
     <Compile Include="Model\Aggregators\MostPlayedGamesAggregator.cs" />
+    <Compile Include="Model\Aggregators\MostPlayedLibrariesAggregator.cs" />
     <Compile Include="Model\Aggregators\TotalPlaytimeAggregator.cs" />
     <Compile Include="Model\Filters\ISpecificYearActivityFilter.cs" />
     <Compile Include="Model\Filters\SpecificYearActivityFilter.cs" />

@@ -44,7 +44,7 @@ namespace YearInReview.UnitTests.Model.Reports._1970
 			Composer1970 sut)
 		{
 			// Arrange
-			A.CallTo(() => mostPlayedGameAggregatorFake.GetMostPlayedGame(A<IReadOnlyCollection<Activity>>._, A<int>._)).Returns(mostPlayedGames);
+			A.CallTo(() => mostPlayedGameAggregatorFake.GetMostPlayedGames(A<IReadOnlyCollection<Activity>>._, A<int>._)).Returns(mostPlayedGames);
 
 			// Act
 			var result = sut.Compose(year, activities);

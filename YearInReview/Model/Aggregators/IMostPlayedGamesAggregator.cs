@@ -6,6 +6,6 @@ namespace YearInReview.Model.Aggregators
 {
 	public interface IMostPlayedGamesAggregator
 	{
-		IReadOnlyCollection<GameWithTime> GetMostPlayedGame(IReadOnlyCollection<Activity> activities, int gameCount);
+		IReadOnlyCollection<GameWithTime> GetMostPlayedGames(IReadOnlyCollection<Activity> activities, int gameCount);
 	}
 }

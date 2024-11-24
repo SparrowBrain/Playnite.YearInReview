@@ -15,7 +15,7 @@ namespace YearInReview.Model.Aggregators
 			_playniteApi = playniteApi;
 		}
 
-		public IReadOnlyCollection<GameWithTime> GetMostPlayedGame(IReadOnlyCollection<Activity> activities,
+		public IReadOnlyCollection<GameWithTime> GetMostPlayedGames(IReadOnlyCollection<Activity> activities,
 			int gameCount)
 		{
 			if (activities.Count == 0)
