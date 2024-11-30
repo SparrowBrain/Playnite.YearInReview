@@ -40,6 +40,7 @@
             </Style>
             <converters:UriToBitmapImageConverter x:Key="UriToBitmapImageConverter" />
             <converters:SecondsToReadableTextConverter x:Key="SecondsToReadableTextConverter" />
+            <converters:BoolToCollapsedVisibilityConverter x:Key="BoolToCollapsedVisibilityConverter" />
         </ResourceDictionary>
     </PluginUserControl.Resources>
 
@@ -80,12 +81,12 @@
             <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding MostPlayedGame.Name}" FontSize="25"></TextBlock>
             <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding MostPlayedGameMessage}"></TextBlock>
         </Grid>
-        <TextBlock Text="{Binding Top10Header}" FontSize="25" TextAlignment="Left"></TextBlock>
+        <TextBlock Text="{Binding TopGamesHeader}" FontSize="25" TextAlignment="Left"></TextBlock>
         <ListBox ItemsSource="{Binding MostPlayedGames}" PreviewMouseWheel="HandlePreviewMouseWheel" Margin="0,0,0,0" Background="Transparent">
             <ListBox.ItemContainerStyle>
                 <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
                     <Setter Property="Focusable" Value="False" />
-                    <Setter Property="Padding" Value="0"/>
+                    <Setter Property="Padding" Value="0" />
                 </Style>
             </ListBox.ItemContainerStyle>
             <ItemsControl.ItemTemplate>
@@ -108,17 +109,51 @@
                             </Image>
                             <TextBlock Grid.Column="2" Text="{Binding Name}" VerticalAlignment="Center" />
                             <StackPanel Grid.Column="3" Orientation="Horizontal">
-                                <Rectangle  Fill="{DynamicResource GlyphBrush}" Height="50" Width="{Binding BarWidth}"/>
+                                <Rectangle  Fill="{DynamicResource GlyphBrush}" Height="50" Width="{Binding BarWidth}" />
                                 <TextBlock Text="{Binding TimePlayed, Converter={StaticResource SecondsToReadableTextConverter}}" VerticalAlignment="Center" Margin="10, 0" />
                             </StackPanel>
-                            
                         </Grid>
                     </Button>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ListBox>
+        <StackPanel Visibility="{Binding ShowTopSources, Converter={StaticResource BoolToCollapsedVisibilityConverter}}">
+            <TextBlock Text="{Binding TopSourcesHeader}" FontSize="25" TextAlignment="Left"></TextBlock>
+            <ListBox ItemsSource="{Binding MostPlayedSources}" PreviewMouseWheel="HandlePreviewMouseWheel" Margin="0,0,0,0" Background="Transparent">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                        <Setter Property="Focusable" Value="False" />
+                        <Setter Property="Padding" Value="0" />
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="0,2.5,0,2.5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="25" />
+                                <!--<ColumnDefinition Width="100" />-->
+                                <ColumnDefinition Width="300" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{Binding Position}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                            <!--<Image Grid.Column="1" Width="75" Source="{Binding CoverImage,
+                         Converter={StaticResource UriToBitmapImageConverter},
+                         ConverterParameter=75,
+                         Mode=OneWay,
+                         FallbackValue={StaticResource DefaultGameIcon},
+                         TargetNullValue={StaticResource DefaultGameIcon}}">
+                                </Image>-->
+                            <TextBlock Grid.Column="1" Text="{Binding Name}" VerticalAlignment="Center" />
+                            <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                <Rectangle  Fill="{DynamicResource GlyphBrush}" Height="50" Width="{Binding BarWidth}" />
+                                <TextBlock Text="{Binding TimePlayed, Converter={StaticResource SecondsToReadableTextConverter}}" VerticalAlignment="Center" Margin="10, 0" />
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ListBox>
+        </StackPanel>
         <Grid>
-
         </Grid>
     </StackPanel>
 </PluginUserControl>

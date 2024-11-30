@@ -1,0 +1,111 @@
+﻿<UserControl x:Class="YearInReview.Infrastructure.UserControls.DonutChart"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <CombinedGeometry x:Key="CircleClip" GeometryCombineMode="Exclude">
+            <CombinedGeometry.Geometry1>
+                <EllipseGeometry Center="125 125" RadiusX="125" RadiusY="125" />
+            </CombinedGeometry.Geometry1>
+            <CombinedGeometry.Geometry2>
+                <EllipseGeometry Center="125 125" RadiusX="100" RadiusY="100" />
+            </CombinedGeometry.Geometry2>
+        </CombinedGeometry>
+    </UserControl.Resources>
+    <Grid>
+        <Polygon Grid.Row="0" Grid.Column="0" Name="Polygon1" 
+                     Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}"
+                     Height="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}"
+                     StrokeThickness="0" Fill="Yellow" 
+                     Points="0,0 250,0 250,250 0,250">
+            <Polygon.Clip>
+                <StaticResource ResourceKey="CircleClip" />
+            </Polygon.Clip>
+        </Polygon>
+        <Polygon Grid.Row="0" Grid.Column="0" Name="Polygon2"
+                     Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}"
+                     Height="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}"
+                     StrokeThickness="0" Fill="Green"
+                     Points="125,125 125,0 250,0 250,250 0,250 0,216.50635094611">
+            <Polygon.Clip>
+                <StaticResource ResourceKey="CircleClip" />
+            </Polygon.Clip>
+        </Polygon>
+        <Polygon Grid.Row="0" Grid.Column="0" Name="Polygon3"
+                     Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}"
+                     Height="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}"
+                     StrokeThickness="0" Fill="Red" 
+                     Points="125,125 125,0 250,0 250,197.168783648703">
+            <Polygon.Clip>
+                <StaticResource ResourceKey="CircleClip" />
+            </Polygon.Clip>
+        </Polygon>
+        <Polygon Grid.Row="0" Grid.Column="0" Name="Polygon4"
+                 Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}"
+                 Height="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}"
+                 StrokeThickness="0" Fill="Blue" 
+                 Points="125,125 125,0 250,0 250,97.168783648703">
+            <Polygon.Clip>
+                <StaticResource ResourceKey="CircleClip" />
+            </Polygon.Clip>
+        </Polygon>
+        <Polygon Grid.Row="0" Grid.Column="0" Name="Polygon5"
+                 Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}"
+                 Height="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}"
+                 StrokeThickness="0" Fill="Magenta" 
+                 Points="125,125 125,0 250,0 250,50">
+            <Polygon.Clip>
+                <StaticResource ResourceKey="CircleClip" />
+            </Polygon.Clip>
+        </Polygon>
+        <Polygon Grid.Row="0" Grid.Column="0" Name="Polygon6"
+                 Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}"
+                 Height="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}"
+                 StrokeThickness="0" Fill="Cyan" 
+                 Points="125,125 125,0 250,0 250,30">
+            <Polygon.Clip>
+                <StaticResource ResourceKey="CircleClip" />
+            </Polygon.Clip>
+        </Polygon>
+        <Polygon Grid.Row="0" Grid.Column="0" Name="Polygon7"
+                 Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}"
+                 Height="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}"
+                 StrokeThickness="0" Fill="Orange" 
+                 Points="125,125 125,0 250,0 250,20">
+            <Polygon.Clip>
+                <StaticResource ResourceKey="CircleClip" />
+            </Polygon.Clip>
+        </Polygon>
+        <Polygon Grid.Row="0" Grid.Column="0" Name="Polygon8"
+                 Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}"
+                 Height="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}"
+                 StrokeThickness="0" Fill="Purple" 
+                 Points="125,125 125,0 250,0 250,10">
+            <Polygon.Clip>
+                <StaticResource ResourceKey="CircleClip" />
+            </Polygon.Clip>
+        </Polygon>
+        <Polygon Grid.Row="0" Grid.Column="0" Name="Polygon9"
+                 Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}"
+                 Height="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}"
+                 StrokeThickness="0" Fill="LawnGreen" 
+                 Points="125,125 125,0 250,0 225,0">
+            <Polygon.Clip>
+                <StaticResource ResourceKey="CircleClip" />
+            </Polygon.Clip>
+        </Polygon>
+        <Polygon Grid.Row="0" Grid.Column="0" Name="Polygon10"
+                 Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}"
+                 Height="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}"
+                 StrokeThickness="0" Fill="RoyalBlue" 
+                 Points="125,125 125,0 250,0 200,0">
+            <Polygon.Clip>
+                <StaticResource ResourceKey="CircleClip" />
+            </Polygon.Clip>
+        </Polygon>
+
+    </Grid>
+</UserControl>

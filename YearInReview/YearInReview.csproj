@@ -61,6 +61,9 @@
     <Compile Include="Infrastructure\Services\DateTimeProvider.cs" />
     <Compile Include="Infrastructure\Services\IDateTimeProvider.cs" />
     <Compile Include="Infrastructure\Services\ReadableTimeFormatter.cs" />
+    <Compile Include="Infrastructure\UserControls\DonutChart.xaml.cs">
+      <DependentUpon>DonutChart.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Model\Aggregators\Data\GameWithTime.cs" />
     <Compile Include="Model\Aggregators\Data\SourceWithTime.cs" />
     <Compile Include="Model\Aggregators\IMetadataProvider.cs" />
@@ -76,6 +79,7 @@
     <Compile Include="Model\Aggregators\Data\Metadata.cs" />
     <Compile Include="Model\Reports\1970\Composer1970.cs" />
     <Compile Include="Model\Reports\1970\IComposer1970.cs" />
+    <Compile Include="Infrastructure\Converters\BoolToCollapsedVisibilityConverter.cs" />
     <Compile Include="Model\Reports\1970\MVVM\Report1970View.xaml.cs">
       <DependentUpon>Report1970View.xaml</DependentUpon>
     </Compile>
@@ -119,6 +123,10 @@
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Infrastructure\UserControls\DonutChart.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Model\Reports\1970\MVVM\Report1970View.xaml">
       <SubType>Designer</SubType>
