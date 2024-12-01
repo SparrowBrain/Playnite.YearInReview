@@ -153,6 +153,7 @@
                 </ItemsControl.ItemTemplate>
             </ListBox>
         </StackPanel>
+        <TextBlock Visibility="{Binding ShowSingleSource, Converter={StaticResource BoolToCollapsedVisibilityConverter}}" Text="{Binding SingleSourceText}"></TextBlock>
         <Grid>
         </Grid>
     </StackPanel>

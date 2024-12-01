@@ -31,7 +31,7 @@ namespace YearInReview.Model.Reports._1970.MVVM
 
 			var totalSourcePlaytime = report.MostPlayedSources.Sum(x => x.TimePlayed);
 			MostPlayedSources = report.MostPlayedSources
-				.Select((x,i) => new SourceViewModel(x, i+1, 500, totalSourcePlaytime)).ToObservable();
+				.Select((x, i) => new SourceViewModel(x, i + 1, 500, totalSourcePlaytime)).ToObservable();
 		}
 
 		public int Year { get; set; }
@@ -64,5 +64,7 @@ namespace YearInReview.Model.Reports._1970.MVVM
 		public string TopGamesHeader => string.Format(ResourceProvider.GetString("LOC_YearInReview_Report1970_TopGamesHeader"), MostPlayedGames.Count);
 
 		public string TopSourcesHeader => string.Format(ResourceProvider.GetString("LOC_YearInReview_Report1970_TopSourcesHeader"));
+
+		public string SingleSourceText => string.Format(ResourceProvider.GetString("LOC_YearInReview_Report1970_SingleSourceText"), MostPlayedSources.FirstOrDefault()?.Name);
 	}
 }

@@ -56,5 +56,34 @@ namespace YearInReview.UnitTests.Model.Aggregators
 			Assert.NotNull(result);
 			Assert.Empty(result);
 		}
+
+		[Theory]
+		[AutoFakeItEasyData]
+		public void GetMostPlayedSources_ReturnsPlayniteLibrary_WhenSourceIdIsDefault(
+		[Frozen] IGameDatabaseAPI gameDatabaseApiFake,
+		[Frozen] IPlayniteAPI playniteApiFake,
+		List<Activity> activities,
+		MostPlayedSourcesAggregator sut)
+		{
+			// Arrange
+			var game = activities.Last();
+			var playniteSourceId = Guid.Empty;
+			var session = new Session { ElapsedSeconds = int.MaxValue / 2, SourceId = playniteSourceId };
+			game.Items.Add(session);
+			var sources = activities.SelectMany(x => x.Items).Select(x => new GameSource() { Id = x.SourceId }).ToList();
+
+			playniteApiFake.CallsTo(x => x.Database).Returns(gameDatabaseApiFake);
+			gameDatabaseApiFake.CallsTo(x => x.Sources).Returns(new TestableItemCollection<GameSource>(sources));
+
+			// Act
+			var result = sut.GetMostPlayedSources(activities);
+
+			// Assert
+			Assert.NotNull(result);
+			var playniteSource = result.FirstOrDefault(x => x.Source.Id == playniteSourceId);
+			Assert.NotNull(playniteSource);
+			Assert.Equal(playniteSourceId, playniteSource.Source.Id);
+			Assert.Equal("Playnite", playniteSource.Source.Name);
+		}
 	}
 }
