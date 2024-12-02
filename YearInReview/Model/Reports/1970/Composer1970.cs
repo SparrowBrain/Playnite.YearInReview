@@ -26,7 +26,7 @@ namespace YearInReview.Model.Reports._1970
 
 		public Report1970 Compose(int year, IReadOnlyCollection<Activity> activities)
 		{
-			var mostPlayedGames = _mostPlayedGameAggregator.GetMostPlayedGames(activities, 25);
+			var mostPlayedGames = _mostPlayedGameAggregator.GetMostPlayedGames(activities, 10);
 
 			return new Report1970()
 			{
