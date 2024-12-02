@@ -6,13 +6,13 @@ namespace YearInReview.Model.Reports.MVVM
 {
 	public class SourceViewModel : ObservableObject
 	{
-		public SourceViewModel(ReportSourceWithTime source, int position, int maxWidth, int totalSourcePlaytime)
+		public SourceViewModel(ReportSourceWithTime source, int position, int maxWidth, int maxSourcePlaytime)
 		{
 			Position = position;
 			Id = source.Id;
 			Name = source.Name;
 			TimePlayed = source.TimePlayed;
-			Percentage = (float)source.TimePlayed / totalSourcePlaytime;
+			Percentage = (float)source.TimePlayed / maxSourcePlaytime;
 			BarWidth = Percentage * maxWidth;
 		}
 

@@ -11,6 +11,7 @@ namespace YearInReview.Model.Reports
 		public string CoverImage { get; set; }
 
 		public string FlavourText { get; set; }
+
 		public int TimePlayed { get; set; }
 	}
 }

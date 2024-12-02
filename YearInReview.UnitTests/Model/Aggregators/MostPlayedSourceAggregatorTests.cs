@@ -13,7 +13,7 @@ using YearInReview.Model.Aggregators;
 
 namespace YearInReview.UnitTests.Model.Aggregators
 {
-	public class MostPlayedLibraryAggregatorTests
+	public class MostPlayedSourceAggregatorTests
 	{
 		[Theory]
 		[AutoFakeItEasyData]

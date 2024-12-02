@@ -29,9 +29,9 @@ namespace YearInReview.Model.Reports._1970.MVVM
 				.Select((t, i) => new GameViewModel(api, i + 1, t, 500, MostPlayedGame.TimePlayed)).ToList()
 				.ToObservable();
 
-			var totalSourcePlaytime = report.MostPlayedSources.Sum(x => x.TimePlayed);
+			var maxSourcePlaytime = report.MostPlayedSources.OrderByDescending(x => x.TimePlayed).FirstOrDefault()?.TimePlayed ?? 0;
 			MostPlayedSources = report.MostPlayedSources
-				.Select((x, i) => new SourceViewModel(x, i + 1, 500, totalSourcePlaytime)).ToObservable();
+				.Select((x, i) => new SourceViewModel(x, i + 1, 500, maxSourcePlaytime)).ToObservable();
 		}
 
 		public int Year { get; set; }
