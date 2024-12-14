@@ -64,6 +64,7 @@
     <Compile Include="Infrastructure\UserControls\DonutChart.xaml.cs">
       <DependentUpon>DonutChart.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Model\Aggregators\Data\CalendarDay.cs" />
     <Compile Include="Model\Aggregators\Data\GameWithTime.cs" />
     <Compile Include="Model\Aggregators\Data\SourceWithTime.cs" />
     <Compile Include="Model\Aggregators\IMetadataProvider.cs" />
@@ -73,6 +74,9 @@
     <Compile Include="Model\Aggregators\MetadataProvider.cs" />
     <Compile Include="Model\Aggregators\MostPlayedGamesAggregator.cs" />
     <Compile Include="Model\Aggregators\MostPlayedSourcesAggregator.cs" />
+    <Compile Include="Model\Aggregators\Data\PlaytimeCalendar.cs" />
+    <Compile Include="Model\Aggregators\PlaytimeCalendarAggregator.cs" />
+    <Compile Include="Extensions\GameActivity\SessionExtensions.cs" />
     <Compile Include="Model\Aggregators\TotalPlaytimeAggregator.cs" />
     <Compile Include="Model\Filters\ISpecificYearActivityFilter.cs" />
     <Compile Include="Model\Filters\SpecificYearActivityFilter.cs" />

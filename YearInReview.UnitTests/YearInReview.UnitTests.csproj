@@ -101,6 +101,7 @@
     <Compile Include="Model\Aggregators\MetadataProviderTests.cs" />
     <Compile Include="Model\Aggregators\MostPlayedGameAggregatorTests.cs" />
     <Compile Include="Model\Aggregators\MostPlayedSourceAggregatorTests.cs" />
+    <Compile Include="Model\Aggregators\PlaytimeCalendarAggregatorTests.cs" />
     <Compile Include="Model\Aggregators\TotalPlaytimeAggregatorTests.cs" />
     <Compile Include="Model\Filters\SpecificYearActivityFilterTests.cs" />
     <Compile Include="Model\Reports\1970\Composer1970Tests.cs" />
