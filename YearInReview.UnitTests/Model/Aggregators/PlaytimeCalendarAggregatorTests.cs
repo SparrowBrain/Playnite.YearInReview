@@ -30,9 +30,9 @@ namespace YearInReview.UnitTests.Model.Aggregators
 			var result = sut.GetCalendar(year, activities);
 
 			// Assert
-			Assert.Equal(expectedDayCount, result.Days.Count);
-			Assert.All(result.Days.Values, x => Assert.Equal(0, x.TotalPlaytime));
-			Assert.All(result.Days.Values, x => Assert.Empty(x.Games));
+			Assert.Equal(expectedDayCount, result.Count);
+			Assert.All(result.Values, x => Assert.Equal(0, x.TotalPlaytime));
+			Assert.All(result.Values, x => Assert.Empty(x.Games));
 		}
 
 		[Theory]
@@ -66,7 +66,7 @@ namespace YearInReview.UnitTests.Model.Aggregators
 			var result = sut.GetCalendar(year, activities);
 
 			// Assert
-			var dayStats = result.Days[dayWithActivity];
+			var dayStats = result[dayWithActivity];
 			Assert.Equal(activities.Sum(x => x.Items.Sum(i => i.ElapsedSeconds)),
 				dayStats.TotalPlaytime);
 			Assert.Equal(activities.Count, dayStats.Games.Count);
@@ -112,7 +112,7 @@ namespace YearInReview.UnitTests.Model.Aggregators
 			var result = sut.GetCalendar(year, activities);
 
 			// Assert
-			var daysWithActivity = result.Days.Where(x => x.Value.TotalPlaytime > 0).ToList();
+			var daysWithActivity = result.Where(x => x.Value.TotalPlaytime > 0).ToList();
 			Assert.Equal(2, daysWithActivity.Count);
 			Assert.Equal(hoursInFirstDay * 60 * 60, daysWithActivity[0].Value.TotalPlaytime);
 			Assert.Equal(hoursInNextDay * 60 * 60, daysWithActivity[1].Value.TotalPlaytime);

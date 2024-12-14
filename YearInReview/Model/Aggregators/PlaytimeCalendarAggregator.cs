@@ -8,7 +8,7 @@ using YearInReview.Model.Aggregators.Data;
 
 namespace YearInReview.Model.Aggregators
 {
-	public class PlaytimeCalendarAggregator
+	public class PlaytimeCalendarAggregator : IPlaytimeCalendarAggregator
 	{
 		private readonly IPlayniteAPI _api;
 
@@ -17,7 +17,7 @@ namespace YearInReview.Model.Aggregators
 			_api = api;
 		}
 
-		public PlaytimeCalendar GetCalendar(int year, IReadOnlyList<Activity> activities)
+		public IDictionary<DateTime, CalendarDay> GetCalendar(int year, IReadOnlyCollection<Activity> activities)
 		{
 			var days = new List<CalendarDay>();
 			var startDate = new DateTime(year, 1, 1);
@@ -54,10 +54,7 @@ namespace YearInReview.Model.Aggregators
 				date = date.AddDays(1);
 			}
 
-			return new PlaytimeCalendar()
-			{
-				Days = days.ToDictionary(x => x.Date, x => x)
-			};
+			return days.ToDictionary(x => x.Date, x => x);
 		}
 	}
 }
