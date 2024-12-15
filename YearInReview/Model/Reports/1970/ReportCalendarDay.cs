@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace YearInReview.Model.Reports
+namespace YearInReview.Model.Reports._1970
 {
 	public class ReportCalendarDay
 	{
