@@ -53,6 +53,7 @@ namespace YearInReview.Model.Reports._1970.MVVM
 
 		public ObservableCollection<SourceViewModel> MostPlayedSources { get; set; }
 
+
 		public string MostPlayedGameMessage => string.Format(ResourceProvider.GetString("LOC_YearInReview_Report1970_MostPlayedGameMessage"), MostPlayedGame.Name, ReadableTimeFormatter.FormatTime(MostPlayedGame.TimePlayed));
 
 		public ICommand OpenMostPlayedDetails =>

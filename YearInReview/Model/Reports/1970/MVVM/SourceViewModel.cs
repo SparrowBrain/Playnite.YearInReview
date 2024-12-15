@@ -1,8 +1,7 @@
-﻿using Playnite.SDK.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace YearInReview.Model.Reports.MVVM
+namespace YearInReview.Model.Reports._1970.MVVM
 {
 	public class SourceViewModel : ObservableObject
 	{

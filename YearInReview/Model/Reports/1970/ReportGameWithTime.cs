@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace YearInReview.Model.Reports
+namespace YearInReview.Model.Reports._1970
 {
 	public class ReportGameWithTime
 	{

@@ -1,6 +1,7 @@
 ﻿using AutoFixture.Xunit2;
 using FakeItEasy;
 using Playnite.SDK.Models;
+using System;
 using System.Collections.Generic;
 using TestTools.Shared;
 using Xunit;
@@ -92,6 +93,26 @@ namespace YearInReview.UnitTests.Model.Reports._1970
 			// Assert
 			Assert.NotNull(result);
 			Assert.Equal(mostPlayedSources.Count, result.MostPlayedSources.Count);
+		}
+
+		[Theory]
+		[AutoFakeItEasyData]
+		public void Compose_AssignsCalendarDays(
+			[Frozen] IPlaytimeCalendarAggregator playtimeCalendarAggregatorFake,
+			Dictionary<DateTime, CalendarDay> calendar,
+			int year,
+			List<Activity> activities,
+			Composer1970 sut)
+		{
+			// Arrange
+			A.CallTo(() => playtimeCalendarAggregatorFake.GetCalendar(year, activities))
+				.Returns(calendar);
+
+			// Act
+			var result = sut.Compose(year, activities);
+
+			// Assert
+			Assert.Equal(calendar.Count, result.PlaytimeCalendarDays.Count);
 		}
 	}
 }

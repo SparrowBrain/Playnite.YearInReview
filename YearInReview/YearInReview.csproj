@@ -64,15 +64,22 @@
     <Compile Include="Infrastructure\UserControls\DonutChart.xaml.cs">
       <DependentUpon>DonutChart.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\UserControls\PlaytimeCalendar.xaml.cs">
+      <DependentUpon>PlaytimeCalendar.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Aggregators\Data\CalendarDay.cs" />
     <Compile Include="Model\Aggregators\Data\GameWithTime.cs" />
     <Compile Include="Model\Aggregators\Data\SourceWithTime.cs" />
     <Compile Include="Model\Aggregators\IMetadataProvider.cs" />
     <Compile Include="Model\Aggregators\IMostPlayedGamesAggregator.cs" />
     <Compile Include="Model\Aggregators\IMostPlayedSourcesAggregator.cs" />
+    <Compile Include="Model\Aggregators\IPlaytimeCalendarAggregator.cs" />
     <Compile Include="Model\Aggregators\ITotalPlaytimeAggregator.cs" />
     <Compile Include="Model\Aggregators\MetadataProvider.cs" />
     <Compile Include="Model\Aggregators\MostPlayedGamesAggregator.cs" />
     <Compile Include="Model\Aggregators\MostPlayedSourcesAggregator.cs" />
+    <Compile Include="Model\Aggregators\PlaytimeCalendarAggregator.cs" />
+    <Compile Include="Extensions\GameActivity\SessionExtensions.cs" />
     <Compile Include="Model\Aggregators\TotalPlaytimeAggregator.cs" />
     <Compile Include="Model\Filters\ISpecificYearActivityFilter.cs" />
     <Compile Include="Model\Filters\SpecificYearActivityFilter.cs" />
@@ -85,16 +92,18 @@
     </Compile>
     <Compile Include="Model\Reports\1970\MVVM\Report1970ViewModel.cs" />
     <Compile Include="Model\Reports\1970\Report1970.cs" />
-    <Compile Include="Model\Reports\MVVM\SourceViewModel.cs" />
-    <Compile Include="Model\Reports\ReportGameWithTime.cs" />
-    <Compile Include="Model\Reports\MVVM\GameViewModel.cs" />
+    <Compile Include="Model\Reports\1970\MVVM\SourceViewModel.cs" />
+    <Compile Include="Model\Reports\1970\ReportCalendarDay.cs" />
+    <Compile Include="Model\Reports\1970\ReportCalendarGame.cs" />
+    <Compile Include="Model\Reports\1970\ReportGameWithTime.cs" />
+    <Compile Include="Model\Reports\1970\MVVM\GameViewModel.cs" />
     <Compile Include="Model\Reports\MVVM\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\Reports\MVVM\MainViewModel.cs" />
     <Compile Include="Model\Reports\MVVM\YearButtonViewModel.cs" />
     <Compile Include="Model\Reports\ReportManager.cs" />
-    <Compile Include="Model\Reports\ReportSourceWithTime.cs" />
+    <Compile Include="Model\Reports\1970\ReportSourceWithTime.cs" />
     <Compile Include="Settings\IPluginSettingsPersistence.cs" />
     <Compile Include="Settings\IVersionedSettings.cs" />
     <Compile Include="Settings\MVVM\YearInReviewSettingsViewModel.cs" />
@@ -125,6 +134,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Infrastructure\UserControls\DonutChart.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Infrastructure\UserControls\PlaytimeCalendar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,10 +1,9 @@
-﻿using Playnite.SDK;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Windows.Documents;
 using System.Windows.Input;
+using Playnite.SDK;
 
-namespace YearInReview.Model.Reports.MVVM
+namespace YearInReview.Model.Reports._1970.MVVM
 {
 	public class GameViewModel : ObservableObject
 	{
