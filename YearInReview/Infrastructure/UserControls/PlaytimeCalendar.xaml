@@ -6,6 +6,6 @@
              xmlns:local="clr-namespace:YearInReview.Infrastructure.UserControls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <StackPanel Name="MainPanel">
-    </StackPanel>
+    <WrapPanel Name="MainPanel">
+    </WrapPanel>
 </UserControl>

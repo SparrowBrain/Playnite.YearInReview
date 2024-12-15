@@ -77,6 +77,42 @@ namespace YearInReview.UnitTests.Model.Aggregators
 
 		[Theory]
 		[AutoFakeItEasyData]
+		public void GetCalendar_OrdersGamesByPlaytime_WhenSeveralActivitiesExistOnThatDay(
+			[Frozen] IGameDatabaseAPI gameDatabaseApiFake,
+			[Frozen] IPlayniteAPI playniteApiFake,
+			DateTime dayWithActivity,
+			List<Game> games,
+			PlaytimeCalendarAggregator sut)
+		{
+			// Arrange
+			dayWithActivity = dayWithActivity.Date;
+			var year = dayWithActivity.Year;
+			var activities = games.Select(x => new Activity()
+			{
+				Id = x.Id,
+				Items = new List<Session>()
+				{
+					new Session()
+					{
+						DateSession = dayWithActivity,
+						ElapsedSeconds = (int)x.Playtime,
+					}
+				}
+			}).ToList();
+			gameDatabaseApiFake.CallsTo(x => x.Games).Returns(new TestableItemCollection<Game>(games));
+			playniteApiFake.CallsTo(x => x.Database).Returns(gameDatabaseApiFake);
+
+			// Act
+			var result = sut.GetCalendar(year, activities);
+
+			// Assert
+			var dayStats = result[dayWithActivity];
+			Assert.Equal(games.OrderByDescending(x => x.Playtime).First().Id, dayStats.Games.First().Game.Id);
+			Assert.Equal(games.OrderByDescending(x => x.Playtime).Last().Id, dayStats.Games.Last().Game.Id);
+		}
+
+		[Theory]
+		[AutoFakeItEasyData]
 		public void GetCalendar_SplitsActivityToTwo_WhenActivityGoesOverMidnight(
 			[Frozen] IGameDatabaseAPI gameDatabaseApiFake,
 			[Frozen] IPlayniteAPI playniteApiFake,

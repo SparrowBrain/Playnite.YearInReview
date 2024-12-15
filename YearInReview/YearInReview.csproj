@@ -87,6 +87,7 @@
     <Compile Include="Model\Reports\1970\Composer1970.cs" />
     <Compile Include="Model\Reports\1970\IComposer1970.cs" />
     <Compile Include="Infrastructure\Converters\BoolToCollapsedVisibilityConverter.cs" />
+    <Compile Include="Infrastructure\UserControls\CalendarDayViewModel.cs" />
     <Compile Include="Model\Reports\1970\MVVM\Report1970View.xaml.cs">
       <DependentUpon>Report1970View.xaml</DependentUpon>
     </Compile>

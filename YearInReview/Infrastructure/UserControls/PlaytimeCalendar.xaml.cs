@@ -1,18 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using YearInReview.Model.Reports._1970;
+using YearInReview.Infrastructure.Services;
+using YearInReview.Model.Reports._1970.MVVM;
 
 namespace YearInReview.Infrastructure.UserControls
 {
@@ -21,35 +14,32 @@ namespace YearInReview.Infrastructure.UserControls
 	/// </summary>
 	public partial class PlaytimeCalendar : UserControl
 	{
-		private IReadOnlyList<ReportCalendarDay> _playtimeCalendarDays;
+		private IReadOnlyList<CalendarDayViewModel> _playtimeCalendarDays;
 
 		public static readonly DependencyProperty ItemsSourceProperty =
-			DependencyProperty.Register("ItemsSource", typeof(IReadOnlyList<ReportCalendarDay>), typeof(PlaytimeCalendar), new PropertyMetadata(null, OnItemsSourceChanged));
+			DependencyProperty.Register("ItemsSource", typeof(IReadOnlyList<CalendarDayViewModel>), typeof(PlaytimeCalendar), new PropertyMetadata(null, OnItemsSourceChanged));
 
 		public PlaytimeCalendar()
 		{
 			InitializeComponent();
-			//AddMonth();
 		}
 
-		public IReadOnlyList<ReportCalendarDay> ItemsSource
+		public IReadOnlyList<CalendarDayViewModel> ItemsSource
 		{
-			get => (IReadOnlyList<ReportCalendarDay>)GetValue(ItemsSourceProperty);
+			get => (IReadOnlyList<CalendarDayViewModel>)GetValue(ItemsSourceProperty);
 			set => SetValue(ItemsSourceProperty, value);
 		}
 
 		protected override void OnInitialized(EventArgs e)
 		{
 			base.OnInitialized(e);
-
-			for (int i = 0; i < 12; i++)
-			{
-				AddMonth();
-			}
 		}
 
-		private void AddMonth()
+		private void AddMonth(IReadOnlyCollection<CalendarDayViewModel> monthDays)
 		{
+			if (monthDays == null || !monthDays.Any())
+				return;
+
 			Grid grid = new Grid();
 			for (int i = 0; i < 6; i++)
 			{
@@ -64,7 +54,7 @@ namespace YearInReview.Infrastructure.UserControls
 			// Add header row
 			TextBlock header = new TextBlock
 			{
-				Text = "January",
+				Text = monthDays.First().Date.ToString("MMMM"),
 				HorizontalAlignment = HorizontalAlignment.Center,
 				VerticalAlignment = VerticalAlignment.Center,
 				FontWeight = FontWeights.Bold
@@ -73,23 +63,108 @@ namespace YearInReview.Infrastructure.UserControls
 			Grid.SetColumnSpan(header, 6);
 			grid.Children.Add(header);
 
+			// Determine the first day of the week based on regional settings
+			DayOfWeek firstDayOfWeek = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek;
+
 			// Add squares into every cell of the grid except the first row
-			for (int row = 1; row < 8; row++)
+			int dayOfWeek = (int)monthDays.First().Date.DayOfWeek;
+			int firstDayOfWeekInt = (int)firstDayOfWeek;
+			var dayOfWeekDelta = dayOfWeek - firstDayOfWeekInt >= 0
+				? dayOfWeek - firstDayOfWeekInt
+				: dayOfWeek - firstDayOfWeekInt + 7;
+
+			foreach (var day in monthDays)
 			{
-				for (int col = 0; col < 6; col++)
+				int row = (day.Date.Day - 1 + dayOfWeekDelta) % 7 + 1;
+				int col = (day.Date.Day - 1 + dayOfWeekDelta) / 7;
+
+				Grid tooltipGrid = new Grid();
+				tooltipGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+				tooltipGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+
+				// Add date row
+				TextBlock dateText = new TextBlock
 				{
-					Border border = new Border
+					Text = day.Date.ToString("d"),
+					HorizontalAlignment = HorizontalAlignment.Left,
+					FontWeight = FontWeights.Bold
+				};
+				Grid.SetRow(dateText, 0);
+				Grid.SetColumnSpan(dateText, 2);
+				tooltipGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+				tooltipGrid.Children.Add(dateText);
+
+				// Add total playtime row
+				if (day.TotalPlaytime > 0)
+				{
+					TextBlock totalPlaytimeLabel = new TextBlock
 					{
-						BorderBrush = Brushes.Black,
-						BorderThickness = new Thickness(1),
-						Background = Brushes.LightGray,
-						Width = 50,
-						Height = 50
+						Text = "Total Playtime",
+						HorizontalAlignment = HorizontalAlignment.Left,
+						FontWeight = FontWeights.Bold
 					};
-					Grid.SetRow(border, row);
-					Grid.SetColumn(border, col);
-					grid.Children.Add(border);
+					Grid.SetRow(totalPlaytimeLabel, 1);
+					Grid.SetColumn(totalPlaytimeLabel, 0);
+					tooltipGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+					tooltipGrid.Children.Add(totalPlaytimeLabel);
+
+					TextBlock totalPlaytimeText = new TextBlock
+					{
+						Text = ReadableTimeFormatter.FormatTime(day.TotalPlaytime),
+						HorizontalAlignment = HorizontalAlignment.Left,
+						FontWeight = FontWeights.Bold
+					};
+					Grid.SetRow(totalPlaytimeText, 1);
+					Grid.SetColumn(totalPlaytimeText, 1);
+					tooltipGrid.Children.Add(totalPlaytimeText);
 				}
+
+				// Add game rows
+				int gameRow = 2;
+				foreach (var game in day.Games)
+				{
+					TextBlock gameNameText = new TextBlock
+					{
+						Text = game.Name,
+						HorizontalAlignment = HorizontalAlignment.Left
+					};
+					Grid.SetRow(gameNameText, gameRow);
+					Grid.SetColumn(gameNameText, 0);
+					tooltipGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+					tooltipGrid.Children.Add(gameNameText);
+
+					TextBlock gameTimeText = new TextBlock
+					{
+						Text = ReadableTimeFormatter.FormatTime(game.TimePlayed),
+						HorizontalAlignment = HorizontalAlignment.Left
+					};
+					Grid.SetRow(gameTimeText, gameRow);
+					Grid.SetColumn(gameTimeText, 1);
+					tooltipGrid.Children.Add(gameTimeText);
+
+					gameRow++;
+				}
+
+				// Blend LightGray and LightGreen based on opacity
+				Color blendedColor = Color.FromArgb(
+					(byte)(Colors.DimGray.A * (1 - day.Opacity) + Colors.LimeGreen.A * day.Opacity),
+					(byte)(Colors.DimGray.R * (1 - day.Opacity) + Colors.LimeGreen.R * day.Opacity),
+					(byte)(Colors.DimGray.G * (1 - day.Opacity) + Colors.LimeGreen.G * day.Opacity),
+					(byte)(Colors.DimGray.B * (1 - day.Opacity) + Colors.LimeGreen.B * day.Opacity)
+				);
+
+				Border border = new Border
+				{
+					BorderBrush = Brushes.Black,
+					BorderThickness = new Thickness(1),
+					Background = new SolidColorBrush(blendedColor),
+					Width = 50,
+					Height = 50,
+					ToolTip = tooltipGrid
+				};
+				Grid.SetRow(border, row);
+				Grid.SetColumn(border, col);
+				grid.Children.Add(border);
 			}
 
 			// Add the grid to the MainPanel
@@ -104,8 +179,13 @@ namespace YearInReview.Infrastructure.UserControls
 
 		private void OnItemsSourceChanged(DependencyPropertyChangedEventArgs e)
 		{
-			_playtimeCalendarDays = e.NewValue as IReadOnlyList<ReportCalendarDay>;
-			AddMonth();
+			_playtimeCalendarDays = e.NewValue as IReadOnlyList<CalendarDayViewModel>;
+
+			for (int i = 0; i < 12; i++)
+			{
+				var monthDays = _playtimeCalendarDays.Where(a => a.Date.Month == i + 1).ToList();
+				AddMonth(monthDays);
+			}
 		}
 	}
 }

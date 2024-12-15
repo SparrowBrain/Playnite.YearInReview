@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using YearInReview.Infrastructure.Services;
+using YearInReview.Infrastructure.UserControls;
 using YearInReview.Model.Reports.MVVM;
 
 namespace YearInReview.Model.Reports._1970.MVVM
@@ -33,6 +34,10 @@ namespace YearInReview.Model.Reports._1970.MVVM
 			var maxSourcePlaytime = report.MostPlayedSources.OrderByDescending(x => x.TimePlayed).FirstOrDefault()?.TimePlayed ?? 0;
 			MostPlayedSources = report.MostPlayedSources
 				.Select((x, i) => new SourceViewModel(x, i + 1, MaxBarWidth, maxSourcePlaytime)).ToObservable();
+
+			var maxPlaytimeInDay = report.PlaytimeCalendarDays.Max(x => x.TotalPlaytime);
+			PlaytimeCalendarDays = report.PlaytimeCalendarDays
+				.Select(x => new CalendarDayViewModel(x, maxPlaytimeInDay)).ToObservable();
 		}
 
 		public int Year { get; set; }
@@ -53,6 +58,7 @@ namespace YearInReview.Model.Reports._1970.MVVM
 
 		public ObservableCollection<SourceViewModel> MostPlayedSources { get; set; }
 
+		public ObservableCollection<CalendarDayViewModel> PlaytimeCalendarDays { get; set; }
 
 		public string MostPlayedGameMessage => string.Format(ResourceProvider.GetString("LOC_YearInReview_Report1970_MostPlayedGameMessage"), MostPlayedGame.Name, ReadableTimeFormatter.FormatTime(MostPlayedGame.TimePlayed));
 

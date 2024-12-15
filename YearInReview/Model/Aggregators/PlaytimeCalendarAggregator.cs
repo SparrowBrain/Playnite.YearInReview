@@ -48,7 +48,7 @@ namespace YearInReview.Model.Aggregators
 						TimePlayed = x.Items.Sum(i => i.ElapsedSeconds),
 						Game = _api.Database.Games.FirstOrDefault(g => g.Id == x.Id) ?? new Game() { Id = x.Id, Name = x.Name }
 					}
-					).ToList()
+					).OrderByDescending(x => x.TimePlayed).ToList()
 				});
 
 				date = date.AddDays(1);
