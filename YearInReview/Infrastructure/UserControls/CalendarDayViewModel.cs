@@ -12,7 +12,7 @@ namespace YearInReview.Infrastructure.UserControls
 			Date = day.Date;
 			TotalPlaytime = day.TotalPlaytime;
 			Games = day.Games.Select(a => new ReportCalendarGame() { Id = a.Id, Name = a.Name, TimePlayed = a.TimePlayed }).ToList();
-			Opacity = TotalPlaytime > 0 ? TotalPlaytime / (float)maxPlaytime * 0.7f + 0.3f : 0;
+			Opacity = TotalPlaytime > 0 ? TotalPlaytime / (float)maxPlaytime * 0.8f + 0.2f : 0;
 		}
 
 		public DateTime Date { get; }

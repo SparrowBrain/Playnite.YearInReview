@@ -17,6 +17,6 @@ namespace YearInReview.Settings
         public bool OptionThatWontBeSaved { get => optionThatWontBeSaved; set => SetValue(ref optionThatWontBeSaved, value); }
 
         public string Username { get; set; }
-        public static YearInReviewSettings Default => new YearInReviewSettings(){Username = "QWX"};
+        public static YearInReviewSettings Default => new YearInReviewSettings(){Username = "Qwx"};
 	}
 }

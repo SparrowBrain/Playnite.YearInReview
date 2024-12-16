@@ -125,7 +125,7 @@
                 </ItemsControl.ItemTemplate>
             </ListBox>
             <StackPanel Visibility="{Binding ShowTopSources, Converter={StaticResource BoolToCollapsedVisibilityConverter}}">
-                <TextBlock Text="{Binding TopSourcesHeader}" FontSize="25" TextAlignment="Left" Margin="10,48,10,10"></TextBlock>
+                <TextBlock Text="{DynamicResource LOC_YearInReview_Report1970_TopSourcesHeader}" FontSize="25" TextAlignment="Left" Margin="10,48,10,10"></TextBlock>
                 <ListBox ItemsSource="{Binding MostPlayedSources}" PreviewMouseWheel="HandlePreviewMouseWheel" Margin="0,0,0,0" Background="Transparent">
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
@@ -153,6 +153,7 @@
                 </ListBox>
             </StackPanel>
             <TextBlock Visibility="{Binding ShowSingleSource, Converter={StaticResource BoolToCollapsedVisibilityConverter}}" Text="{Binding SingleSourceText}" FontSize="25" Margin="10,48,10,10"></TextBlock>
+            <TextBlock Text="{DynamicResource LOC_YearInReview_Report1970_PlaytimeCalendarHeader}" FontSize="25" TextAlignment="Left" Margin="10,48,10,10"></TextBlock>
             <userControls:PlaytimeCalendar ItemsSource="{Binding PlaytimeCalendarDays}"/>
 
 
