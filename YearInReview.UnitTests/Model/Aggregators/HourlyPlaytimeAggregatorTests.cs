@@ -33,7 +33,13 @@ namespace YearInReview.UnitTests.Model.Aggregators
 	{
 		public IDictionary<int, int> GetHours(IReadOnlyCollection<Activity> activities)
 		{
-			throw new NotImplementedException();
+			var result = new Dictionary<int, int>();
+			for (var i = 0; i < 24; i++)
+			{
+				result.Add(i, 0);
+			}
+
+			return result;
 		}
 	}
 }
