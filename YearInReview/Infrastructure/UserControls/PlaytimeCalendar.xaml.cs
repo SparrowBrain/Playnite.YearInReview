@@ -179,7 +179,7 @@ namespace YearInReview.Infrastructure.UserControls
 		{
 			var dateText = new TextBlock
 			{
-				Text = day.Date.ToString("d"),
+				Text = day.Date.ToString("d, dddd"),
 				HorizontalAlignment = HorizontalAlignment.Left,
 				FontWeight = FontWeights.Bold
 			};

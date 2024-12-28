@@ -91,5 +91,33 @@ namespace YearInReview.UnitTests.Extensions.GameActivity
 			Assert.Equal(dayWithActivity.AddHours(1), result[1].DateSession);
 			Assert.Equal(dayWithActivity.AddHours(2), result[2].DateSession);
 		}
+
+		[Theory]
+		[AutoData]
+		public void SplitIntoHourly_SplitsSessionToTwo_WhenSessionGoesOverAnHourAndStartsFifteenPast(
+			DateTime dayWithActivity)
+		{
+			// Arrange
+			dayWithActivity = dayWithActivity.Date;
+			var sessions = new List<Session>
+			{
+				new Session()
+				{
+					DateSession = dayWithActivity.AddMinutes(15),
+					ElapsedSeconds = (int)TimeSpan.FromHours(1).TotalSeconds,
+				}
+			};
+
+			// Act
+			var result = sessions.SplitIntoHourly().ToList();
+
+			// Assert
+			Assert.Equal(2, result.Count);
+			Assert.Equal(45 * 60, result[0].ElapsedSeconds);
+			Assert.Equal(15 * 60, result[1].ElapsedSeconds);
+
+			Assert.Equal(dayWithActivity.AddMinutes(15), result[0].DateSession);
+			Assert.Equal(dayWithActivity.AddHours(1), result[1].DateSession);
+		}
 	}
 }

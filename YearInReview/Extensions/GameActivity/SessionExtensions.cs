@@ -46,7 +46,10 @@ namespace YearInReview.Extensions.GameActivity
 			{
 				var startTime = session.DateSession;
 				var endTime = startTime.AddSeconds(session.ElapsedSeconds);
-				if (endTime - startTime <= TimeSpan.FromHours(1))
+				if (startTime.Hour == endTime.Hour 
+				    && startTime.Day == endTime.Day 
+				    && startTime.Month == endTime.Month 
+				    && startTime.Year == endTime.Year)
 				{
 					yield return session;
 					continue;
