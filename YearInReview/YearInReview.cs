@@ -70,12 +70,14 @@ namespace YearInReview
 					var mostPlayedSourcesAggregator = new MostPlayedSourcesAggregator(Api);
 					var totalPlaytimeAggregator = new TotalPlaytimeAggregator();
 					var playtimeCalendarAggregator = new PlaytimeCalendarAggregator(Api);
+					var hourlyPlaytimeAggregator = new HourlyPlaytimeAggregator();
 					var composer = new Composer1970(
 						metadataProvider,
 						totalPlaytimeAggregator,
 						mostPlayedGamesAggregator,
 						mostPlayedSourcesAggregator,
-						playtimeCalendarAggregator);
+						playtimeCalendarAggregator,
+						hourlyPlaytimeAggregator);
 					var gameActivityExtension = new GameActivityExtension(Api.Paths.ExtensionsDataPath);
 					var specificYearActivityFilter = new SpecificYearActivityFilter();
 					var reportManager = new ReportManager(Api, composer, gameActivityExtension, specificYearActivityFilter);

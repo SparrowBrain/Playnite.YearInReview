@@ -2,9 +2,9 @@
 using System.Linq;
 using YearInReview.Extensions.GameActivity;
 
-namespace YearInReview.UnitTests.Model.Aggregators
+namespace YearInReview.Model.Aggregators
 {
-	public class HourlyPlaytimeAggregator
+	public class HourlyPlaytimeAggregator : IHourlyPlaytimeAggregator
 	{
 		public IDictionary<int, int> GetHours(IReadOnlyCollection<Activity> activities)
 		{

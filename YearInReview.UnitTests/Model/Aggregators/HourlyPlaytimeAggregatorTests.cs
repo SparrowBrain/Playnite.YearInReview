@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TestTools.Shared;
 using Xunit;
 using YearInReview.Extensions.GameActivity;
+using YearInReview.Model.Aggregators;
 
 namespace YearInReview.UnitTests.Model.Aggregators
 {

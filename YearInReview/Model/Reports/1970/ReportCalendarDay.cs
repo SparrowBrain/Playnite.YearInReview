@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows.Media;
 
 namespace YearInReview.Model.Reports._1970
 {

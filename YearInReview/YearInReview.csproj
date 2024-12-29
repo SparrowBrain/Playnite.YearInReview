@@ -71,6 +71,7 @@
     <Compile Include="Model\Aggregators\Data\GameWithTime.cs" />
     <Compile Include="Model\Aggregators\Data\SourceWithTime.cs" />
     <Compile Include="Model\Aggregators\HourlyPlaytimeAggregator.cs" />
+    <Compile Include="Model\Aggregators\IHourlyPlaytimeAggregator.cs" />
     <Compile Include="Model\Aggregators\IMetadataProvider.cs" />
     <Compile Include="Model\Aggregators\IMostPlayedGamesAggregator.cs" />
     <Compile Include="Model\Aggregators\IMostPlayedSourcesAggregator.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="Model\Reports\1970\ReportCalendarGame.cs" />
     <Compile Include="Model\Reports\1970\ReportGameWithTime.cs" />
     <Compile Include="Model\Reports\1970\MVVM\GameViewModel.cs" />
+    <Compile Include="Model\Reports\1970\ReportHourlyPlaytime.cs" />
     <Compile Include="Model\Reports\MVVM\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
