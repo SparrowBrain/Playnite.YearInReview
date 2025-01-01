@@ -155,7 +155,8 @@
             <TextBlock Visibility="{Binding ShowSingleSource, Converter={StaticResource BoolToCollapsedVisibilityConverter}}" Text="{Binding SingleSourceText}" FontSize="25" Margin="10,48,10,10"></TextBlock>
             <TextBlock Text="{DynamicResource LOC_YearInReview_Report1970_PlaytimeCalendarHeader}" FontSize="25" TextAlignment="Left" Margin="10,48,10,10"></TextBlock>
             <userControls:PlaytimeCalendar ItemsSource="{Binding PlaytimeCalendarDays}"/>
-            <ScrollViewer HorizontalScrollBarVisibility="Auto">
+            <TextBlock Text="{DynamicResource LOC_YearInReview_Report1970_HourlyPlaytimeHeader}" FontSize="25" TextAlignment="Left" Margin="10,48,10,10"></TextBlock>
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" PreviewMouseWheel="HourlyPlaytimeScrollViewer_PreviewMouseWheel">
                 <userControls:HourlyPlaytime ItemsSource="{Binding HourlyPlaytime}"/>
             </ScrollViewer>
         </StackPanel>

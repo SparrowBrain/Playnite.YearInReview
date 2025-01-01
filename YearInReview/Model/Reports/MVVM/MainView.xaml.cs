@@ -1,4 +1,8 @@
-﻿using Playnite.SDK.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
+using Playnite.SDK.Controls;
 
 namespace YearInReview.Model.Reports.MVVM
 {
