@@ -18,9 +18,11 @@ The structure of the code is still in limbo, but here's the general idea:
 * Settings - all the settings stuff.
 
 ### What about the year prefix / suffix?
-Since all reports are shareable, it's vital the Report.cs class does not change after it has been used and serialized. While the initial organization is messy, the idea that every part of the report is in a self-contained set of classes. What this also means, is that once we want to change the report structure or add more data, we can easily do it by creating new classes with the new year suffix. As in:
-* 1970 - all years until 2026.
-* 2026 - let's say we create a new format for 2026. Then all reports starting from 2026 will use these classes.
+~~Since all reports are shareable, it's vital the Report.cs class does not change after it has been used and serialized. While the initial organization is messy, the idea that every part of the report is in a self-contained set of classes. What this also means, is that once we want to change the report structure or add more data, we can easily do it by creating new classes with the new year suffix. As in:~~
+* ~~1970 - all years until 2026.~~
+* ~~2026 - let's say we create a new format for 2026. Then all reports starting from 2026 will use these classes.~~
+
+Ignore all of this. Reports now will be versioned. This will allow evolution for previous year reports while still maintaining some sanity while managing imported / exported reports.
 
 ### Unit Testing
 Most of the code should be written with Unit Tests. It is preferable to apply TDD.
