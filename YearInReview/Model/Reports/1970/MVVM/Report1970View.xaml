@@ -159,6 +159,35 @@
             <ScrollViewer HorizontalScrollBarVisibility="Auto" PreviewMouseWheel="HourlyPlaytimeScrollViewer_PreviewMouseWheel">
                 <userControls:HourlyPlaytime ItemsSource="{Binding HourlyPlaytime}"/>
             </ScrollViewer>
+
+            <StackPanel Visibility="{Binding ShowFriendLeaderboard, Converter={StaticResource BoolToCollapsedVisibilityConverter}}">
+                <TextBlock Text="{DynamicResource LOC_YearInReview_Report1970_FriendsLeaderboardHeader}" FontSize="25" TextAlignment="Left" Margin="10,48,10,10"></TextBlock>
+                <ListBox ItemsSource="{Binding FriendsPlaytimeLeaderboard}" PreviewMouseWheel="HandlePreviewMouseWheel" Margin="0,0,0,0" Background="Transparent">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                            <Setter Property="Focusable" Value="False" />
+                            <Setter Property="Padding" Value="0" />
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Margin="0,2.5,0,2.5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="25" />
+                                    <ColumnDefinition Width="300" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="{Binding Position}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                <TextBlock Grid.Column="1" Text="{Binding Name}" VerticalAlignment="Center" />
+                                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                    <Rectangle  Fill="{DynamicResource GlyphBrush}" Height="50" Width="{Binding BarWidth}" />
+                                    <TextBlock Text="{Binding Playtime, Converter={StaticResource SecondsToReadableTextConverter}}" VerticalAlignment="Center" Margin="10, 0" />
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ListBox>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </PluginUserControl>

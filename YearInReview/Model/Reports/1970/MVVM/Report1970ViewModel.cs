@@ -5,7 +5,6 @@ using System.Linq;
 using System.Windows.Input;
 using YearInReview.Infrastructure.Services;
 using YearInReview.Infrastructure.UserControls;
-using YearInReview.Model.Reports.MVVM;
 
 namespace YearInReview.Model.Reports._1970.MVVM
 {
@@ -14,13 +13,14 @@ namespace YearInReview.Model.Reports._1970.MVVM
 		private const int MaxBarWidth = 500;
 		private readonly IPlayniteAPI _api;
 
-		public Report1970ViewModel(IPlayniteAPI api, Report1970 report)
+		public Report1970ViewModel(IPlayniteAPI api, Report1970 report, IReadOnlyList<Report1970> friendReports)
 		{
 			_api = api;
+
 			Year = report.Metadata.Year;
 			Username = report.Metadata.Username;
 
-			IntroMessage = string.Format(ResourceProvider.GetString("LOC_YearInReview_Report1970_Intro"), Username);
+			IntroMessage = string.Format(ResourceProvider.GetString("LOC_YearInReview_Report1970_Intro"), Year, Username);
 			IntroMessageSubtext = string.Format(ResourceProvider.GetString("LOC_YearInReview_Report1970_IntroSubtext"),
 				ReadableTimeFormatter.FormatTime(report.TotalPlaytime),
 				Year);
@@ -42,6 +42,19 @@ namespace YearInReview.Model.Reports._1970.MVVM
 			var maxHourlyPlaytime = report.HourlyPlaytime.Max(x => x.Playtime);
 			HourlyPlaytime = report.HourlyPlaytime
 				.Select(x => new HourlyPlaytimeViewModel(x, maxHourlyPlaytime)).ToObservable();
+
+			if (friendReports != null)
+			{
+				var allReports = friendReports.Concat(new[] { report })
+					.OrderByDescending(x => x.TotalPlaytime)
+					.ToList();
+
+				var maxFriendPlaytime = allReports.Max(x => x.TotalPlaytime);
+
+				FriendsPlaytimeLeaderboard = allReports
+					.Select((x, i) => new FriendPlaytimeLeaderboardViewModel(i + 1, x.Metadata.Username, x.TotalPlaytime, maxFriendPlaytime))
+					.ToObservable();
+			}
 		}
 
 		public int Year { get; set; }
@@ -66,6 +79,11 @@ namespace YearInReview.Model.Reports._1970.MVVM
 
 		public ObservableCollection<HourlyPlaytimeViewModel> HourlyPlaytime { get; set; }
 
+		public bool ShowFriendLeaderboard => FriendsPlaytimeLeaderboard.Any();
+
+		public ObservableCollection<FriendPlaytimeLeaderboardViewModel> FriendsPlaytimeLeaderboard { get; set; } =
+			new ObservableCollection<FriendPlaytimeLeaderboardViewModel>();
+
 		public string MostPlayedGameMessage => string.Format(ResourceProvider.GetString("LOC_YearInReview_Report1970_MostPlayedGameMessage"), MostPlayedGame.Name, ReadableTimeFormatter.FormatTime(MostPlayedGame.TimePlayed));
 
 		public ICommand OpenMostPlayedDetails =>
@@ -80,5 +98,27 @@ namespace YearInReview.Model.Reports._1970.MVVM
 		public string TopSourcesHeader => string.Format(ResourceProvider.GetString("LOC_YearInReview_Report1970_TopSourcesHeader"));
 
 		public string SingleSourceText => string.Format(ResourceProvider.GetString("LOC_YearInReview_Report1970_SingleSourceText"), MostPlayedSources.FirstOrDefault()?.Name);
+	}
+
+	public class FriendPlaytimeLeaderboardViewModel
+	{
+		private const int MaxBarWidth = 500;
+
+		public FriendPlaytimeLeaderboardViewModel(int position, string name, int playtime, int maxPlaytime)
+		{
+			Position = position;
+			Name = name;
+			Playtime = playtime;
+
+			BarWidth = (float)playtime * MaxBarWidth / maxPlaytime;
+		}
+
+		public int Position { get; }
+
+		public string Name { get; }
+
+		public int Playtime { get; }
+
+		public float BarWidth { get; set; }
 	}
 }

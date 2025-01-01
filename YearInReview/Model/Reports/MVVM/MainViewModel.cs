@@ -31,7 +31,9 @@ namespace YearInReview.Model.Reports.MVVM
 						try
 						{
 							var report = await _reportManager.GetReport(year);
-							DisplayReport(report);
+							var old = await _reportManager.GetReport(2023);
+
+							DisplayReport(report, new List<Report1970>() { old });
 						}
 						catch (Exception ex)
 						{
@@ -41,9 +43,9 @@ namespace YearInReview.Model.Reports.MVVM
 			});
 		}
 
-		private void DisplayReport(Report1970 report)
+		private void DisplayReport(Report1970 report, List<Report1970> friendReports)
 		{
-			var viewModel = new Report1970ViewModel(_api, report);
+			var viewModel = new Report1970ViewModel(_api, report, friendReports);
 			var view = new Report1970View(viewModel);
 
 			ActiveReport = view;
