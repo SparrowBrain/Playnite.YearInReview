@@ -56,6 +56,7 @@
     <Compile Include="Extensions\GameActivity\IGameActivityExtension.cs" />
     <Compile Include="Extensions\GameActivity\Session.cs" />
     <Compile Include="Infrastructure\Converters\BaseConverter.cs" />
+    <Compile Include="Infrastructure\Converters\HourToRegionalConverter.cs" />
     <Compile Include="Infrastructure\Converters\SecondsToReadableTextConverter.cs" />
     <Compile Include="Infrastructure\Converters\UriToBitmapImageConverter.cs" />
     <Compile Include="Infrastructure\Services\DateTimeProvider.cs" />
@@ -64,6 +65,10 @@
     <Compile Include="Infrastructure\UserControls\DonutChart.xaml.cs">
       <DependentUpon>DonutChart.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\UserControls\HourlyPlaytime.xaml.cs">
+      <DependentUpon>HourlyPlaytime.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Infrastructure\UserControls\HourlyPlaytimeViewModel.cs" />
     <Compile Include="Infrastructure\UserControls\PlaytimeCalendar.xaml.cs">
       <DependentUpon>PlaytimeCalendar.xaml</DependentUpon>
     </Compile>
@@ -138,6 +143,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Infrastructure\UserControls\DonutChart.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Infrastructure\UserControls\HourlyPlaytime.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

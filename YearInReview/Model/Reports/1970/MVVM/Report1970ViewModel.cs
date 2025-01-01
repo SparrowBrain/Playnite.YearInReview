@@ -38,6 +38,10 @@ namespace YearInReview.Model.Reports._1970.MVVM
 			var maxPlaytimeInDay = report.PlaytimeCalendarDays.Max(x => x.TotalPlaytime);
 			PlaytimeCalendarDays = report.PlaytimeCalendarDays
 				.Select(x => new CalendarDayViewModel(x, maxPlaytimeInDay)).ToObservable();
+
+			var maxHourlyPlaytime = report.HourlyPlaytime.Max(x => x.Playtime);
+			HourlyPlaytime = report.HourlyPlaytime
+				.Select(x => new HourlyPlaytimeViewModel(x, maxHourlyPlaytime)).ToObservable();
 		}
 
 		public int Year { get; set; }
@@ -59,6 +63,8 @@ namespace YearInReview.Model.Reports._1970.MVVM
 		public ObservableCollection<SourceViewModel> MostPlayedSources { get; set; }
 
 		public ObservableCollection<CalendarDayViewModel> PlaytimeCalendarDays { get; set; }
+
+		public ObservableCollection<HourlyPlaytimeViewModel> HourlyPlaytime { get; set; }
 
 		public string MostPlayedGameMessage => string.Format(ResourceProvider.GetString("LOC_YearInReview_Report1970_MostPlayedGameMessage"), MostPlayedGame.Name, ReadableTimeFormatter.FormatTime(MostPlayedGame.TimePlayed));
 

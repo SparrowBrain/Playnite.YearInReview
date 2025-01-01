@@ -66,7 +66,7 @@ namespace YearInReview.Model.Reports._1970
 				HourlyPlaytime = _hourlyPlaytimeAggregator.GetHours(activities).Select(x => new ReportHourlyPlaytime()
 				{
 					Hour = x.Key,
-					TotalPlaytime = x.Value
+					Playtime = x.Value
 				}).ToList()
 			};
 		}

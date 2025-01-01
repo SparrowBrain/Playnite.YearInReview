@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Playnite.SDK.Controls;
 using YearInReview.Infrastructure.Services;
 
 namespace YearInReview.Infrastructure.UserControls
@@ -11,7 +12,7 @@ namespace YearInReview.Infrastructure.UserControls
 	/// <summary>
 	/// Interaction logic for PlaytimeCalendar.xaml
 	/// </summary>
-	public partial class PlaytimeCalendar : UserControl
+	public partial class PlaytimeCalendar : PluginUserControl
 	{
 		private const double GridCellSize = 50;
 		private readonly ILogger _logger = LogManager.GetLogger();

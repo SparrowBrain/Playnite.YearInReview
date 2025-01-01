@@ -116,7 +116,7 @@
                                 </Image>
                                 <TextBlock Grid.Column="2" Text="{Binding Name}" VerticalAlignment="Center" />
                                 <StackPanel Grid.Column="3" Orientation="Horizontal">
-                                    <Rectangle  Fill="{DynamicResource GlyphBrush}" Height="50" Width="{Binding BarWidth}" />
+                                    <Rectangle Fill="{DynamicResource GlyphBrush}" Height="50" Width="{Binding BarWidth}" />
                                     <TextBlock Text="{Binding TimePlayed, Converter={StaticResource SecondsToReadableTextConverter}}" VerticalAlignment="Center" Margin="10, 0" />
                                 </StackPanel>
                             </Grid>
@@ -155,8 +155,9 @@
             <TextBlock Visibility="{Binding ShowSingleSource, Converter={StaticResource BoolToCollapsedVisibilityConverter}}" Text="{Binding SingleSourceText}" FontSize="25" Margin="10,48,10,10"></TextBlock>
             <TextBlock Text="{DynamicResource LOC_YearInReview_Report1970_PlaytimeCalendarHeader}" FontSize="25" TextAlignment="Left" Margin="10,48,10,10"></TextBlock>
             <userControls:PlaytimeCalendar ItemsSource="{Binding PlaytimeCalendarDays}"/>
-
-
+            <ScrollViewer HorizontalScrollBarVisibility="Auto">
+                <userControls:HourlyPlaytime ItemsSource="{Binding HourlyPlaytime}"/>
+            </ScrollViewer>
         </StackPanel>
     </Grid>
 </PluginUserControl>
