@@ -13,6 +13,20 @@ namespace YearInReview.UnitTests.Model.Aggregators
 	{
 		[Theory]
 		[AutoFakeItEasyData]
+		public void Aggregate_ReturnsMetadataWithGuid(
+			int year,
+			MetadataProvider sut)
+		{
+			// Act
+			var result = sut.Get(year);
+
+			// Assert
+			Assert.NotNull(result);
+			Assert.NotEqual(Guid.Empty, result.Id);
+		}
+
+		[Theory]
+		[AutoFakeItEasyData]
 		public void Aggregate_ReturnsMetadataWithCorrectYear(
 			int year,
 			MetadataProvider sut)

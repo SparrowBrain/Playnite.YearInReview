@@ -1,4 +1,5 @@
-﻿using YearInReview.Infrastructure.Services;
+﻿using System;
+using YearInReview.Infrastructure.Services;
 using YearInReview.Model.Aggregators.Data;
 using YearInReview.Settings;
 
@@ -19,6 +20,7 @@ namespace YearInReview.Model.Aggregators
 		{
 			return new Metadata
 			{
+				Id = Guid.NewGuid(),
 				Year = year,
 				GeneratedTimestamp = _dateTimeProvider.GetNow(),
 				Username = _pluginSettingsPersistence.LoadPluginSettings<YearInReviewSettings>().Username
