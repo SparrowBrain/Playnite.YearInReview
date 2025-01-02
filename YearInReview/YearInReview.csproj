@@ -106,13 +106,17 @@
     <Compile Include="Model\Reports\1970\ReportGameWithTime.cs" />
     <Compile Include="Model\Reports\1970\MVVM\GameViewModel.cs" />
     <Compile Include="Model\Reports\1970\ReportHourlyPlaytime.cs" />
+    <Compile Include="Model\Reports\ISlimReport.cs" />
     <Compile Include="Model\Reports\MVVM\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\Reports\MVVM\MainViewModel.cs" />
     <Compile Include="Model\Reports\MVVM\YearButtonViewModel.cs" />
+    <Compile Include="Model\Reports\Persistence\PersistedReport.cs" />
+    <Compile Include="Model\Reports\Persistence\ReportPersistence.cs" />
     <Compile Include="Model\Reports\ReportManager.cs" />
     <Compile Include="Model\Reports\1970\ReportSourceWithTime.cs" />
+    <Compile Include="Model\Reports\SlimReport.cs" />
     <Compile Include="Settings\IPluginSettingsPersistence.cs" />
     <Compile Include="Settings\IVersionedSettings.cs" />
     <Compile Include="Settings\MVVM\YearInReviewSettingsViewModel.cs" />
