@@ -1,6 +1,5 @@
 ﻿using AutoFixture.Xunit2;
 using FakeItEasy;
-using FakeItEasy.ExtensionSyntax.Full;
 using Playnite.SDK;
 using Playnite.SDK.Models;
 using System;
@@ -30,8 +29,8 @@ namespace YearInReview.UnitTests.Model.Aggregators
 			mostPlayedGame.Items.Add(biggestSession);
 			var sources = activities.SelectMany(x => x.Items).Select(x => new GameSource() { Id = x.SourceId }).ToList();
 
-			playniteApiFake.CallsTo(x => x.Database).Returns(gameDatabaseApiFake);
-			gameDatabaseApiFake.CallsTo(x => x.Sources).Returns(new TestableItemCollection<GameSource>(sources));
+			A.CallTo(() => playniteApiFake.Database).Returns(gameDatabaseApiFake);
+			A.CallTo(() => gameDatabaseApiFake.Sources).Returns(new TestableItemCollection<GameSource>(sources));
 
 			// Act
 			var result = sut.GetMostPlayedSources(activities);
@@ -72,8 +71,8 @@ namespace YearInReview.UnitTests.Model.Aggregators
 			game.Items.Add(session);
 			var sources = activities.SelectMany(x => x.Items).Select(x => new GameSource() { Id = x.SourceId }).ToList();
 
-			playniteApiFake.CallsTo(x => x.Database).Returns(gameDatabaseApiFake);
-			gameDatabaseApiFake.CallsTo(x => x.Sources).Returns(new TestableItemCollection<GameSource>(sources));
+			A.CallTo(() => playniteApiFake.Database).Returns(gameDatabaseApiFake);
+			A.CallTo(() => gameDatabaseApiFake.Sources).Returns(new TestableItemCollection<GameSource>(sources));
 
 			// Act
 			var result = sut.GetMostPlayedSources(activities);

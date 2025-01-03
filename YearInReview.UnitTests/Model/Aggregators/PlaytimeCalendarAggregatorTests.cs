@@ -1,6 +1,5 @@
 ﻿using AutoFixture.Xunit2;
 using FakeItEasy;
-using FakeItEasy.ExtensionSyntax.Full;
 using Playnite.SDK;
 using Playnite.SDK.Models;
 using System;
@@ -51,16 +50,16 @@ namespace YearInReview.UnitTests.Model.Aggregators
 			{
 				Id = x.Id,
 				Items = new List<Session>()
-				{
-					new Session()
-					{
-						DateSession = dayWithActivity,
-						ElapsedSeconds = 100,
-					}
-				}
+								{
+									new Session()
+									{
+										DateSession = dayWithActivity,
+										ElapsedSeconds = 100,
+									}
+								}
 			}).ToList();
-			gameDatabaseApiFake.CallsTo(x => x.Games).Returns(new TestableItemCollection<Game>(games));
-			playniteApiFake.CallsTo(x => x.Database).Returns(gameDatabaseApiFake);
+			A.CallTo(() => gameDatabaseApiFake.Games).Returns(new TestableItemCollection<Game>(games));
+			A.CallTo(() => playniteApiFake.Database).Returns(gameDatabaseApiFake);
 
 			// Act
 			var result = sut.GetCalendar(year, activities);
@@ -91,16 +90,16 @@ namespace YearInReview.UnitTests.Model.Aggregators
 			{
 				Id = x.Id,
 				Items = new List<Session>()
-				{
-					new Session()
-					{
-						DateSession = dayWithActivity,
-						ElapsedSeconds = (int)x.Playtime,
-					}
-				}
+								{
+									new Session()
+									{
+										DateSession = dayWithActivity,
+										ElapsedSeconds = (int)x.Playtime,
+									}
+								}
 			}).ToList();
-			gameDatabaseApiFake.CallsTo(x => x.Games).Returns(new TestableItemCollection<Game>(games));
-			playniteApiFake.CallsTo(x => x.Database).Returns(gameDatabaseApiFake);
+			A.CallTo(() => gameDatabaseApiFake.Games).Returns(new TestableItemCollection<Game>(games));
+			A.CallTo(() => playniteApiFake.Database).Returns(gameDatabaseApiFake);
 
 			// Act
 			var result = sut.GetCalendar(year, activities);
@@ -126,23 +125,23 @@ namespace YearInReview.UnitTests.Model.Aggregators
 			var hoursInFirstDay = 1;
 			var hoursInNextDay = 2;
 			var activities = new List<Activity>()
-			{
-				new Activity()
-				{
-					Id = game.Id,
-					Name = game.Name,
-					Items = new List<Session>()
-					{
-						new Session()
-						{
-							DateSession = dayWithActivity.AddHours(24 - hoursInFirstDay),
-							ElapsedSeconds = (int) TimeSpan.FromHours(hoursInFirstDay + hoursInNextDay).TotalSeconds,
-						}
-					}
-				}
-			};
-			gameDatabaseApiFake.CallsTo(x => x.Games).Returns(new TestableItemCollection<Game>(new List<Game>() { game }));
-			playniteApiFake.CallsTo(x => x.Database).Returns(gameDatabaseApiFake);
+							{
+								new Activity()
+								{
+									Id = game.Id,
+									Name = game.Name,
+									Items = new List<Session>()
+									{
+										new Session()
+										{
+											DateSession = dayWithActivity.AddHours(24 - hoursInFirstDay),
+											ElapsedSeconds = (int) TimeSpan.FromHours(hoursInFirstDay + hoursInNextDay).TotalSeconds,
+										}
+									}
+								}
+							};
+			A.CallTo(() => gameDatabaseApiFake.Games).Returns(new TestableItemCollection<Game>(new List<Game>() { game }));
+			A.CallTo(() => playniteApiFake.Database).Returns(gameDatabaseApiFake);
 
 			// Act
 			var result = sut.GetCalendar(year, activities);

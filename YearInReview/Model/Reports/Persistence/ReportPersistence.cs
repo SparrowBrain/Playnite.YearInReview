@@ -6,7 +6,7 @@ using YearInReview.Model.Reports._1970;
 
 namespace YearInReview.Model.Reports.Persistence
 {
-	public class ReportPersistence
+	public class ReportPersistence : IReportPersistence
 	{
 		private readonly string _reportsPath;
 
@@ -49,6 +49,7 @@ namespace YearInReview.Model.Reports.Persistence
 					var report = JsonConvert.DeserializeObject<SlimReport>(File.ReadAllText(userReportFilePath));
 					persistedReports.Add(new PersistedReport()
 					{
+						Id = report.Metadata.Id,
 						IsOwn = true,
 						FilePath = userReportFilePath,
 						Username = report.Metadata.Username,
@@ -65,6 +66,7 @@ namespace YearInReview.Model.Reports.Persistence
 						var report = JsonConvert.DeserializeObject<SlimReport>(File.ReadAllText(friendReportFilePath));
 						persistedReports.Add(new PersistedReport()
 						{
+							Id = report.Metadata.Id,
 							IsOwn = false,
 							FilePath = friendReportFilePath,
 							Username = report.Metadata.Username,

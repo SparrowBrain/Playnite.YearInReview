@@ -103,6 +103,7 @@ namespace YearInReview.IntegrationTests.Model.Reports.Persistence
 
 			// Assert
 			var persistedReport = Assert.Single(result);
+			Assert.Equal(report.Metadata.Id, persistedReport.Id);
 			Assert.True(persistedReport.IsOwn);
 			Assert.Equal(reportFilePath, persistedReport.FilePath);
 			Assert.Equal(report.Metadata.Year, persistedReport.Year);
@@ -138,6 +139,7 @@ namespace YearInReview.IntegrationTests.Model.Reports.Persistence
 			Assert.Contains(result,
 				x => reports.Any(r =>
 					Path.Combine(friendsPath, $"{r.Metadata.Username}_{r.Metadata.Year}.json") == x.FilePath
+					&& r.Metadata.Id == x.Id
 					&& r.Metadata.Year == x.Year
 					&& r.Metadata.Username == x.Username
 					&& r.TotalPlaytime == x.TotalPlaytime));

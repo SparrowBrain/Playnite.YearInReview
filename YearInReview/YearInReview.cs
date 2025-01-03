@@ -12,6 +12,7 @@ using YearInReview.Model.Filters;
 using YearInReview.Model.Reports;
 using YearInReview.Model.Reports._1970;
 using YearInReview.Model.Reports.MVVM;
+using YearInReview.Model.Reports.Persistence;
 using YearInReview.Settings;
 using YearInReview.Settings.MVVM;
 
@@ -80,7 +81,10 @@ namespace YearInReview
 						hourlyPlaytimeAggregator);
 					var gameActivityExtension = new GameActivityExtension(Api.Paths.ExtensionsDataPath);
 					var specificYearActivityFilter = new SpecificYearActivityFilter();
-					var reportManager = new ReportManager(Api, composer, gameActivityExtension, specificYearActivityFilter);
+					var reportPersistence = new ReportPersistence(GetPluginUserDataPath());
+					logger.Debug("ReportPersistence path: " + GetPluginUserDataPath());
+					var reportGenerator = new ReportGenerator();
+					var reportManager = new ReportManager(Api, reportPersistence, reportGenerator, dateTimeProvider, composer, gameActivityExtension, specificYearActivityFilter);
 					var viewModel = new MainViewModel(Api, reportManager);
 					var view = new MainView(viewModel);
 
