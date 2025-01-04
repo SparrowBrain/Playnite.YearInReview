@@ -66,6 +66,7 @@ namespace YearInReview.Infrastructure.UserControls
 
 			var grid = InitializeMonthGrid();
 			AddMonthHeader(monthDays, grid);
+			AddMonthMostPlayedGame(monthDays, grid);
 
 			var dayOfWeekOffset = GetDayOfWeekOffset(monthDays);
 			foreach (var day in monthDays)
@@ -84,7 +85,7 @@ namespace YearInReview.Infrastructure.UserControls
 				grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(GridCellSize) });
 			}
 
-			for (var i = 0; i < 8; i++)
+			for (var i = 0; i < 9; i++)
 			{
 				grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(GridCellSize) });
 			}
@@ -105,6 +106,43 @@ namespace YearInReview.Infrastructure.UserControls
 			Grid.SetColumnSpan(header, 6);
 			grid.Children.Add(header);
 		}
+		
+		private static void AddMonthMostPlayedGame(IReadOnlyCollection<CalendarDayViewModel> monthDays, Grid grid)
+		{
+			// get list of games played in the month, ordered by total time played
+			// TODO this is probably not the best point to calculate this, maybe it should be done in the PlaytimeCalendarAggregator
+			var mostPlayedList = monthDays
+				.SelectMany(a => a.Games)
+				.GroupBy(a => a.Id)
+				.Select(g => new 
+				{ 
+					Game = g.First(), 
+					TotalTimePlayed = g.Sum(a => a.TimePlayed) 
+				})
+				.OrderByDescending(g => g.TotalTimePlayed);
+			
+			var mostPlayed = mostPlayedList.FirstOrDefault();
+			if (mostPlayed == null)
+			{
+				return;
+			}
+			
+			// format the most played game time
+			string mostPlayedGameTime = ReadableTimeFormatter.FormatTime(mostPlayed.TotalTimePlayed);
+			string gameTimeText = $"{mostPlayed.Game.Name} ({mostPlayedGameTime})";
+			string mostPlayedText = string.Format(ResourceProvider.GetString("LOC_YearInReview_Report1970_PlaytimeCalendarMostPlayedGame"), gameTimeText);
+			
+			// add the most played game text to the grid
+			var mostPlayedGame = new TextBlock
+			{
+				Text = mostPlayedText,
+				HorizontalAlignment = HorizontalAlignment.Center,
+				VerticalAlignment = VerticalAlignment.Center,
+			};
+			Grid.SetRow(mostPlayedGame, 1);
+			Grid.SetColumnSpan(mostPlayedGame, 6);
+			grid.Children.Add(mostPlayedGame);
+		}
 
 		private static int GetDayOfWeekOffset(IReadOnlyCollection<CalendarDayViewModel> monthDays)
 		{
@@ -119,7 +157,7 @@ namespace YearInReview.Infrastructure.UserControls
 
 		private void SetupDayCell(CalendarDayViewModel day, int dayOfWeekOffset, Grid grid)
 		{
-			var row = (day.Date.Day - 1 + dayOfWeekOffset) % 7 + 1;
+			var row = (day.Date.Day - 1 + dayOfWeekOffset) % 7 + 2;
 			var col = (day.Date.Day - 1 + dayOfWeekOffset) / 7;
 
 			var dayColorBrush = GetDayColorBrush(day);
