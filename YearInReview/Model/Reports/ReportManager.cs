@@ -49,22 +49,25 @@ namespace YearInReview.Model.Reports
 			return _composer1970.Compose(year, filteredActivities);
 		}
 
-		public void Init()
+		// TODO Don't forget. There's probably gonna be race condition between report manager and UI.
+		public async Task Init()
 		{
 			var reports = _reportPersistence.PreLoadAllReports();
 			if (!reports.Any())
 			{
-				reports = GenerateAll();
+				reports = await GenerateAll();
 			}
-
-			reports = GenerateNewYears(reports);
+			else
+			{
+				reports = await GenerateNewYears(reports);
+			}
 
 			_reportCache = reports.ToDictionary(x => x.Id, x => x);
 		}
 
-		private IReadOnlyCollection<PersistedReport> GenerateAll()
+		private async Task<IReadOnlyCollection<PersistedReport>> GenerateAll()
 		{
-			var generatedReports = _reportGenerator.GenerateAllYears();
+			var generatedReports = await _reportGenerator.GenerateAllYears();
 			foreach (var report in generatedReports)
 			{
 				_reportPersistence.SaveReport(report);
@@ -74,7 +77,8 @@ namespace YearInReview.Model.Reports
 			return reports;
 		}
 
-		private IReadOnlyCollection<PersistedReport> GenerateNewYears(IReadOnlyCollection<PersistedReport> reports)
+		private async Task<IReadOnlyCollection<PersistedReport>> GenerateNewYears(
+			IReadOnlyCollection<PersistedReport> reports)
 		{
 			var mostRecentOwnReport = reports.Where(x => x.IsOwn).OrderByDescending(x => x.Year).FirstOrDefault();
 			if (mostRecentOwnReport?.Year < _dateTimeProvider.GetNow().Year - 1)
@@ -85,7 +89,7 @@ namespace YearInReview.Model.Reports
 					yearsToGenerate.Add(i);
 				}
 
-				var generatedReports = yearsToGenerate.Select(year => _reportGenerator.Generate(year)).ToList();
+				var generatedReports = await Task.WhenAll(yearsToGenerate.Select(year => _reportGenerator.Generate(year)));
 				foreach (var report in generatedReports)
 				{
 					_reportPersistence.SaveReport(report);

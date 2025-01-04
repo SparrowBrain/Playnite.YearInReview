@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace YearInReview.UnitTests
 {
-	internal class TestableItemCollection<T> : IItemCollection<T> where T : DatabaseObject
+	public class TestableItemCollection<T> : IItemCollection<T> where T : DatabaseObject
 	{
 		private List<T> _items;
 
@@ -19,7 +19,6 @@ namespace YearInReview.UnitTests
 
 		public void Dispose()
 		{
-			throw new NotImplementedException();
 		}
 
 		public bool ContainsItem(Guid id)

@@ -48,5 +48,27 @@ namespace YearInReview.UnitTests.Model.Filters
 			// Assert
 			Assert.Equivalent(initialActivities, resultActivities);
 		}
+
+		[Theory]
+		[AutoData]
+		public void GetActivityForYear_ReturnsShorterSession_WhenSessionGoesOverNewYear(
+			Activity initialActivity,
+			Session initialSession,
+			int year,
+			SpecificYearActivityFilter sut)
+		{
+			// Arrange
+			initialSession.DateSession = new DateTime(year, 12, 31, 23, 0, 0);
+			initialSession.ElapsedSeconds = (int)TimeSpan.FromHours(2).TotalSeconds;
+			initialActivity.Items = new List<Session> { initialSession };
+
+			// Act
+			var result = sut.GetActivityForYear(year, new List<Activity> { initialActivity });
+
+			// Assert
+			var actualActivity = Assert.Single(result);
+			var actualSession = Assert.Single(actualActivity.Items);
+			Assert.Equal(60 * 60, actualSession.ElapsedSeconds);
+		}
 	}
 }

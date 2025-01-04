@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FakeItEasy;
@@ -18,7 +17,7 @@ namespace YearInReview.UnitTests.Model.Reports
 	{
 		[Theory]
 		[AutoFakeItEasyData]
-		public void Init_LoadsReports_WhenReportsExist(
+		public async Task Init_LoadsReports_WhenReportsExist(
 			[Frozen] IReportPersistence reportPersistence,
 			List<PersistedReport> persistedReports,
 			ReportManager sut)
@@ -29,7 +28,7 @@ namespace YearInReview.UnitTests.Model.Reports
 			A.CallTo(() => reportPersistence.PreLoadAllReports()).Returns(persistedReports);
 
 			// Act
-			sut.Init();
+			await sut.Init();
 
 			// Assert
 			var reports = sut.GetAllPreLoadedReports();
@@ -38,7 +37,7 @@ namespace YearInReview.UnitTests.Model.Reports
 
 		[Theory]
 		[AutoFakeItEasyData]
-		public void Init_GeneratesReportsAndSavesThem_WhenNoOwnReportExists(
+		public async Task Init_GeneratesReportsAndSavesThem_WhenNoOwnReportExists(
 			[Frozen] IReportPersistence reportPersistence,
 			[Frozen] IReportGenerator reportGenerator,
 			List<Report1970> generatedReports,
@@ -53,7 +52,7 @@ namespace YearInReview.UnitTests.Model.Reports
 			A.CallTo(() => reportGenerator.GenerateAllYears()).Returns(generatedReports);
 
 			// Act
-			sut.Init();
+			await sut.Init();
 
 			// Assert
 			generatedReports.ForEach(report => A.CallTo(() => reportPersistence.SaveReport(report)).MustHaveHappened());
@@ -63,7 +62,7 @@ namespace YearInReview.UnitTests.Model.Reports
 
 		[Theory]
 		[AutoFakeItEasyData]
-		public void Init_GeneratesNewReports_WhenLastGeneratedReportIsOlderThanPreviousYear(
+		public async Task Init_GeneratesNewReports_WhenLastGeneratedReportIsOlderThanPreviousYear(
 			[Frozen] IReportPersistence reportPersistence,
 			[Frozen] IReportGenerator reportGenerator,
 			[Frozen] IDateTimeProvider dateTimeProvider,
@@ -93,7 +92,7 @@ namespace YearInReview.UnitTests.Model.Reports
 				generatedReport2);
 
 			// Act
-			sut.Init();
+			await sut.Init();
 
 			// Assert
 			A.CallTo(() => reportPersistence.SaveReport(generatedReport1)).MustHaveHappened();

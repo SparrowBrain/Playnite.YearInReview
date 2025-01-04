@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using YearInReview.Extensions.GameActivity;
 
@@ -15,7 +16,9 @@ namespace YearInReview.Model.Filters
 				Items = x.Items.Where(s => s.DateSession.Year == year).Select(i => new Session()
 				{
 					DateSession = i.DateSession,
-					ElapsedSeconds = i.ElapsedSeconds,
+					ElapsedSeconds = i.DateSession.AddSeconds(i.ElapsedSeconds).Year == year
+						? i.ElapsedSeconds
+						: (int)(new DateTime(year + 1, 1, 1) - i.DateSession).TotalSeconds,
 					IdConfiguration = i.IdConfiguration,
 					PlatformIDs = i.PlatformIDs,
 					PlatfromId = i.PlatfromId,

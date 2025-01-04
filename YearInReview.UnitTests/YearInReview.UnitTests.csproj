@@ -107,6 +107,7 @@
     <Compile Include="Model\Aggregators\TotalPlaytimeAggregatorTests.cs" />
     <Compile Include="Model\Filters\SpecificYearActivityFilterTests.cs" />
     <Compile Include="Model\Reports\1970\Composer1970Tests.cs" />
+    <Compile Include="Model\Reports\ReportGeneratorTests.cs" />
     <Compile Include="Model\Reports\ReportManagerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestableItemCollection.cs" />
