@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Playnite.SDK;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Playnite.SDK;
 using YearInReview.Extensions.GameActivity;
 using YearInReview.Model.Filters;
 using YearInReview.Model.Reports._1970;
@@ -27,9 +27,22 @@ namespace YearInReview.Model.Reports
 			_composer1970 = composer1970;
 		}
 
-		public Task<IReadOnlyCollection<Report1970>> GenerateAllYears()
+		// TODO what happens when no activity / sessions?
+		public async Task<IReadOnlyCollection<Report1970>> GenerateAllYears()
 		{
-			throw new NotImplementedException();
+			var games = _playniteApi.Database.Games;
+			var activities = await _gameActivityExtension.GetActivityForGames(games);
+			var allYears = activities.SelectMany(x => x.Items).Select(x => x.DateSession.Year).Distinct();
+
+			var reports = new List<Report1970>();
+			foreach (var year in allYears)
+			{
+				var filteredActivities = _specificYearActivityFilter.GetActivityForYear(year, activities);
+				var report = _composer1970.Compose(year, filteredActivities);
+				reports.Add(report);
+			}
+
+			return reports;
 		}
 
 		public async Task<Report1970> Generate(int year)
