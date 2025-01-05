@@ -1,6 +1,6 @@
 ﻿using YearInReview.Model.Aggregators.Data;
 
-namespace YearInReview.Model.Reports
+namespace YearInReview.Model.Reports.Persistence
 {
 	public class SlimReport : ISlimReport
 	{

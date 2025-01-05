@@ -119,7 +119,7 @@
     <Compile Include="Model\Reports\ReportGenerator.cs" />
     <Compile Include="Model\Reports\ReportManager.cs" />
     <Compile Include="Model\Reports\1970\ReportSourceWithTime.cs" />
-    <Compile Include="Model\Reports\SlimReport.cs" />
+    <Compile Include="Model\Reports\Persistence\SlimReport.cs" />
     <Compile Include="Settings\IPluginSettingsPersistence.cs" />
     <Compile Include="Settings\IVersionedSettings.cs" />
     <Compile Include="Settings\MVVM\YearInReviewSettingsViewModel.cs" />

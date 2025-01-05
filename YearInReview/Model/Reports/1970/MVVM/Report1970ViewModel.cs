@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Input;
 using YearInReview.Infrastructure.Services;
 using YearInReview.Infrastructure.UserControls;
+using YearInReview.Model.Reports.Persistence;
 
 namespace YearInReview.Model.Reports._1970.MVVM
 {
@@ -13,7 +14,7 @@ namespace YearInReview.Model.Reports._1970.MVVM
 		private const int MaxBarWidth = 500;
 		private readonly IPlayniteAPI _api;
 
-		public Report1970ViewModel(IPlayniteAPI api, Report1970 report, IReadOnlyList<Report1970> friendReports)
+		public Report1970ViewModel(IPlayniteAPI api, Report1970 report, List<PersistedReport> allYearReports)
 		{
 			_api = api;
 
@@ -43,16 +44,16 @@ namespace YearInReview.Model.Reports._1970.MVVM
 			HourlyPlaytime = report.HourlyPlaytime
 				.Select(x => new HourlyPlaytimeViewModel(x, maxHourlyPlaytime)).ToObservable();
 
-			if (friendReports != null)
+			if (allYearReports != null)
 			{
-				var allReports = friendReports.Concat(new[] { report })
+				var allReports = allYearReports
 					.OrderByDescending(x => x.TotalPlaytime)
 					.ToList();
 
 				var maxFriendPlaytime = allReports.Max(x => x.TotalPlaytime);
 
 				FriendsPlaytimeLeaderboard = allReports
-					.Select((x, i) => new FriendPlaytimeLeaderboardViewModel(i + 1, x.Metadata.Username, x.TotalPlaytime, maxFriendPlaytime))
+					.Select((x, i) => new FriendPlaytimeLeaderboardViewModel(i + 1, x.Username, x.TotalPlaytime, maxFriendPlaytime))
 					.ToObservable();
 			}
 		}

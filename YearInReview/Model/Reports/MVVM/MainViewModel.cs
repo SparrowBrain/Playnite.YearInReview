@@ -2,9 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Controls;
 using YearInReview.Model.Reports._1970;
 using YearInReview.Model.Reports._1970.MVVM;
+using YearInReview.Model.Reports.Persistence;
 
 namespace YearInReview.Model.Reports.MVVM
 {
@@ -15,37 +17,56 @@ namespace YearInReview.Model.Reports.MVVM
 		private readonly ReportManager _reportManager;
 		private UserControl _activeReport;
 		private ObservableCollection<YearButtonViewModel> _yearButtons = new ObservableCollection<YearButtonViewModel>();
+		private ObservableCollection<ReportButtonViewModel> _reportButtons = new ObservableCollection<ReportButtonViewModel>();
 
 		public MainViewModel(IPlayniteAPI api, ReportManager reportManager)
 		{
 			_api = api;
 			_reportManager = reportManager;
-			var year = 2024;
+			var preLoadedReports = reportManager.GetAllPreLoadedReports();
+			var years = preLoadedReports.Select(x => x.Year).Distinct().OrderByDescending(x => x);
 
-			YearButtons.Add(new YearButtonViewModel()
+			foreach (var year in years)
 			{
-				Year = year,
-				DisplayCommand =
-					new RelayCommand(async () =>
-					{
-						try
+				YearButtons.Add(new YearButtonViewModel()
+				{
+					Year = year,
+					SwitchYearCommand =
+						new RelayCommand(async () =>
 						{
-							var report = await _reportManager.GetReport(year);
-							var old = await _reportManager.GetReport(2023);
-
-							DisplayReport(report, new List<Report1970>() { old });
-						}
-						catch (Exception ex)
-						{
-							_logger.Error(ex, "Error while trying to display report");
-						}
-					})
-			});
+							try
+							{
+								ReportButtons = preLoadedReports.Where(x => x.Year == year).OrderBy(x => x.IsOwn).Select(x => new ReportButtonViewModel()
+								{
+									Username = x.Username,
+									DisplayCommand = new RelayCommand(async () =>
+									{
+										try
+										{
+											var report = await _reportManager.GetReport(x.Id);
+											var allYearReports = preLoadedReports.Where(p => p.Year == year).ToList();
+											DisplayReport(report, allYearReports);
+										}
+										catch (Exception ex)
+										{
+											_logger.Error(ex, "Error while trying to display report");
+										}
+									})
+								}).ToObservable();
+								ReportButtons.FirstOrDefault()?.DisplayCommand.Execute(null);
+							}
+							catch (Exception ex)
+							{
+								_logger.Error(ex, "Error while trying to display report");
+							}
+						})
+				});
+			}
 		}
 
-		private void DisplayReport(Report1970 report, List<Report1970> friendReports)
+		private void DisplayReport(Report1970 report, List<PersistedReport> allYearReports)
 		{
-			var viewModel = new Report1970ViewModel(_api, report, friendReports);
+			var viewModel = new Report1970ViewModel(_api, report, allYearReports);
 			var view = new Report1970View(viewModel);
 
 			ActiveReport = view;
@@ -55,6 +76,12 @@ namespace YearInReview.Model.Reports.MVVM
 		{
 			get => _yearButtons;
 			set => SetValue(ref _yearButtons, value);
+		}
+
+		public ObservableCollection<ReportButtonViewModel> ReportButtons
+		{
+			get => _reportButtons;
+			set => SetValue(ref _reportButtons, value);
 		}
 
 		public UserControl ActiveReport

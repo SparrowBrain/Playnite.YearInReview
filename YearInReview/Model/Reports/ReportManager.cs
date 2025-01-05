@@ -21,6 +21,7 @@ namespace YearInReview.Model.Reports
 		private readonly IGameActivityExtension _gameActivityExtension;
 		private readonly ISpecificYearActivityFilter _specificYearActivityFilter;
 
+		// TODO Consider using concurrent dictionary
 		private Dictionary<Guid, PersistedReport> _reportCache;
 
 		public ReportManager(
@@ -41,7 +42,7 @@ namespace YearInReview.Model.Reports
 			_specificYearActivityFilter = specificYearActivityFilter;
 		}
 
-		public async Task<Report1970> GetReport(int year)
+		public async Task<Report1970> GetReport(Guid year)
 		{
 			var activities = await _gameActivityExtension.GetActivityForGames(_playniteApi.Database.Games.ToList());
 			var filteredActivities = _specificYearActivityFilter.GetActivityForYear(year, activities);

@@ -3,6 +3,7 @@ using Playnite.SDK.Events;
 using Playnite.SDK.Plugins;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media;
 using YearInReview.Extensions.GameActivity;
@@ -22,6 +23,7 @@ namespace YearInReview
 	{
 		private static readonly ILogger logger = LogManager.GetLogger();
 		private readonly StartupSettingsValidator _startupSettingsValidator;
+		private readonly ReportManager _reportManager;
 
 		private YearInReviewSettingsViewModel settings { get; set; }
 
@@ -38,6 +40,27 @@ namespace YearInReview
 
 			var pluginSettingsPersistence = new PluginSettingsPersistence(this);
 			_startupSettingsValidator = new StartupSettingsValidator(pluginSettingsPersistence);
+
+			var dateTimeProvider = new DateTimeProvider();
+			var metadataProvider = new MetadataProvider(dateTimeProvider, pluginSettingsPersistence);
+			var mostPlayedGamesAggregator = new MostPlayedGamesAggregator(Api);
+			var mostPlayedSourcesAggregator = new MostPlayedSourcesAggregator(Api);
+			var totalPlaytimeAggregator = new TotalPlaytimeAggregator();
+			var playtimeCalendarAggregator = new PlaytimeCalendarAggregator(Api);
+			var hourlyPlaytimeAggregator = new HourlyPlaytimeAggregator();
+			var composer = new Composer1970(
+				metadataProvider,
+				totalPlaytimeAggregator,
+				mostPlayedGamesAggregator,
+				mostPlayedSourcesAggregator,
+				playtimeCalendarAggregator,
+				hourlyPlaytimeAggregator);
+			var gameActivityExtension = new GameActivityExtension(Api.Paths.ExtensionsDataPath);
+			var specificYearActivityFilter = new SpecificYearActivityFilter();
+			var reportPersistence = new ReportPersistence(GetPluginUserDataPath());
+			logger.Debug("ReportPersistence path: " + GetPluginUserDataPath());
+			var reportGenerator = new ReportGenerator(Api, gameActivityExtension, specificYearActivityFilter, composer);
+			_reportManager = new ReportManager(Api, reportPersistence, reportGenerator, dateTimeProvider, composer, gameActivityExtension, specificYearActivityFilter);
 		}
 
 		public static IPlayniteAPI Api { get; private set; }
@@ -64,28 +87,7 @@ namespace YearInReview
 
 					//return _playNextMainView;
 
-					var dateTimeProvider = new DateTimeProvider();
-					var pluginSettingsPersistence = new PluginSettingsPersistence(this);
-					var metadataProvider = new MetadataProvider(dateTimeProvider, pluginSettingsPersistence);
-					var mostPlayedGamesAggregator = new MostPlayedGamesAggregator(Api);
-					var mostPlayedSourcesAggregator = new MostPlayedSourcesAggregator(Api);
-					var totalPlaytimeAggregator = new TotalPlaytimeAggregator();
-					var playtimeCalendarAggregator = new PlaytimeCalendarAggregator(Api);
-					var hourlyPlaytimeAggregator = new HourlyPlaytimeAggregator();
-					var composer = new Composer1970(
-						metadataProvider,
-						totalPlaytimeAggregator,
-						mostPlayedGamesAggregator,
-						mostPlayedSourcesAggregator,
-						playtimeCalendarAggregator,
-						hourlyPlaytimeAggregator);
-					var gameActivityExtension = new GameActivityExtension(Api.Paths.ExtensionsDataPath);
-					var specificYearActivityFilter = new SpecificYearActivityFilter();
-					var reportPersistence = new ReportPersistence(GetPluginUserDataPath());
-					logger.Debug("ReportPersistence path: " + GetPluginUserDataPath());
-					var reportGenerator = new ReportGenerator(Api, gameActivityExtension, specificYearActivityFilter, composer);
-					var reportManager = new ReportManager(Api, reportPersistence, reportGenerator, dateTimeProvider, composer, gameActivityExtension, specificYearActivityFilter);
-					var viewModel = new MainViewModel(Api, reportManager);
+					var viewModel = new MainViewModel(Api, _reportManager);
 					var view = new MainView(viewModel);
 
 					return view;
@@ -121,6 +123,17 @@ namespace YearInReview
 		public override void OnApplicationStarted(OnApplicationStartedEventArgs args)
 		{
 			_startupSettingsValidator.EnsureCorrectVersionSettingsExist();
+			Task.Run(async () =>
+			{
+				try
+				{
+					await _reportManager.Init();
+				}
+				catch (Exception e)
+				{
+					logger.Error(e, "Failed to init report manager.");
+				}
+			});
 		}
 
 		public override void OnApplicationStopped(OnApplicationStoppedEventArgs args)

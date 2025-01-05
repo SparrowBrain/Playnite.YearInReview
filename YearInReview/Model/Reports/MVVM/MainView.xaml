@@ -10,6 +10,7 @@
         <Grid Margin="0,75,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
             <ListBox Grid.Row="0" ItemsSource="{Binding YearButtons}" Margin="0,0,0,0" Background="Transparent">
@@ -26,11 +27,29 @@
                 </ListBox.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Button Content="{Binding Year}" Command="{Binding DisplayCommand}"></Button>
+                    <Button Content="{Binding Year}" Command="{Binding SwitchYearCommand}"></Button>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
             </ListBox>
-            <ContentControl Grid.Row="1" Content="{Binding ActiveReport}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"></ContentControl>
+            <ListBox Grid.Row="1" ItemsSource="{Binding ReportButtons}" Margin="0,0,0,0" Background="Transparent">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                        <Setter Property="Focusable" Value="False" />
+                        <Setter Property="Padding" Value="0"/>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation='Horizontal'/>
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Content="{Binding Username}" Command="{Binding SwitchYearCommand}"></Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ListBox>
+            <ContentControl Grid.Row="2" Content="{Binding ActiveReport}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"></ContentControl>
         </Grid>
    </ScrollViewer>
 </PluginUserControl>
