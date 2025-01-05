@@ -132,7 +132,7 @@ namespace YearInReview.Infrastructure.UserControls
 			}
 			
 			// format the most played game with its total time played
-			string mostPlayedText = string.Format(
+			var mostPlayedText = string.Format(
 				ResourceProvider.GetString("LOC_YearInReview_Report1970_PlaytimeCalendarMostPlayedGame"), 
 				mostPlayed.Game.Name,
 				ReadableTimeFormatter.FormatTime(mostPlayed.TotalTimePlayed)
