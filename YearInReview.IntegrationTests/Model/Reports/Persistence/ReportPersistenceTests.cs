@@ -144,5 +144,23 @@ namespace YearInReview.IntegrationTests.Model.Reports.Persistence
 					&& r.Metadata.Username == x.Username
 					&& r.TotalPlaytime == x.TotalPlaytime));
 		}
+
+		[Theory]
+		[AutoData]
+		public void LoadReport_ReturnsReport_WhenExistingPathIsGiven(Report1970 expected)
+		{
+			// Arrange
+			Directory.CreateDirectory(_reportsPath);
+			var friendsPath = Path.Combine(_reportsPath, "2023", "Friends");
+			Directory.CreateDirectory(friendsPath);
+			var reportPath = Path.Combine(friendsPath, $"{expected.Metadata.Username}_{expected.Metadata.Year}.json");
+			File.WriteAllText(reportPath, JsonConvert.SerializeObject(expected));
+
+			// Act
+			var actual = _sut.LoadReport(reportPath);
+
+			// Assert
+			Assert.Equivalent(expected, actual);
+		}
 	}
 }

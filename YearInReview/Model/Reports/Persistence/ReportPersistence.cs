@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using YearInReview.Model.Reports._1970;
 
@@ -78,6 +79,12 @@ namespace YearInReview.Model.Reports.Persistence
 			}
 
 			return persistedReports;
+		}
+
+		public Report1970 LoadReport(string filePath)
+		{
+			var contents = File.ReadAllText(filePath);
+			return JsonConvert.DeserializeObject<Report1970>(contents);
 		}
 	}
 }

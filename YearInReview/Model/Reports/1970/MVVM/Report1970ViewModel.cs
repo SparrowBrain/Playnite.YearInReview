@@ -44,7 +44,7 @@ namespace YearInReview.Model.Reports._1970.MVVM
 			HourlyPlaytime = report.HourlyPlaytime
 				.Select(x => new HourlyPlaytimeViewModel(x, maxHourlyPlaytime)).ToObservable();
 
-			if (allYearReports != null)
+			if (allYearReports.Count > 1)
 			{
 				var allReports = allYearReports
 					.OrderByDescending(x => x.TotalPlaytime)

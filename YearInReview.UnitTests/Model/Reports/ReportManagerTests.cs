@@ -1,9 +1,9 @@
-﻿using System;
+﻿using AutoFixture.Xunit2;
+using FakeItEasy;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoFixture.Xunit2;
-using FakeItEasy;
 using TestTools.Shared;
 using Xunit;
 using YearInReview.Infrastructure.Services;
@@ -99,6 +99,28 @@ namespace YearInReview.UnitTests.Model.Reports
 			A.CallTo(() => reportPersistence.SaveReport(generatedReport2)).MustHaveHappened();
 			var reports = sut.GetAllPreLoadedReports();
 			Assert.Equivalent(persistedReports2, reports);
+		}
+
+		[Theory]
+		[AutoFakeItEasyData]
+		public async Task GetReport_LoadReportFromPeristence_WhenReportsExist(
+			[Frozen] IReportPersistence reportPersistence,
+			List<PersistedReport> persistedReports,
+			Report1970 expected,
+			ReportManager sut)
+		{
+			// Arrange
+			var ownReport = persistedReports.Last();
+			ownReport.IsOwn = true;
+			A.CallTo(() => reportPersistence.PreLoadAllReports()).Returns(persistedReports);
+			A.CallTo(() => reportPersistence.LoadReport(ownReport.FilePath)).Returns(expected);
+			await sut.Init();
+			
+			// Act
+			var actual = sut.GetReport(ownReport.Id);
+
+			// Assert
+			Assert.Equal(expected, actual);
 		}
 	}
 }

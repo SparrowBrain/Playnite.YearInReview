@@ -32,18 +32,18 @@ namespace YearInReview.Model.Reports.MVVM
 				{
 					Year = year,
 					SwitchYearCommand =
-						new RelayCommand(async () =>
+						new RelayCommand(() =>
 						{
 							try
 							{
 								ReportButtons = preLoadedReports.Where(x => x.Year == year).OrderBy(x => x.IsOwn).Select(x => new ReportButtonViewModel()
 								{
 									Username = x.Username,
-									DisplayCommand = new RelayCommand(async () =>
+									DisplayCommand = new RelayCommand(() =>
 									{
 										try
 										{
-											var report = await _reportManager.GetReport(x.Id);
+											var report = _reportManager.GetReport(x.Id);
 											var allYearReports = preLoadedReports.Where(p => p.Year == year).ToList();
 											DisplayReport(report, allYearReports);
 										}

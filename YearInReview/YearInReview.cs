@@ -59,7 +59,7 @@ namespace YearInReview
 			var specificYearActivityFilter = new SpecificYearActivityFilter();
 			var reportPersistence = new ReportPersistence(GetPluginUserDataPath());
 			logger.Debug("ReportPersistence path: " + GetPluginUserDataPath());
-			var reportGenerator = new ReportGenerator(Api, gameActivityExtension, specificYearActivityFilter, composer);
+			var reportGenerator = new ReportGenerator(Api, dateTimeProvider, gameActivityExtension, specificYearActivityFilter, composer);
 			_reportManager = new ReportManager(Api, reportPersistence, reportGenerator, dateTimeProvider, composer, gameActivityExtension, specificYearActivityFilter);
 		}
 

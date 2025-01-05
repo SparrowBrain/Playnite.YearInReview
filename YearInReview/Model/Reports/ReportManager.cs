@@ -42,12 +42,15 @@ namespace YearInReview.Model.Reports
 			_specificYearActivityFilter = specificYearActivityFilter;
 		}
 
-		public async Task<Report1970> GetReport(Guid year)
+		public Report1970 GetReport(Guid id)
 		{
-			var activities = await _gameActivityExtension.GetActivityForGames(_playniteApi.Database.Games.ToList());
-			var filteredActivities = _specificYearActivityFilter.GetActivityForYear(year, activities);
+			if(!_reportCache.TryGetValue(id, out var persistedReport))
+			{
+				throw new Exception($"Report {id} not persisted in cache.");
+			}
 
-			return _composer1970.Compose(year, filteredActivities);
+			var report = _reportPersistence.LoadReport(persistedReport.FilePath);
+			return report;
 		}
 
 		// TODO Don't forget. There's probably gonna be race condition between report manager and UI.

@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-using AutoFixture.Xunit2;
+﻿using AutoFixture.Xunit2;
 using FakeItEasy;
 using Playnite.SDK;
 using Playnite.SDK.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using TestTools.Shared;
 using Xunit;
 using YearInReview.Extensions.GameActivity;
+using YearInReview.Infrastructure.Services;
 using YearInReview.Model.Filters;
 using YearInReview.Model.Reports;
 using YearInReview.Model.Reports._1970;
@@ -50,7 +49,7 @@ namespace YearInReview.UnitTests.Model.Reports
 
 		[Theory]
 		[AutoFakeItEasyData]
-		public async Task GenerateAllYears_GenerateAllYearReportExceptCurrent(
+		public async Task GenerateAllYears_GenerateAllYearReports(
 			[Frozen] IPlayniteAPI playniteApi,
 			[Frozen] IGameDatabaseAPI gameDatabaseApi,
 			[Frozen] IGameActivityExtension gameActivityExtension,
@@ -92,6 +91,39 @@ namespace YearInReview.UnitTests.Model.Reports
 			Assert.Equal(2, actual.Count);
 			Assert.Contains(expected1, actual);
 			Assert.Contains(expected2, actual);
+		}
+
+		[Theory]
+		[AutoFakeItEasyData]
+		public async Task GenerateAllYears_DoesNotGenerateCurrentYearReport(
+			[Frozen] IPlayniteAPI playniteApi,
+			[Frozen] IGameDatabaseAPI gameDatabaseApi,
+			[Frozen] IGameActivityExtension gameActivityExtension,
+			[Frozen] ISpecificYearActivityFilter specificYearActivityFilter,
+			[Frozen] IDateTimeProvider dateTimeProvider,
+			TestableItemCollection<Game> games,
+			List<Activity> activities,
+			List<Activity> filteredActivities,
+			int currentYear,
+			ReportGenerator sut)
+		{
+			// Arrange
+			foreach (var session in activities.SelectMany(activity => activity.Items))
+			{
+				session.DateSession = new DateTime(currentYear, session.DateSession.Month, session.DateSession.Day);
+			}
+
+			A.CallTo(() => dateTimeProvider.GetNow()).Returns(new DateTime(currentYear, 2, 2));
+			A.CallTo(() => playniteApi.Database).Returns(gameDatabaseApi);
+			A.CallTo(() => gameDatabaseApi.Games).Returns(games);
+			A.CallTo(() => gameActivityExtension.GetActivityForGames(games)).Returns(activities);
+			A.CallTo(() => specificYearActivityFilter.GetActivityForYear(currentYear, activities)).Returns(filteredActivities);
+
+			// Act
+			var actual = await sut.GenerateAllYears();
+
+			// Assert
+			Assert.Empty(actual);
 		}
 	}
 }
