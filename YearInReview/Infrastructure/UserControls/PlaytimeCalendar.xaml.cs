@@ -107,10 +107,14 @@ namespace YearInReview.Infrastructure.UserControls
 			grid.Children.Add(header);
 		}
 		
+		/// <summary>
+		/// Calculate the most played game in the month and adds it to the second row of the grid.
+		/// As discussed in <see href="https://github.com/SparrowBrain/Playnite.YearInReview/issues/1">Issue #1</see>,
+		/// the calculation is done inside this UI logic, to avoid redundancy in the aggregation object.
+		/// </summary>
 		private static void AddMonthMostPlayedGame(IReadOnlyCollection<CalendarDayViewModel> monthDays, Grid grid)
 		{
 			// get list of games played in the month, ordered by total time played
-			// TODO this is probably not the best point to calculate this, maybe it should be done in the PlaytimeCalendarAggregator
 			var mostPlayedList = monthDays
 				.SelectMany(a => a.Games)
 				.GroupBy(a => a.Id)
@@ -124,13 +128,15 @@ namespace YearInReview.Infrastructure.UserControls
 			var mostPlayed = mostPlayedList.FirstOrDefault();
 			if (mostPlayed == null)
 			{
-				return;
+				return; // display nothing if there are no games played in the month
 			}
 			
-			// format the most played game time
-			string mostPlayedGameTime = ReadableTimeFormatter.FormatTime(mostPlayed.TotalTimePlayed);
-			string gameTimeText = $"{mostPlayed.Game.Name} ({mostPlayedGameTime})";
-			string mostPlayedText = string.Format(ResourceProvider.GetString("LOC_YearInReview_Report1970_PlaytimeCalendarMostPlayedGame"), gameTimeText);
+			// format the most played game with its total time played
+			string mostPlayedText = string.Format(
+				ResourceProvider.GetString("LOC_YearInReview_Report1970_PlaytimeCalendarMostPlayedGame"), 
+				mostPlayed.Game.Name,
+				ReadableTimeFormatter.FormatTime(mostPlayed.TotalTimePlayed)
+				);
 			
 			// add the most played game text to the grid
 			var mostPlayedGame = new TextBlock
