@@ -1,22 +1,44 @@
 ﻿using System.Collections.Generic;
-using Playnite.SDK.Data;
 
 namespace YearInReview.Settings
 {
-    public class YearInReviewSettings : ObservableObject
-    {
-        private string option1 = string.Empty;
-        private bool option2 = false;
-        private bool optionThatWontBeSaved = false;
+	public class YearInReviewSettings : ObservableObject, IVersionedSettings
+	{
+		public const int CurrentVersion = 0;
 
-        public string Option1 { get => option1; set => SetValue(ref option1, value); }
-        public bool Option2 { get => option2; set => SetValue(ref option2, value); }
-        // Playnite serializes settings object to a JSON object and saves it as text file.
-        // If you want to exclude some property from being saved then use `JsonDontSerialize` ignore attribute.
-        [DontSerialize]
-        public bool OptionThatWontBeSaved { get => optionThatWontBeSaved; set => SetValue(ref optionThatWontBeSaved, value); }
+		private string _username;
+		private bool _showSidebarItem;
+		private bool _showNewReportNotifications;
 
-        public string Username { get; set; }
-        public static YearInReviewSettings Default => new YearInReviewSettings(){Username = "Qwx"};
+		public YearInReviewSettings()
+		{
+			Version = CurrentVersion;
+		}
+
+		public static YearInReviewSettings Default => new YearInReviewSettings
+		{
+			ShowSidebarItem = true,
+			ShowNewReportNotifications = true,
+		};
+
+		public int Version { get; set; }
+
+		public string Username
+		{
+			get => _username;
+			set => SetValue(ref _username, value);
+		}
+
+		public bool ShowSidebarItem
+		{
+			get => _showSidebarItem;
+			set => SetValue(ref _showSidebarItem, value);
+		}
+
+		public bool ShowNewReportNotifications
+		{
+			get => _showNewReportNotifications;
+			set => SetValue(ref _showNewReportNotifications, value);
+		}
 	}
 }

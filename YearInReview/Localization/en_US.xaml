@@ -16,4 +16,10 @@
     <sys:String x:Key="LOC_YearInReview_ReadableTime_DayPart">{0} d</sys:String>
     <sys:String x:Key="LOC_YearInReview_ReadableTime_HourPart">{0} h</sys:String>
     <sys:String x:Key="LOC_YearInReview_ReadableTime_MinutePart">{0} min</sys:String>
+    <sys:String x:Key="LOC_YearInReview_Settings_Error_UsernameEmpty">Username cannot be empty</sys:String>
+    <sys:String x:Key="LOC_YearInReview_Settings_ShowNewReportNotifications">Show new report notifications</sys:String>
+    <sys:String x:Key="LOC_YearInReview_Settings_ShowSidebarItem">Show sidebar item</sys:String>
+    <sys:String x:Key="LOC_YearInReview_Settings_UserInterfaceSettingsHeader">User Interface</sys:String>
+    <sys:String x:Key="LOC_YearInReview_Settings_Username">Username</sys:String>
+    <sys:String x:Key="LOC_YearInReview_Settings_UserSettingsHeader">User</sys:String>
 </ResourceDictionary>

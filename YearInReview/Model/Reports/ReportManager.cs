@@ -1,11 +1,8 @@
-﻿using Playnite.SDK;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using YearInReview.Extensions.GameActivity;
 using YearInReview.Infrastructure.Services;
-using YearInReview.Model.Filters;
 using YearInReview.Model.Reports._1970;
 using YearInReview.Model.Reports.Persistence;
 
@@ -13,33 +10,20 @@ namespace YearInReview.Model.Reports
 {
 	public class ReportManager
 	{
-		private readonly IPlayniteAPI _playniteApi;
 		private readonly IReportPersistence _reportPersistence;
 		private readonly IReportGenerator _reportGenerator;
 		private readonly IDateTimeProvider _dateTimeProvider;
-		private readonly IComposer1970 _composer1970;
-		private readonly IGameActivityExtension _gameActivityExtension;
-		private readonly ISpecificYearActivityFilter _specificYearActivityFilter;
 
-		// TODO Consider using concurrent dictionary
 		private Dictionary<Guid, PersistedReport> _reportCache;
 
 		public ReportManager(
-			IPlayniteAPI playniteApi,
 			IReportPersistence reportPersistence,
 			IReportGenerator reportGenerator,
-			IDateTimeProvider dateTimeProvider,
-			IComposer1970 composer1970,
-			IGameActivityExtension gameActivityExtension,
-			ISpecificYearActivityFilter specificYearActivityFilter)
+			IDateTimeProvider dateTimeProvider)
 		{
-			_playniteApi = playniteApi;
 			_reportPersistence = reportPersistence;
 			_reportGenerator = reportGenerator;
 			_dateTimeProvider = dateTimeProvider;
-			_composer1970 = composer1970;
-			_gameActivityExtension = gameActivityExtension;
-			_specificYearActivityFilter = specificYearActivityFilter;
 		}
 
 		public Report1970 GetReport(Guid id)

@@ -5,10 +5,43 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
              d:DesignHeight="400" d:DesignWidth="600">
-    <StackPanel>
-        <TextBlock Text="Description for Option1:"/>
-        <TextBox Text="{Binding Settings.Option1}"/>
-        <TextBlock Text="Description for Option2:"/>
-        <CheckBox IsChecked="{Binding Settings.Option2}"/>
-    </StackPanel>
+    <UserControl.Resources>
+        <Style TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}">
+            <Setter Property="Margin" Value="0,5,5,0" />
+            <Setter Property="TextWrapping" Value="Wrap"></Setter>
+        </Style>
+        <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Margin" Value="5,0,5,0"></Setter>
+        </Style>
+        <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Setter Property="Margin" Value="2.5,2.5,2.5,2.5"></Setter>
+        </Style>
+        <Style TargetType="RadioButton" BasedOn="{StaticResource {x:Type RadioButton}}">
+            <Setter Property="Margin" Value="0,2.5,0,2.5"></Setter>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <GroupBox Grid.Row="0" Header="{DynamicResource LOC_YearInReview_Settings_UserSettingsHeader}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="{DynamicResource LOC_YearInReview_Settings_Username}" />
+                <TextBox Grid.Column="1" Text="{Binding Settings.Username}" />
+            </Grid>
+        </GroupBox>
+        <GroupBox Grid.Row="1" Header="{DynamicResource LOC_YearInReview_Settings_UserInterfaceSettingsHeader}">
+            <StackPanel>
+                <CheckBox IsChecked="{Binding Settings.ShowSidebarItem}" Content="{DynamicResource LOC_YearInReview_Settings_ShowSidebarItem}" />
+                <CheckBox IsChecked="{Binding Settings.ShowNewReportNotifications}" Content="{DynamicResource LOC_YearInReview_Settings_ShowNewReportNotifications}" />
+            </StackPanel>
+        </GroupBox>
+        
+    </Grid>
 </UserControl>

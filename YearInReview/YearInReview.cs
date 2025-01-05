@@ -21,18 +21,19 @@ namespace YearInReview
 {
 	public class YearInReview : GenericPlugin
 	{
-		private static readonly ILogger logger = LogManager.GetLogger();
+		private static readonly ILogger Logger = LogManager.GetLogger();
 		private readonly StartupSettingsValidator _startupSettingsValidator;
 		private readonly ReportManager _reportManager;
 
-		private YearInReviewSettingsViewModel settings { get; set; }
+		private YearInReviewSettingsViewModel _settingsViewModel;
+		private MainViewModel _mainViewModel;
+		private MainView _mainView;
 
 		public override Guid Id { get; } = Guid.Parse("a22a7611-3023-4ca8-907e-47f883acd1b2");
 
 		public YearInReview(IPlayniteAPI api) : base(api)
 		{
 			Api = api;
-			settings = new YearInReviewSettingsViewModel(this);
 			Properties = new GenericPluginProperties
 			{
 				HasSettings = true
@@ -58,9 +59,8 @@ namespace YearInReview
 			var gameActivityExtension = new GameActivityExtension(Api.Paths.ExtensionsDataPath);
 			var specificYearActivityFilter = new SpecificYearActivityFilter();
 			var reportPersistence = new ReportPersistence(GetPluginUserDataPath());
-			logger.Debug("ReportPersistence path: " + GetPluginUserDataPath());
 			var reportGenerator = new ReportGenerator(Api, dateTimeProvider, gameActivityExtension, specificYearActivityFilter, composer);
-			_reportManager = new ReportManager(Api, reportPersistence, reportGenerator, dateTimeProvider, composer, gameActivityExtension, specificYearActivityFilter);
+			_reportManager = new ReportManager(reportPersistence, reportGenerator, dateTimeProvider);
 		}
 
 		public static IPlayniteAPI Api { get; private set; }
@@ -78,46 +78,15 @@ namespace YearInReview
 				Type = SiderbarItemType.View,
 				Opened = () =>
 				{
-					//if (_playNextMainView == null || _playNextMainViewModel == null)
-					//{
-					// _playNextMainViewModel = new PlayNextMainViewModel(this);
-					// _playNextMainView = new PlayNextMainView(_playNextMainViewModel);
-					// RefreshPlayNextData();
-					//}
+					if (_mainView == null || _mainViewModel == null)
+					{
+						_mainViewModel = new MainViewModel(Api, _reportManager);
+						_mainView = new MainView(_mainViewModel);
+					}
 
-					//return _playNextMainView;
-
-					var viewModel = new MainViewModel(Api, _reportManager);
-					var view = new MainView(viewModel);
-
-					return view;
+					return _mainView;
 				}
 			};
-		}
-
-		public override void OnGameInstalled(OnGameInstalledEventArgs args)
-		{
-			// Add code to be executed when game is finished installing.
-		}
-
-		public override void OnGameStarted(OnGameStartedEventArgs args)
-		{
-			// Add code to be executed when game is started running.
-		}
-
-		public override void OnGameStarting(OnGameStartingEventArgs args)
-		{
-			// Add code to be executed when game is preparing to be started.
-		}
-
-		public override void OnGameStopped(OnGameStoppedEventArgs args)
-		{
-			// Add code to be executed when game is preparing to be started.
-		}
-
-		public override void OnGameUninstalled(OnGameUninstalledEventArgs args)
-		{
-			// Add code to be executed when game is uninstalled.
 		}
 
 		public override void OnApplicationStarted(OnApplicationStartedEventArgs args)
@@ -131,24 +100,14 @@ namespace YearInReview
 				}
 				catch (Exception e)
 				{
-					logger.Error(e, "Failed to init report manager.");
+					Logger.Error(e, "Failed to init report manager.");
 				}
 			});
 		}
 
-		public override void OnApplicationStopped(OnApplicationStoppedEventArgs args)
-		{
-			// Add code to be executed when Playnite is shutting down.
-		}
-
-		public override void OnLibraryUpdated(OnLibraryUpdatedEventArgs args)
-		{
-			// Add code to be executed when library is updated.
-		}
-
 		public override ISettings GetSettings(bool firstRunSettings)
 		{
-			return settings;
+			return _settingsViewModel ?? (_settingsViewModel = new YearInReviewSettingsViewModel(this));
 		}
 
 		public override UserControl GetSettingsView(bool firstRunSettings)
