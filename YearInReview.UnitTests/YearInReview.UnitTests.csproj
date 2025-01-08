@@ -99,6 +99,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\GameActivity\SessionExtensionsTests.cs" />
+    <Compile Include="Model\Aggregators\AddedGamesAggregatorTest.cs" />
     <Compile Include="Model\Aggregators\HourlyPlaytimeAggregatorTests.cs" />
     <Compile Include="Model\Aggregators\MetadataProviderTests.cs" />
     <Compile Include="Model\Aggregators\MostPlayedGameAggregatorTests.cs" />
