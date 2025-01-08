@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExtensionStartupValidator.cs" />
+    <Compile Include="ExtensionStartupValidator.cs" />
     <Compile Include="Extensions\GameActivity\Activity.cs" />
     <Compile Include="Extensions\GameActivity\GameActivityExtension.cs" />
     <Compile Include="Extensions\GameActivity\IGameActivityExtension.cs" />
@@ -74,10 +75,13 @@
       <DependentUpon>PlaytimeCalendar.xaml</DependentUpon>
     </Compile>
     <Compile Include="IYearInReview.cs" />
+    <Compile Include="Model\Aggregators\IAddedGamesAggregator.cs" />
+    <Compile Include="Model\Aggregators\Data\AddedGame.cs" />
     <Compile Include="Model\Aggregators\Data\CalendarDay.cs" />
     <Compile Include="Model\Aggregators\Data\GameWithTime.cs" />
     <Compile Include="Model\Aggregators\Data\SourceWithTime.cs" />
     <Compile Include="Model\Aggregators\HourlyPlaytimeAggregator.cs" />
+    <Compile Include="Model\Aggregators\IAddedGamesAggregator.cs" />
     <Compile Include="Model\Aggregators\IHourlyPlaytimeAggregator.cs" />
     <Compile Include="Model\Aggregators\IMetadataProvider.cs" />
     <Compile Include="Model\Aggregators\IMostPlayedGamesAggregator.cs" />
