@@ -72,10 +72,12 @@
     <Compile Include="Infrastructure\UserControls\PlaytimeCalendar.xaml.cs">
       <DependentUpon>PlaytimeCalendar.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Model\Aggregators\Data\AddedGame.cs" />
     <Compile Include="Model\Aggregators\Data\CalendarDay.cs" />
     <Compile Include="Model\Aggregators\Data\GameWithTime.cs" />
     <Compile Include="Model\Aggregators\Data\SourceWithTime.cs" />
     <Compile Include="Model\Aggregators\HourlyPlaytimeAggregator.cs" />
+    <Compile Include="Model\Aggregators\IAddedGamesAggregator.cs" />
     <Compile Include="Model\Aggregators\IHourlyPlaytimeAggregator.cs" />
     <Compile Include="Model\Aggregators\IMetadataProvider.cs" />
     <Compile Include="Model\Aggregators\IMostPlayedGamesAggregator.cs" />
