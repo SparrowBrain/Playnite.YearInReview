@@ -75,6 +75,7 @@
       <DependentUpon>PlaytimeCalendar.xaml</DependentUpon>
     </Compile>
     <Compile Include="IYearInReview.cs" />
+    <Compile Include="Model\Aggregators\AddedGamesAggregator.cs" />
     <Compile Include="Model\Aggregators\IAddedGamesAggregator.cs" />
     <Compile Include="Model\Aggregators\Data\AddedGame.cs" />
     <Compile Include="Model\Aggregators\Data\CalendarDay.cs" />
