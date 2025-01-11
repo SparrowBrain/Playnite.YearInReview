@@ -19,7 +19,7 @@ using YearInReview.Settings.MVVM;
 
 namespace YearInReview
 {
-	public class YearInReview : GenericPlugin
+	public class YearInReview : GenericPlugin, IYearInReview
 	{
 		private static readonly ILogger Logger = LogManager.GetLogger();
 		private readonly StartupSettingsValidator _startupSettingsValidator;
@@ -34,6 +34,7 @@ namespace YearInReview
 		public YearInReview(IPlayniteAPI api) : base(api)
 		{
 			Api = api;
+
 			Properties = new GenericPluginProperties
 			{
 				HasSettings = true
@@ -92,6 +93,56 @@ namespace YearInReview
 		public override void OnApplicationStarted(OnApplicationStartedEventArgs args)
 		{
 			_startupSettingsValidator.EnsureCorrectVersionSettingsExist();
+			ValidateExtensionStateAndRun();
+		}
+
+	
+
+		public override ISettings GetSettings(bool firstRunSettings)
+		{
+			return _settingsViewModel ?? (_settingsViewModel = new YearInReviewSettingsViewModel(this));
+		}
+
+		public override UserControl GetSettingsView(bool firstRunSettings)
+		{
+			return new YearInReviewSettingsView();
+		}
+
+		private void ValidateExtensionStateAndRun()
+		{
+			if (_settingsViewModel != null)
+			{
+				_settingsViewModel.SettingsSaved -= HandleSettingsViewModelSettingsSaved;
+			}
+
+			var extensionStartupValidator = new ExtensionStartupValidator(this, Api);
+			var isOkToRun = extensionStartupValidator.IsOkToRun().Result;
+			if (isOkToRun)
+			{
+				RunInit();
+			}
+			else
+			{
+				GetSettings(false);
+				if (_settingsViewModel != null)
+				{
+					_settingsViewModel.SettingsSaved += HandleSettingsViewModelSettingsSaved;
+				}
+			}
+		}
+
+		private void HandleSettingsViewModelSettingsSaved()
+		{
+			if (_settingsViewModel != null)
+			{
+				_settingsViewModel.SettingsSaved -= HandleSettingsViewModelSettingsSaved;
+			}
+
+			ValidateExtensionStateAndRun();
+		}
+
+		private void RunInit()
+		{
 			Task.Run(async () =>
 			{
 				try
@@ -103,16 +154,6 @@ namespace YearInReview
 					Logger.Error(e, "Failed to init report manager.");
 				}
 			});
-		}
-
-		public override ISettings GetSettings(bool firstRunSettings)
-		{
-			return _settingsViewModel ?? (_settingsViewModel = new YearInReviewSettingsViewModel(this));
-		}
-
-		public override UserControl GetSettingsView(bool firstRunSettings)
-		{
-			return new YearInReviewSettingsView();
 		}
 	}
 }

@@ -69,8 +69,8 @@ namespace YearInReview.UnitTests.Model.Aggregators
 		[Theory]
 		[AutoFakeItEasyData]
 		public void GetMostPlayedGames_ReturnsGameWithMostElapsedTimeAsFirst_WhenActivitiesProvided(
-			[Frozen] Fake<IGameDatabaseAPI> gameDatabaseApiFake,
-			[Frozen] Fake<IPlayniteAPI> playniteApiFake,
+			[Frozen] IGameDatabaseAPI gameDatabaseApiFake,
+			[Frozen] IPlayniteAPI playniteApiFake,
 			int gameCount,
 			List<Activity> activities,
 			MostPlayedGamesAggregator sut)
@@ -80,8 +80,8 @@ namespace YearInReview.UnitTests.Model.Aggregators
 			mostPlayedGame.Items.Add(new Session { ElapsedSeconds = int.MaxValue / 2 });
 			var games = activities.Select(x => new Game { Id = x.Id }).ToList();
 
-			gameDatabaseApiFake.CallsTo(x => x.Games).Returns(new TestableItemCollection<Game>(games));
-			playniteApiFake.CallsTo(x => x.Database).Returns(gameDatabaseApiFake.FakedObject);
+			A.CallTo(() => gameDatabaseApiFake.Games).Returns(new TestableItemCollection<Game>(games));
+			A.CallTo(() => playniteApiFake.Database).Returns(gameDatabaseApiFake);
 
 			// Act
 			var result = sut.GetMostPlayedGames(activities, gameCount);

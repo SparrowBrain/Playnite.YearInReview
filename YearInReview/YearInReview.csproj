@@ -51,6 +51,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExtensionStartupValidator.cs" />
     <Compile Include="Extensions\GameActivity\Activity.cs" />
     <Compile Include="Extensions\GameActivity\GameActivityExtension.cs" />
     <Compile Include="Extensions\GameActivity\IGameActivityExtension.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="Infrastructure\UserControls\PlaytimeCalendar.xaml.cs">
       <DependentUpon>PlaytimeCalendar.xaml</DependentUpon>
     </Compile>
+    <Compile Include="IYearInReview.cs" />
     <Compile Include="Model\Aggregators\Data\CalendarDay.cs" />
     <Compile Include="Model\Aggregators\Data\GameWithTime.cs" />
     <Compile Include="Model\Aggregators\Data\SourceWithTime.cs" />

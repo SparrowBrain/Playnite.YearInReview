@@ -1,4 +1,5 @@
-﻿using Playnite.SDK;
+﻿using System;
+using Playnite.SDK;
 using Playnite.SDK.Data;
 using System.Collections.Generic;
 
@@ -11,6 +12,14 @@ namespace YearInReview.Settings.MVVM
 		private YearInReviewSettings _editingClone;
 		private YearInReviewSettings _settings;
 
+		public YearInReviewSettingsViewModel(YearInReview plugin)
+		{
+			_plugin = plugin;
+
+			var savedSettings = plugin.LoadPluginSettings<YearInReviewSettings>();
+			Settings = savedSettings ?? new YearInReviewSettings();
+		}
+
 		public YearInReviewSettings Settings
 		{
 			get => _settings;
@@ -21,13 +30,7 @@ namespace YearInReview.Settings.MVVM
 			}
 		}
 
-		public YearInReviewSettingsViewModel(YearInReview plugin)
-		{
-			_plugin = plugin;
-
-			var savedSettings = plugin.LoadPluginSettings<YearInReviewSettings>();
-			Settings = savedSettings ?? new YearInReviewSettings();
-		}
+		public event Action SettingsSaved;
 
 		public void BeginEdit()
 		{
@@ -42,6 +45,7 @@ namespace YearInReview.Settings.MVVM
 		public void EndEdit()
 		{
 			_plugin.SavePluginSettings(Settings);
+			OnSettingsSaved();
 		}
 
 		public bool VerifySettings(out List<string> errors)
@@ -53,6 +57,11 @@ namespace YearInReview.Settings.MVVM
 			}
 
 			return errors.Count == 0;
+		}
+
+		protected virtual void OnSettingsSaved()
+		{
+			SettingsSaved?.Invoke();
 		}
 	}
 }

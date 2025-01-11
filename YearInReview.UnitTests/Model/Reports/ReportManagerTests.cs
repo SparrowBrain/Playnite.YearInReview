@@ -115,7 +115,7 @@ namespace YearInReview.UnitTests.Model.Reports
 			A.CallTo(() => reportPersistence.PreLoadAllReports()).Returns(persistedReports);
 			A.CallTo(() => reportPersistence.LoadReport(ownReport.FilePath)).Returns(expected);
 			await sut.Init();
-			
+
 			// Act
 			var actual = sut.GetReport(ownReport.Id);
 

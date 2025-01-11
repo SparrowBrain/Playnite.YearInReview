@@ -1,6 +1,7 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <sys:String x:Key="LOC_YearInReview_Notification_SetUsername">Please set your username in the Year In Review plugin settings.</sys:String>
     <sys:String x:Key="LOC_YearInReview_PlaytimeCalendar">Total Playtime</sys:String>
     <sys:String x:Key="LOC_YearInReview_PluginName">Year in Review</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_HourlyPlaytimeHeader">And here's a breakdown of your play during a day</sys:String>
@@ -16,7 +17,7 @@
     <sys:String x:Key="LOC_YearInReview_ReadableTime_DayPart">{0} d</sys:String>
     <sys:String x:Key="LOC_YearInReview_ReadableTime_HourPart">{0} h</sys:String>
     <sys:String x:Key="LOC_YearInReview_ReadableTime_MinutePart">{0} min</sys:String>
-    <sys:String x:Key="LOC_YearInReview_Settings_Error_UsernameEmpty">Username cannot be empty</sys:String>
+    <sys:String x:Key="LOC_YearInReview_Settings_Error_UsernameEmpty">Username cannot be empty.</sys:String>
     <sys:String x:Key="LOC_YearInReview_Settings_ShowNewReportNotifications">Show new report notifications</sys:String>
     <sys:String x:Key="LOC_YearInReview_Settings_ShowSidebarItem">Show sidebar item</sys:String>
     <sys:String x:Key="LOC_YearInReview_Settings_UserInterfaceSettingsHeader">User Interface</sys:String>

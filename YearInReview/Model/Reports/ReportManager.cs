@@ -26,17 +26,6 @@ namespace YearInReview.Model.Reports
 			_dateTimeProvider = dateTimeProvider;
 		}
 
-		public Report1970 GetReport(Guid id)
-		{
-			if(!_reportCache.TryGetValue(id, out var persistedReport))
-			{
-				throw new Exception($"Report {id} not persisted in cache.");
-			}
-
-			var report = _reportPersistence.LoadReport(persistedReport.FilePath);
-			return report;
-		}
-
 		// TODO Don't forget. There's probably gonna be race condition between report manager and UI.
 		public async Task Init()
 		{
@@ -51,6 +40,17 @@ namespace YearInReview.Model.Reports
 			}
 
 			_reportCache = reports.ToDictionary(x => x.Id, x => x);
+		}
+
+		public Report1970 GetReport(Guid id)
+		{
+			if (!_reportCache.TryGetValue(id, out var persistedReport))
+			{
+				throw new Exception($"Report {id} not persisted in cache.");
+			}
+
+			var report = _reportPersistence.LoadReport(persistedReport.FilePath);
+			return report;
 		}
 
 		private async Task<IReadOnlyCollection<PersistedReport>> GenerateAll()
