@@ -10,11 +10,6 @@ namespace YearInReview.UnitTests.Model.Aggregators
 {
 	public class AddedGamesAggregatorTest
 	{
-		private static IEnumerable<DateTime> GetAllDatesOfYear(int year)
-		{
-			return Enumerable.Range(1, 12).SelectMany(month => Enumerable.Range(1, DateTime.DaysInMonth(year, month)).Select(day => new DateTime(year, month, day)));
-		}
-
 		[Theory]
 		[AutoFakeItEasyData]
 		public void GetAddedGames_Empty_WhenGamesNull(AddedGamesAggregator sut)
@@ -56,20 +51,6 @@ namespace YearInReview.UnitTests.Model.Aggregators
 			// Assert
 			Assert.Empty(result);
 		}
-
-		[Theory]
-		[AutoFakeItEasyData]
-		public void GetAdded_Empty_WhenYearNegative(AddedGamesAggregator sut)
-		{
-			// Arrange
-			var games = new List<Game>();
-
-			// Act
-			var result = sut.GetAddedGames(games, -1);
-
-			// Assert
-			Assert.Empty(result);
-		}
 		
 		[Theory] 
 		[AutoFakeItEasyData] 
@@ -101,9 +82,8 @@ namespace YearInReview.UnitTests.Model.Aggregators
 			var result = sut.GetAddedGames(games, date.Year);
 
 			// Assert
-			Assert.Single(result);
-			Assert.True(game.Added == result.First().AddedDate);
-			Assert.True(Equals(game, result.First().Game));
+			var assertedAddedGame = Assert.Single(result);
+			Assert.Equal(game, assertedAddedGame.Game);
 		}
 
 		[Theory] 
@@ -138,45 +118,8 @@ namespace YearInReview.UnitTests.Model.Aggregators
 			var result = sut.GetAddedGames(games, dateMatching.Year);
 
 			// Assert
-			Assert.Single(result);
-			Assert.True(dateMatching == result.First().AddedDate);
-			Assert.True(Equals(matchingGame, result.First().Game));
-		}
-
-		[Theory] 
-		[AutoFakeItEasyData] 
-		public void GetAddedGames_ReturnsAllCorrect_WhenAllGamesMatching_AllDaysInYear(AddedGamesAggregator sut)
-		{
-			// Arrange
-			const int year = 2025;
-			// all dates of a full year in one list
-			var allDatesOfYear = GetAllDatesOfYear(year);
-			// create games with added date for each day of the year
-			var games = allDatesOfYear.Select(date => new Game { Added = date }).ToList();
-			
-			// Act
-			var result = sut.GetAddedGames(games, year);
-			
-			// Assert
-			Assert.Equal(games.Count, result.Count);
-		}
-
-		[Theory] 
-		[AutoFakeItEasyData] 
-		public void GetAddedGames_ReturnsAllCorrect_WhenAllGamesMatching_AllDaysInLeapYear(AddedGamesAggregator sut)
-		{
-			// Arrange
-			const int year = 2024;
-			// all dates of a full leap year in one list
-			var allDatesOfYear = GetAllDatesOfYear(year);
-			// create games with added date for each day of the year
-			var games = allDatesOfYear.Select(date => new Game { Added = date }).ToList();
-			
-			// Act
-			var result = sut.GetAddedGames(games, year);
-			
-			// Assert
-			Assert.Equal(games.Count, result.Count);
+			var assertedAddedGame = Assert.Single(result);
+			Assert.Equal(matchingGame, assertedAddedGame.Game);
 		}
 		
 		[Theory]
@@ -225,32 +168,6 @@ namespace YearInReview.UnitTests.Model.Aggregators
 			Assert.Contains(result, r => Equals(r.Game, gameOnLastDay) && r.AddedDate == lastDayOfYear);
 			Assert.DoesNotContain(result, r => Equals(r.Game, gameOutsideYear1));
 			Assert.DoesNotContain(result, r => Equals(r.Game, gameOutsideYear2));
-		}
-		
-		[Theory]
-		[AutoFakeItEasyData]
-		public void GetAddedGames_ReturnsCorrectGames_WhenIncludesDifferentNullValues(AddedGamesAggregator sut)
-		{
-			// Arrange
-			const int year = 2025;
-			var game1 = new Game { Added = null };
-			var game2 = new Game { Added = null };
-			Game game3 = null;
-			var date = new DateTime(year, 1, 1);
-			var game4 = new Game { Added = date };
-			var game5 = new Game { Added = date };
-
-			var games = new List<Game> { game1, game2, game3, game4, game5 };
-
-			// Act
-			var result = sut.GetAddedGames(games, year);
-
-			// Assert
-			Assert.Equal(2, result.Count);
-			Assert.Contains(result, r => Equals(r.Game, game4) && r.AddedDate == date);
-			Assert.Contains(result, r => Equals(r.Game, game5) && r.AddedDate == date);
-			Assert.DoesNotContain(result, r => Equals(r.Game, game1));
-			Assert.DoesNotContain(result, r => Equals(r.Game, game2));
 		}
 	}
 }

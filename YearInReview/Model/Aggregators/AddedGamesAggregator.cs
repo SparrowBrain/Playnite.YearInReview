@@ -19,7 +19,10 @@ namespace YearInReview.Model.Aggregators
 		public IReadOnlyCollection<AddedGame> GetAddedGames(IReadOnlyCollection<Game> allGames, int filterYear)
 		{
 			var filteredGames = new List<AddedGame>();
-			if (allGames == null || allGames.Count <= 0) return filteredGames;
+			if (allGames == null || allGames.Count <= 0)
+			{
+				return filteredGames;
+			}
 			
 			filteredGames = allGames
 				.Where(g => g?.Added != null && g.Added.Value.Year == filterYear)
