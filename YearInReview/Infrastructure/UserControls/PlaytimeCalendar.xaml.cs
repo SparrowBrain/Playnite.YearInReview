@@ -66,6 +66,7 @@ namespace YearInReview.Infrastructure.UserControls
 
 			var grid = InitializeMonthGrid();
 			AddMonthHeader(monthDays, grid);
+			AddMonthMostPlayedGame(monthDays, grid);
 
 			var dayOfWeekOffset = GetDayOfWeekOffset(monthDays);
 			foreach (var day in monthDays)
@@ -84,7 +85,7 @@ namespace YearInReview.Infrastructure.UserControls
 				grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(GridCellSize) });
 			}
 
-			for (var i = 0; i < 8; i++)
+			for (var i = 0; i < 9; i++)
 			{
 				grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(GridCellSize) });
 			}
@@ -105,6 +106,49 @@ namespace YearInReview.Infrastructure.UserControls
 			Grid.SetColumnSpan(header, 6);
 			grid.Children.Add(header);
 		}
+		
+		/// <summary>
+		/// Calculate the most played game in the month and adds it to the second row of the grid.
+		/// As discussed in <see href="https://github.com/SparrowBrain/Playnite.YearInReview/issues/1">Issue #1</see>,
+		/// the calculation is done inside this UI logic, to avoid redundancy in the aggregation object.
+		/// </summary>
+		private static void AddMonthMostPlayedGame(IReadOnlyCollection<CalendarDayViewModel> monthDays, Grid grid)
+		{
+			// get list of games played in the month, ordered by total time played
+			var mostPlayedList = monthDays
+				.SelectMany(a => a.Games)
+				.GroupBy(a => a.Id)
+				.Select(g => new 
+				{ 
+					Game = g.First(), 
+					TotalTimePlayed = g.Sum(a => a.TimePlayed) 
+				})
+				.OrderByDescending(g => g.TotalTimePlayed);
+			
+			var mostPlayed = mostPlayedList.FirstOrDefault();
+			if (mostPlayed == null)
+			{
+				return; // display nothing if there are no games played in the month
+			}
+			
+			// format the most played game with its total time played
+			var mostPlayedText = string.Format(
+				ResourceProvider.GetString("LOC_YearInReview_Report1970_PlaytimeCalendarMostPlayedGame"), 
+				mostPlayed.Game.Name,
+				ReadableTimeFormatter.FormatTime(mostPlayed.TotalTimePlayed)
+				);
+			
+			// add the most played game text to the grid
+			var mostPlayedGame = new TextBlock
+			{
+				Text = mostPlayedText,
+				HorizontalAlignment = HorizontalAlignment.Center,
+				VerticalAlignment = VerticalAlignment.Center,
+			};
+			Grid.SetRow(mostPlayedGame, 1);
+			Grid.SetColumnSpan(mostPlayedGame, 6);
+			grid.Children.Add(mostPlayedGame);
+		}
 
 		private static int GetDayOfWeekOffset(IReadOnlyCollection<CalendarDayViewModel> monthDays)
 		{
@@ -119,7 +163,7 @@ namespace YearInReview.Infrastructure.UserControls
 
 		private void SetupDayCell(CalendarDayViewModel day, int dayOfWeekOffset, Grid grid)
 		{
-			var row = (day.Date.Day - 1 + dayOfWeekOffset) % 7 + 1;
+			var row = (day.Date.Day - 1 + dayOfWeekOffset) % 7 + 2;
 			var col = (day.Date.Day - 1 + dayOfWeekOffset) / 7;
 
 			var dayColorBrush = GetDayColorBrush(day);
