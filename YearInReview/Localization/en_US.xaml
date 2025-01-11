@@ -1,6 +1,7 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <sys:String x:Key="LOC_YearInReview_Notification_InstallGameActivity">GameActivity extension not installed. It is mandatory for YearInReview extension to work.</sys:String>
     <sys:String x:Key="LOC_YearInReview_Notification_SetUsername">Please set your username in the Year In Review plugin settings.</sys:String>
     <sys:String x:Key="LOC_YearInReview_PlaytimeCalendar">Total Playtime</sys:String>
     <sys:String x:Key="LOC_YearInReview_PluginName">Year in Review</sys:String>

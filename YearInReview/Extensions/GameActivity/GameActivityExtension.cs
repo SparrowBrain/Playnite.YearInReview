@@ -11,13 +11,13 @@ namespace YearInReview.Extensions.GameActivity
 {
 	public class GameActivityExtension : IGameActivityExtension
 	{
-		private static Guid _extensionId = Guid.Parse("afbb1a0d-04a1-4d0c-9afa-c6e42ca855b4");
+		public static Guid ExtensionId = Guid.Parse("afbb1a0d-04a1-4d0c-9afa-c6e42ca855b4");
 		private readonly ILogger _logger = LogManager.GetLogger(nameof(GameActivityExtension));
 		private readonly string _activityPath;
 
 		public GameActivityExtension(string extensionsDataPath)
 		{
-			var dataPath = Path.Combine(extensionsDataPath, _extensionId.ToString(), "GameActivity");
+			var dataPath = Path.Combine(extensionsDataPath, ExtensionId.ToString(), "GameActivity");
 			_activityPath = dataPath;
 		}
 
