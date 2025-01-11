@@ -13,6 +13,7 @@ namespace YearInReview.Model.Reports._1970
 		private readonly IMostPlayedSourcesAggregator _mostPlayedSourcesAggregator;
 		private readonly IPlaytimeCalendarAggregator _playtimeCalendarAggregator;
 		private readonly IHourlyPlaytimeAggregator _hourlyPlaytimeAggregator;
+		private readonly IAddedGamesAggregator _addedGamesAggregator;
 
 		public Composer1970(
 			IMetadataProvider metadataProvider,
@@ -20,7 +21,8 @@ namespace YearInReview.Model.Reports._1970
 			IMostPlayedGamesAggregator mostPlayedGameAggregator,
 			IMostPlayedSourcesAggregator mostPlayedSourcesAggregator,
 			IPlaytimeCalendarAggregator playtimeCalendarAggregator,
-			IHourlyPlaytimeAggregator hourlyPlaytimeAggregator)
+			IHourlyPlaytimeAggregator hourlyPlaytimeAggregator,
+			IAddedGamesAggregator addedGamesAggregator)
 		{
 			_metadataProvider = metadataProvider;
 			_totalPlaytimeAggregator = totalPlaytimeAggregator;
@@ -28,6 +30,7 @@ namespace YearInReview.Model.Reports._1970
 			_mostPlayedSourcesAggregator = mostPlayedSourcesAggregator;
 			_playtimeCalendarAggregator = playtimeCalendarAggregator;
 			_hourlyPlaytimeAggregator = hourlyPlaytimeAggregator;
+			_addedGamesAggregator = addedGamesAggregator;
 		}
 
 		public Report1970 Compose(int year, IReadOnlyCollection<Activity> activities)
@@ -67,7 +70,8 @@ namespace YearInReview.Model.Reports._1970
 				{
 					Hour = x.Key,
 					Playtime = x.Value
-				}).ToList()
+				}).ToList(),
+				AddedGamesCount = _addedGamesAggregator.GetAddedGames(year).Count
 			};
 		}
 	}

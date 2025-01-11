@@ -170,13 +170,15 @@ namespace YearInReview
 			var totalPlaytimeAggregator = new TotalPlaytimeAggregator();
 			var playtimeCalendarAggregator = new PlaytimeCalendarAggregator(Api);
 			var hourlyPlaytimeAggregator = new HourlyPlaytimeAggregator();
+			var addedGamesAggregator = new AddedGamesAggregator(Api);
 			var composer = new Composer1970(
 				metadataProvider,
 				totalPlaytimeAggregator,
 				mostPlayedGamesAggregator,
 				mostPlayedSourcesAggregator,
 				playtimeCalendarAggregator,
-				hourlyPlaytimeAggregator);
+				hourlyPlaytimeAggregator,
+				addedGamesAggregator);
 			var gameActivityExtension = new GameActivityExtension(Api.Paths.ExtensionsDataPath);
 			var specificYearActivityFilter = new SpecificYearActivityFilter();
 			var reportPersistence = new ReportPersistence(GetPluginUserDataPath());
