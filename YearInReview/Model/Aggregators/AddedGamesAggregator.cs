@@ -16,8 +16,9 @@ namespace YearInReview.Model.Aggregators
 			_playniteApi = playniteApi;
 		}
 		
-		public IReadOnlyCollection<AddedGame> GetAddedGames(IReadOnlyCollection<Game> allGames, int filterYear)
+		public IReadOnlyCollection<AddedGame> GetAddedGames(int filterYear)
 		{
+			var allGames = _playniteApi.Database.Games;
 			var filteredGames = new List<AddedGame>();
 			if (allGames == null || allGames.Count <= 0)
 			{
@@ -30,12 +31,6 @@ namespace YearInReview.Model.Aggregators
 				.ToList();
 
 			return filteredGames;
-		}
-		
-		public IReadOnlyCollection<AddedGame> GetAddedGames(int filterYear)
-		{
-			var allGames = _playniteApi.Database.Games;
-			return GetAddedGames(allGames.ToList(), filterYear);
 		}
 	}
 }
