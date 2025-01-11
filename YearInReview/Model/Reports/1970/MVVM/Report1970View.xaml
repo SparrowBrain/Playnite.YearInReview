@@ -153,7 +153,7 @@
                 </ListBox>
             </StackPanel>
             <TextBlock Visibility="{Binding ShowSingleSource, Converter={StaticResource BoolToCollapsedVisibilityConverter}}" Text="{Binding SingleSourceText}" FontSize="25" Margin="10,48,10,10"></TextBlock>
-            <TextBlock Text="{Binding AddGamesCount}" FontSize="25" TextAlignment="Left" Margin="10,48,10,10"></TextBlock>
+            <TextBlock Text="{Binding AddGamesCountText}" FontSize="25" TextAlignment="Left" Margin="10,48,10,10"></TextBlock>
             <TextBlock Text="{DynamicResource LOC_YearInReview_Report1970_PlaytimeCalendarHeader}" FontSize="25" TextAlignment="Left" Margin="10,48,10,10"></TextBlock>
             <userControls:PlaytimeCalendar ItemsSource="{Binding PlaytimeCalendarDays}"/>
             <TextBlock Text="{DynamicResource LOC_YearInReview_Report1970_HourlyPlaytimeHeader}" FontSize="25" TextAlignment="Left" Margin="10,48,10,10"></TextBlock>
