@@ -1,6 +1,6 @@
-﻿using System;
-using Playnite.SDK;
+﻿using Playnite.SDK;
 using Playnite.SDK.Data;
+using System;
 using System.Collections.Generic;
 
 namespace YearInReview.Settings.MVVM
@@ -61,6 +61,8 @@ namespace YearInReview.Settings.MVVM
 
 		protected virtual void OnSettingsSaved()
 		{
+			LogManager.GetLogger().Debug("OnSettingsSaved");
+			LogManager.GetLogger().Debug("SettingsSaved == null: " + (SettingsSaved == null));
 			SettingsSaved?.Invoke();
 		}
 	}

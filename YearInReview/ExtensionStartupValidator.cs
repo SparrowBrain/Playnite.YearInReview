@@ -1,8 +1,11 @@
 ﻿using Playnite.SDK;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using YearInReview.Extensions.GameActivity;
 using YearInReview.Settings;
+using YearInReview.Validation;
 
 namespace YearInReview
 {
@@ -20,23 +23,29 @@ namespace YearInReview
 			_playniteApi = playniteApi;
 		}
 
-		public async Task<bool> IsOkToRun()
+		public async Task<IReadOnlyCollection<InitValidationError>> IsOkToRun()
 		{
-			foreach (var loadedPlugins in _playniteApi.Addons.Plugins)
-			{
-				_logger.Debug("Installed extension: " + loadedPlugins);
-			}
+			var errors = new List<InitValidationError>();
 
 			if (_playniteApi.Addons.Plugins.All(x => x.Id != GameActivityExtension.ExtensionId))
 			{
 				_logger.Warn("GameActivity extension not installed. Cannot run YearInReview.");
 
+				var message = ResourceProvider.GetString("LOC_YearInReview_Notification_InstallGameActivity");
+				Action callToAction = () => System.Diagnostics.Process.Start("https://playnite.link/addons.html#playnite-gameactivity-plugin");
+
 				_playniteApi.Notifications.Add(new NotificationMessage(
-				"year_in_review_game_activity_not_installed",
-				ResourceProvider.GetString("LOC_YearInReview_Notification_InstallGameActivity"),
+				InitValidationError.GameActivityExtensionNotInstalled,
+				message,
 				NotificationType.Info,
-				() => System.Diagnostics.Process.Start("https://playnite.link/addons.html#playnite-gameactivity-plugin")));
-				return false;
+				callToAction));
+
+				errors.Add(new InitValidationError
+				{
+					Id = InitValidationError.GameActivityExtensionNotInstalled,
+					Message = message,
+					CallToAction = callToAction
+				});
 			}
 
 			var settings = _plugin.LoadPluginSettings<YearInReviewSettings>();
@@ -44,15 +53,23 @@ namespace YearInReview
 			{
 				_logger.Warn("Username is not set, plugin will not work correctly.");
 
+				var message = ResourceProvider.GetString("LOC_YearInReview_Notification_SetUsername");
+				Action callToAction = () => _plugin.OpenSettingsView();
+
 				_playniteApi.Notifications.Add(new NotificationMessage(
-				"year_in_review_missing_username",
-				ResourceProvider.GetString("LOC_YearInReview_Notification_SetUsername"),
+				InitValidationError.UsernameNotSetError,
+				message,
 				NotificationType.Info,
-				() => _plugin.OpenSettingsView()));
-				return false;
+				callToAction));
+				errors.Add(new InitValidationError()
+				{
+					Id = InitValidationError.UsernameNotSetError,
+					Message = message,
+					CallToAction = callToAction
+				});
 			}
 
-			return true;
+			return errors;
 		}
 	}
 }

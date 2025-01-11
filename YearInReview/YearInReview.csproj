@@ -128,6 +128,12 @@
     <Compile Include="Settings\PluginSettingsPersistence.cs" />
     <Compile Include="Settings\StartupSettingsValidator.cs" />
     <Compile Include="Settings\VersionedSettings.cs" />
+    <Compile Include="Validation\MVVM\ValidationErrorsViewModel.cs" />
+    <Compile Include="Validation\MVVM\ValidationErrorsView.xaml.cs">
+      <DependentUpon>ValidationErrorsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Validation\InitValidationError.cs" />
+    <Compile Include="Validation\MVVM\ValidationErrorViewModel.cs" />
     <Compile Include="YearInReview.cs" />
     <Compile Include="Settings\YearInReviewSettings.cs" />
     <Compile Include="Settings\MVVM\YearInReviewSettingsView.xaml.cs">
@@ -172,6 +178,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Settings\MVVM\YearInReviewSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Validation\MVVM\ValidationErrorsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -14,6 +14,11 @@ namespace YearInReview.Infrastructure.Converters
 				return Visibility.Collapsed;
 			}
 
+			if (parameter != null && bool.TryParse(parameter.ToString(), out var invert) && invert)
+			{
+				return visible ? Visibility.Collapsed : Visibility.Visible;
+			}
+
 			return visible ? Visibility.Visible : Visibility.Collapsed;
 		}
 

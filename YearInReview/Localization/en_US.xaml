@@ -25,4 +25,5 @@
     <sys:String x:Key="LOC_YearInReview_Settings_UserInterfaceSettingsHeader">User Interface</sys:String>
     <sys:String x:Key="LOC_YearInReview_Settings_Username">Username</sys:String>
     <sys:String x:Key="LOC_YearInReview_Settings_UserSettingsHeader">User</sys:String>
+    <sys:String x:Key="LOC_YearInReview_ValidationErrors_Header">Year In Review cannot run because of these issues:</sys:String>
 </ResourceDictionary>

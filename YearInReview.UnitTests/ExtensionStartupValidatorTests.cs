@@ -2,7 +2,6 @@
 using FakeItEasy;
 using Playnite.SDK;
 using Playnite.SDK.Plugins;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,6 +9,7 @@ using TestTools.Shared;
 using Xunit;
 using YearInReview.Extensions.GameActivity;
 using YearInReview.Settings;
+using YearInReview.Validation;
 
 namespace YearInReview.UnitTests
 {
@@ -40,8 +40,8 @@ namespace YearInReview.UnitTests
 			var result = await sut.IsOkToRun();
 
 			// Assert
-			Assert.False(result);
-			A.CallTo(() => playniteApi.Notifications.Add(A<NotificationMessage>.That.Matches(x => x.Id == "year_in_review_missing_username"))).MustHaveHappened();
+			Assert.Contains(result, x => x.Id == InitValidationError.UsernameNotSetError);
+			A.CallTo(() => playniteApi.Notifications.Add(A<NotificationMessage>.That.Matches(x => x.Id == InitValidationError.UsernameNotSetError))).MustHaveHappened();
 		}
 
 		[Theory]
@@ -63,13 +63,13 @@ namespace YearInReview.UnitTests
 			var result = await sut.IsOkToRun();
 
 			// Assert
-			Assert.False(result);
-			A.CallTo(() => playniteApi.Notifications.Add(A<NotificationMessage>.That.Matches(x => x.Id == "year_in_review_game_activity_not_installed"))).MustHaveHappened();
+			Assert.Contains(result, x => x.Id == InitValidationError.GameActivityExtensionNotInstalled);
+			A.CallTo(() => playniteApi.Notifications.Add(A<NotificationMessage>.That.Matches(x => x.Id == InitValidationError.GameActivityExtensionNotInstalled))).MustHaveHappened();
 		}
 
 		[Theory]
 		[AutoFakeItEasyData]
-		public async Task Validate_ReturnsTrue_WhenValidationSucceeds(
+		public async Task Validate_ReturnsEmpty_WhenValidationSucceeds(
 			[Frozen] IYearInReview plugin,
 			[Frozen] IPlayniteAPI playniteApi,
 			[Frozen] IAddons addons,
@@ -89,23 +89,7 @@ namespace YearInReview.UnitTests
 			var result = await sut.IsOkToRun();
 
 			// Assert
-			Assert.True(result);
+			Assert.Empty(result);
 		}
-	}
-}
-
-public class TestablePlugin : Plugin
-{
-	private Guid _id;
-
-	public TestablePlugin(IPlayniteAPI playniteApi) : base(playniteApi)
-	{
-	}
-
-	public override Guid Id => _id;
-
-	public void SetId(Guid id)
-	{
-		_id = id;
 	}
 }
