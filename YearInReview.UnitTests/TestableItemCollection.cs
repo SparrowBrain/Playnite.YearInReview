@@ -63,7 +63,7 @@ namespace YearInReview.UnitTests
 			throw new NotImplementedException();
 		}
 
-		public int Count { get; }
+		public int Count => _items?.Count ?? 0;
 		public bool IsReadOnly { get; }
 
 		public T Get(Guid id)
