@@ -1,0 +1,34 @@
+name: Run Tests
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "**" ]
+
+env:
+  SOLUTION_NAME: YearInReview
+  XUNIT_PATH: packages\xunit.runner.console.2.9.2\tools\net462\xunit.console.exe
+
+jobs:
+  test:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4.1.2
+    - name: Setup Nuget.exe
+      uses: nuget/setup-nuget@v2
+    - name: Restore packages
+      run: nuget restore ${{ env.SOLUTION_NAME }}.sln
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v2
+    - name: Build with MSBuild
+      run: msbuild  ${{ env.SOLUTION_NAME }}.sln -p:Configuration=Release
+    - name: Run xUnit # very fragile
+      run: > 
+        ${{ github.workspace }}\${{ env.XUNIT_PATH }} 
+        ${{ github.workspace }}\${{ env.SOLUTION_NAME }}.IntegrationTests\bin\Release\${{ env.SOLUTION_NAME }}.IntegrationTests.dll 
+        ${{ github.workspace }}\${{ env.SOLUTION_NAME }}.UnitTests\bin\Release\${{ env.SOLUTION_NAME }}.UnitTests.dll         
+        # ${{ github.workspace }}\ReleaseTools.IntegrationTests\bin\Release\ReleaseTools.IntegrationTests.dll 
+        # ${{ github.workspace }}\ReleaseTools.UnitTests\bin\Release\ReleaseTools.UnitTests.dll 
