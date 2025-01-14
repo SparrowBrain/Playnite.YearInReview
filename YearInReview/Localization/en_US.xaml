@@ -5,6 +5,7 @@
     <sys:String x:Key="LOC_YearInReview_Notification_SetUsername">Please set your username in the Year In Review plugin settings.</sys:String>
     <sys:String x:Key="LOC_YearInReview_PlaytimeCalendar">Total Playtime</sys:String>
     <sys:String x:Key="LOC_YearInReview_PluginName">Year in Review</sys:String>
+    <sys:String x:Key="LOC_YearInReview_Report1970_AddedGamesCountHeader">You've added {0} games throughout the year to your library.</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_HourlyPlaytimeHeader">And here's a breakdown of your play during a day</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_Intro">Here goes the year {0}, {1}!</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_IntroSubtext">In total, you've spent {0} playing. Now let's see what you've played in {1}.</sys:String>
@@ -26,5 +27,4 @@
     <sys:String x:Key="LOC_YearInReview_Settings_Username">Username</sys:String>
     <sys:String x:Key="LOC_YearInReview_Settings_UserSettingsHeader">User</sys:String>
     <sys:String x:Key="LOC_YearInReview_ValidationErrors_Header">Year In Review cannot run because of these issues:</sys:String>
-    <sys:String x:Key="LOC_YearInReview_Report1970_AddedGamesCountHeader">You've added {0} games throughout the year to your library.</sys:String>
 </ResourceDictionary>
