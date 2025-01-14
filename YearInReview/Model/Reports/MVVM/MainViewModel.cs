@@ -62,6 +62,9 @@ namespace YearInReview.Model.Reports.MVVM
 						})
 				});
 			}
+
+			YearButtons.FirstOrDefault()?.SwitchYearCommand.Execute(null);
+			ReportButtons.FirstOrDefault()?.DisplayCommand.Execute(null);
 		}
 
 		private void DisplayReport(Report1970 report, List<PersistedReport> allYearReports)

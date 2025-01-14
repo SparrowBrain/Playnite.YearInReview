@@ -69,7 +69,7 @@ namespace YearInReview
 					{
 						ValidateExtensionStateAndInitialize();
 					}
-
+					
 					if (_initValidationErrors.Any())
 					{
 						var errorsViewModel = new ValidationErrorsViewModel(_initValidationErrors);
