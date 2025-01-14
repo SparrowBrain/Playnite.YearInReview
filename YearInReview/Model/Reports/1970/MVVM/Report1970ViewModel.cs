@@ -27,6 +27,8 @@ namespace YearInReview.Model.Reports._1970.MVVM
 				Year);
 
 			MostPlayedGame = report.MostPlayedGames.First();
+			
+			AddedGamesCount = report.AddedGamesCount;
 
 			MostPlayedGames = report.MostPlayedGames
 				.Select((t, i) => new GameViewModel(api, i + 1, t, MaxBarWidth, MostPlayedGame.TimePlayed)).ToList()
@@ -65,6 +67,8 @@ namespace YearInReview.Model.Reports._1970.MVVM
 		public string IntroMessage { get; set; }
 
 		public string IntroMessageSubtext { get; set; }
+		
+		public int AddedGamesCount { get; set; }
 
 		public ReportGameWithTime MostPlayedGame { get; set; }
 
@@ -99,6 +103,8 @@ namespace YearInReview.Model.Reports._1970.MVVM
 		public string TopSourcesHeader => string.Format(ResourceProvider.GetString("LOC_YearInReview_Report1970_TopSourcesHeader"));
 
 		public string SingleSourceText => string.Format(ResourceProvider.GetString("LOC_YearInReview_Report1970_SingleSourceText"), MostPlayedSources.FirstOrDefault()?.Name);
+		
+		public string AddGamesCountText => string.Format(ResourceProvider.GetString("LOC_YearInReview_Report1970_AddedGamesCountHeader"), AddedGamesCount);
 	}
 
 	public class FriendPlaytimeLeaderboardViewModel

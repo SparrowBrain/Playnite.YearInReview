@@ -134,5 +134,25 @@ namespace YearInReview.UnitTests.Model.Reports._1970
 			// Assert
 			Assert.Equal(playtime.Count, result.HourlyPlaytime.Count);
 		}
+
+		[Theory]
+		[AutoFakeItEasyData]
+		public void Compose_AssignsAddedGames(
+			[Frozen] IAddedGamesAggregator addedGamesAggregatorFake,
+			List<AddedGame> games,
+			int year,
+			List<Activity> activities,
+			Composer1970 sut)
+		{
+			// Arrange
+			A.CallTo(() => addedGamesAggregatorFake.GetAddedGames(year))
+				.Returns(games);
+
+			// Act
+			var result = sut.Compose(year, activities);
+
+			// Assert
+			Assert.Equal(games.Count, result.AddedGamesCount);
+		}
 	}
 }

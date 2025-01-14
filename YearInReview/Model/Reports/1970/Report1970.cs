@@ -16,5 +16,7 @@ namespace YearInReview.Model.Reports._1970
 		public IReadOnlyList<ReportCalendarDay> PlaytimeCalendarDays { get; set; }
 
 		public IReadOnlyList<ReportHourlyPlaytime> HourlyPlaytime { get; set; }
+		
+		public int AddedGamesCount { get; set; }
 	}
 }
