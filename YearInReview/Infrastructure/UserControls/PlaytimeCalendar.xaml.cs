@@ -135,7 +135,7 @@ namespace YearInReview.Infrastructure.UserControls
 			var mostPlayedText = string.Format(
 				ResourceProvider.GetString("LOC_YearInReview_Report1970_PlaytimeCalendarMostPlayedGame"), 
 				mostPlayed.Game.Name,
-				ReadableTimeFormatter.FormatTime(mostPlayed.TotalTimePlayed)
+				ReadableTimeFormatter.FormatTime(mostPlayed.TotalTimePlayed, true)
 				);
 			
 			// add the most played game text to the grid

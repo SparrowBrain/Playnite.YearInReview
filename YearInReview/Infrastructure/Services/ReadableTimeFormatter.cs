@@ -6,7 +6,10 @@ namespace YearInReview.Infrastructure.Services
 {
 	public class ReadableTimeFormatter
 	{
-		public static string FormatTime(int seconds)
+		private const string NonBreakableSpace = "\u00A0";
+		private const string BreakableSpace = " ";
+		
+		public static string FormatTime(int seconds, bool nonLineBreaking = false)
 		{
 			if (seconds < 60)
 			{
@@ -19,18 +22,24 @@ namespace YearInReview.Infrastructure.Services
 			if (timeSpan.Days > 0)
 			{
 				readableText.Append(string.Format(ResourceProvider.GetString("LOC_YearInReview_ReadableTime_DayPart"), timeSpan.Days));
-				readableText.Append(" ");
+				readableText.Append(BreakableSpace);
 			}
 			if (timeSpan.Hours > 0)
 			{
 				readableText.Append(string.Format(ResourceProvider.GetString("LOC_YearInReview_ReadableTime_HourPart"), timeSpan.Hours));
-				readableText.Append(" ");
+				readableText.Append(BreakableSpace);
 			}
 			if (timeSpan.Minutes > 0)
 			{
 				readableText.Append(string.Format(ResourceProvider.GetString("LOC_YearInReview_ReadableTime_MinutePart"), timeSpan.Minutes));
 			}
 
+			// Replace breakable spaces with non-breakable spaces, if nonLineBreaking is set
+			if (nonLineBreaking)
+			{
+				readableText.Replace(BreakableSpace, NonBreakableSpace);
+			}
+			
 			return readableText.ToString().Trim();
 		}
 	}

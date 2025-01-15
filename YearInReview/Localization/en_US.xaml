@@ -12,7 +12,7 @@
     <sys:String x:Key="LOC_YearInReview_Report1970_FriendsLeaderboardHeader">Let's see how you rank amongst your friends regarding playtime</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_MostPlayedGameMessage">It looks like you could not get enough of {0}. You've spent {1} playing it.</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_PlaytimeCalendarHeader">Here's how your playtime looked over the year</sys:String>
-    <sys:String x:Key="LOC_YearInReview_Report1970_PlaytimeCalendarMostPlayedGame">Most played game: {0} ({1})</sys:String>
+    <sys:String x:Key="LOC_YearInReview_Report1970_PlaytimeCalendarMostPlayedGame">Mostly: {0} ({1})</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_SingleSourceText">This year is all about {0}. You haven't played on any other libraries.</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_TopGamesHeader">And here's a look at your overall top {0}</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_TopSourcesHeader">Let's see which library was your favourite this year</sys:String>
