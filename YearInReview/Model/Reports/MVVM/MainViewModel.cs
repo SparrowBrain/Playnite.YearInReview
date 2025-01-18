@@ -62,14 +62,8 @@ namespace YearInReview.Model.Reports.MVVM
 						})
 				});
 			}
-		}
 
-		private void DisplayReport(Report1970 report, List<PersistedReport> allYearReports)
-		{
-			var viewModel = new Report1970ViewModel(_api, report, allYearReports);
-			var view = new Report1970View(viewModel);
-
-			ActiveReport = view;
+			DisplayMostRecentUserReport();
 		}
 
 		public ObservableCollection<YearButtonViewModel> YearButtons
@@ -88,6 +82,20 @@ namespace YearInReview.Model.Reports.MVVM
 		{
 			get => _activeReport;
 			set => SetValue(ref _activeReport, value);
+		}
+
+		private void DisplayReport(Report1970 report, List<PersistedReport> allYearReports)
+		{
+			var viewModel = new Report1970ViewModel(_api, report, allYearReports);
+			var view = new Report1970View(viewModel);
+
+			ActiveReport = view;
+		}
+
+		private void DisplayMostRecentUserReport()
+		{
+			YearButtons.FirstOrDefault()?.SwitchYearCommand.Execute(null);
+			ReportButtons.FirstOrDefault()?.DisplayCommand.Execute(null);
 		}
 	}
 }
