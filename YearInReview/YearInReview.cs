@@ -1,12 +1,14 @@
-﻿using Playnite.SDK;
-using Playnite.SDK.Events;
-using Playnite.SDK.Plugins;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Playnite.SDK;
+using Playnite.SDK.Controls;
+using Playnite.SDK.Events;
+using Playnite.SDK.Plugins;
 using YearInReview.Extensions.GameActivity;
 using YearInReview.Infrastructure.Services;
 using YearInReview.Model.Aggregators;
@@ -36,6 +38,9 @@ namespace YearInReview
 		private IReadOnlyCollection<InitValidationError> _initValidationErrors = new List<InitValidationError>();
 
 		public override Guid Id { get; } = Guid.Parse("a22a7611-3023-4ca8-907e-47f883acd1b2");
+		
+		private const double DefaultDialogWindowHeight = 600;
+		private const double DefaultDialogWindowWidth = 1000;
 
 		public YearInReview(IPlayniteAPI api) : base(api)
 		{
@@ -54,6 +59,12 @@ namespace YearInReview
 
 		public override IEnumerable<SidebarItem> GetSidebarItems()
 		{
+			var settings = GetSettings(false) as YearInReviewSettingsViewModel;
+			if (settings?.Settings.ShowSidebarItem != true)
+			{
+				yield break;
+			}
+			
 			yield return new SidebarItem
 			{
 				Title = ResourceProvider.GetString("LOC_YearInReview_PluginName"),
@@ -63,27 +74,23 @@ namespace YearInReview
 					FontFamily = ResourceProvider.GetResource("FontIcoFont") as FontFamily
 				},
 				Type = SiderbarItemType.View,
-				Opened = () =>
+				Opened = GetPluginView
+			};
+		}
+
+		public override IEnumerable<MainMenuItem> GetMainMenuItems(GetMainMenuItemsArgs args)
+		{
+			var pluginName = ResourceProvider.GetString("LOC_YearInReview_PluginName");
+			var pluginMenuSection = "@" + pluginName;
+			
+			yield return new MainMenuItem
+			{
+				Description = ResourceProvider.GetString("LOC_YearInReview_ShowYearInReviewMenuItem"),
+				MenuSection = pluginMenuSection,
+				Action = _ =>
 				{
-					if (!_isStartupValidationSuccess)
-					{
-						ValidateExtensionStateAndInitialize();
-					}
-					
-					if (_initValidationErrors.Any())
-					{
-						var errorsViewModel = new ValidationErrorsViewModel(_initValidationErrors);
-						var errorsView = new ValidationErrorsView(errorsViewModel);
-						return errorsView;
-					}
-
-					if (_mainView == null || _mainViewModel == null)
-					{
-						_mainViewModel = new MainViewModel(Api, _reportManager);
-						_mainView = new MainView(_mainViewModel);
-					}
-
-					return _mainView;
+					var view = GetPluginView();
+					OpenViewAsDialog(view, pluginName);
 				}
 			};
 		}
@@ -187,6 +194,49 @@ namespace YearInReview
 			_reportManager = new ReportManager(reportPersistence, reportGenerator, dateTimeProvider);
 
 			return _reportManager;
+		}
+		
+		private PluginUserControl GetPluginView()
+		{
+			if (!_isStartupValidationSuccess)
+			{
+				ValidateExtensionStateAndInitialize();
+			}
+
+			if (_initValidationErrors.Any())
+			{
+				var errorsViewModel = new ValidationErrorsViewModel(_initValidationErrors);
+				var errorsView = new ValidationErrorsView(errorsViewModel);
+				return errorsView;
+			}
+
+			if (_mainView == null || _mainViewModel == null)
+			{
+				_mainViewModel = new MainViewModel(Api, _reportManager);
+				_mainView = new MainView(_mainViewModel);
+			}
+
+			return _mainView;
+		}
+		
+		private void OpenViewAsDialog(
+			PluginUserControl view,
+			string title,
+			double height = DefaultDialogWindowHeight,
+			double width = DefaultDialogWindowWidth
+		) 
+		{
+			var window = PlayniteApi.Dialogs.CreateWindow(new WindowCreationOptions
+			{
+				ShowMinimizeButton = false
+			});
+			window.Height = height;
+			window.Width = width;
+			window.Title = title;
+			window.Content = view;
+			window.Owner = PlayniteApi.Dialogs.GetCurrentAppWindow();
+			window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+			window.ShowDialog();
 		}
 	}
 }
