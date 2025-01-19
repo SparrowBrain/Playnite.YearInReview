@@ -53,7 +53,7 @@
                 </ListBox.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Button Content="{Binding Username}" Command="{Binding SwitchYearCommand}"></Button>
+                        <Button Content="{Binding Username}" Command="{Binding DisplayCommand}"></Button>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ListBox>

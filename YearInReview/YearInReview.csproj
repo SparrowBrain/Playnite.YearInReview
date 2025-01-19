@@ -51,6 +51,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\Reports\MVVM\ReportButtonViewModel.cs" />
     <Compile Include="Validation\ExtensionStartupValidator.cs" />
     <Compile Include="Extensions\GameActivity\Activity.cs" />
     <Compile Include="Extensions\GameActivity\GameActivityExtension.cs" />

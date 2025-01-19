@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Windows.Input;
 
 namespace YearInReview.Model.Reports.MVVM
@@ -14,12 +9,5 @@ namespace YearInReview.Model.Reports.MVVM
 
 
 		public ICommand SwitchYearCommand { get; set; }
-	}
-
-	public class ReportButtonViewModel : ObservableObject
-	{
-		public string Username { get; set; }
-
-		public ICommand DisplayCommand { get; set; }
 	}
 }
