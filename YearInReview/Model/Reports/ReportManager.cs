@@ -14,7 +14,7 @@ namespace YearInReview.Model.Reports
 		private readonly IReportGenerator _reportGenerator;
 		private readonly IDateTimeProvider _dateTimeProvider;
 
-		private Dictionary<Guid, PersistedReport> _reportCache;
+		private Dictionary<Guid, PersistedReport> _reportCache = new Dictionary<Guid, PersistedReport>();
 
 		public ReportManager(
 			IReportPersistence reportPersistence,
@@ -92,6 +92,24 @@ namespace YearInReview.Model.Reports
 		public IReadOnlyCollection<PersistedReport> GetAllPreLoadedReports()
 		{
 			return _reportCache.Values.ToList();
+		}
+
+		public void ExportReport(Guid id, string exportPath)
+		{
+			if (!_reportCache.TryGetValue(id, out var persistedReport))
+			{
+				throw new InvalidOperationException($"Report {id} not persisted in cache.");
+			}
+
+			var report = _reportPersistence.LoadReport(persistedReport.FilePath);
+			_reportPersistence.ExportReport(report, exportPath);
+		}
+
+		public Guid ImportReport(string importPath)
+		{
+			var persistedReport = _reportPersistence.ImportReport(importPath);
+			_reportCache.Add(persistedReport.Id, persistedReport);
+			return persistedReport.Id;
 		}
 	}
 }

@@ -1,8 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
 using YearInReview.Model.Reports._1970;
 
 namespace YearInReview.Model.Reports.Persistence
@@ -85,6 +84,62 @@ namespace YearInReview.Model.Reports.Persistence
 		{
 			var contents = File.ReadAllText(filePath);
 			return JsonConvert.DeserializeObject<Report1970>(contents);
+		}
+
+		// TODO: Don't forget to sanitize username
+		public void ExportReport(Report1970 report, string exportPath)
+		{
+			var serialized = JsonConvert.SerializeObject(report);
+			File.WriteAllText(exportPath, serialized);
+		}
+
+		public PersistedReport ImportReport(string importPath)
+		{
+			var contents = File.ReadAllText(importPath);
+			var report = JsonConvert.DeserializeObject<Report1970>(contents);
+			ValidateImportedReport(report, importPath);
+
+			var friendsPath = Path.Combine(_reportsPath, report.Metadata.Year.ToString(), "Friends");
+			var importedFilePath = Path.Combine(friendsPath, GetSanitizedFriendFileName(report));
+
+			if (!Directory.Exists(friendsPath))
+			{
+				Directory.CreateDirectory(friendsPath);
+			}
+
+			File.WriteAllText(importedFilePath, contents);
+
+			return new PersistedReport()
+			{
+				Id = report.Metadata.Id,
+				IsOwn = false,
+				FilePath = importedFilePath,
+				Username = report.Metadata.Username,
+				Year = report.Metadata.Year,
+				TotalPlaytime = report.TotalPlaytime,
+			};
+		}
+
+		private static void ValidateImportedReport(Report1970 report, string importPath)
+		{
+			if (report.Metadata == null
+				|| report.Metadata.Id == Guid.Empty
+				|| report.Metadata.Year == 0
+				|| string.IsNullOrEmpty(report.Metadata.Username))
+			{
+				throw new InvalidDataException($"File \"{importPath}\" is not a valid report file.");
+			}
+		}
+
+		private static string GetSanitizedFriendFileName(Report1970 report)
+		{
+			var fileName = $"{report.Metadata.Username}_{report.Metadata.Year}.json";
+			foreach (var invalidChar in Path.GetInvalidFileNameChars())
+			{
+				fileName = fileName.Replace(invalidChar, '_');
+			}
+
+			return fileName;
 		}
 	}
 }

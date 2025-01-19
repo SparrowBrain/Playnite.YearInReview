@@ -103,7 +103,7 @@ namespace YearInReview.UnitTests.Model.Reports
 
 		[Theory]
 		[AutoFakeItEasyData]
-		public async Task GetReport_LoadReportFromPeristence_WhenReportsExist(
+		public async Task GetReport_LoadReportFromPersistence_WhenReportsExist(
 			[Frozen] IReportPersistence reportPersistence,
 			List<PersistedReport> persistedReports,
 			Report1970 expected,
@@ -120,6 +120,83 @@ namespace YearInReview.UnitTests.Model.Reports
 			var actual = sut.GetReport(ownReport.Id);
 
 			// Assert
+			Assert.Equal(expected, actual);
+		}
+
+		[Theory]
+		[AutoFakeItEasyData]
+		public void ExportReport_ThrowsException_WhenReportNotFound(
+			Guid reportId,
+			string reportPath,
+			ReportManager sut)
+		{
+			// Act
+			var exception = Record.Exception(() => sut.ExportReport(reportId, reportPath));
+
+			// Assert
+			Assert.NotNull(exception);
+			Assert.IsType<InvalidOperationException>(exception);
+			Assert.Equal($"Report {reportId} not persisted in cache.", exception.Message);
+		}
+
+		[Theory]
+		[AutoFakeItEasyData]
+		public async Task ExportReport_PersistsReport_WhenReportExists(
+			[Frozen] IReportPersistence reportPersistence,
+			List<PersistedReport> persistedReports,
+			Report1970 report,
+			string reportPath,
+			ReportManager sut)
+		{
+			// Arrange
+			var persistedReport = persistedReports.Last();
+			A.CallTo(() => reportPersistence.PreLoadAllReports()).Returns(persistedReports);
+			A.CallTo(() => reportPersistence.LoadReport(persistedReport.FilePath)).Returns(report);
+			await sut.Init();
+
+			// Act
+			sut.ExportReport(persistedReport.Id, reportPath);
+
+			// Assert
+			A.CallTo(() => reportPersistence.ExportReport(report, reportPath)).MustHaveHappened();
+		}
+
+		[Theory]
+		[AutoFakeItEasyData]
+		public void ImportReport_ReturnsImportedReportId(
+			[Frozen] IReportPersistence reportPersistence,
+			string reportPath,
+			PersistedReport persistedReport,
+			ReportManager sut)
+		{
+			// Arrange
+			A.CallTo(() => reportPersistence.ImportReport(reportPath)).Returns(persistedReport);
+
+			// Act
+			var actual = sut.ImportReport(reportPath);
+
+			// Assert
+			Assert.Equal(persistedReport.Id, actual);
+		}
+
+		[Theory]
+		[AutoFakeItEasyData]
+		public void ImportReport_PersistsReportInCache(
+			[Frozen] IReportPersistence reportPersistence,
+			string reportPath,
+			PersistedReport persistedReport,
+			Report1970 expected,
+			ReportManager sut)
+		{
+			// Arrange
+			A.CallTo(() => reportPersistence.ImportReport(reportPath)).Returns(persistedReport);
+			A.CallTo(() => reportPersistence.LoadReport(persistedReport.FilePath)).Returns(expected);
+
+			// Act
+			var actualId = sut.ImportReport(reportPath);
+
+			// Assert
+			var actual = sut.GetReport(actualId);
 			Assert.Equal(expected, actual);
 		}
 	}

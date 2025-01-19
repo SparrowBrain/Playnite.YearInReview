@@ -8,12 +8,16 @@
              d:DesignHeight="450" d:DesignWidth="800">
    <ScrollViewer>
         <Grid Margin="0,75,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
-            <ListBox Grid.Row="0" ItemsSource="{Binding YearButtons}" Margin="0,0,0,0" Background="Transparent">
+            <ListBox Grid.Row="0" Grid.Column="0" ItemsSource="{Binding YearButtons}" Margin="0,0,0,0" Background="Transparent">
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
                         <Setter Property="Focusable" Value="False" />
@@ -31,7 +35,11 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
             </ListBox>
-            <ListBox Grid.Row="1" ItemsSource="{Binding ReportButtons}" Margin="0,0,0,0" Background="Transparent">
+            <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Command="{Binding ExportReport}">TEMP EXPORT</Button>
+                <Button Command="{Binding ImportReport}">TEMP IMPORT</Button>
+            </StackPanel>
+            <ListBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding ReportButtons}" Margin="0,0,0,0" Background="Transparent">
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
                         <Setter Property="Focusable" Value="False" />
@@ -49,7 +57,7 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ListBox>
-            <ContentControl Grid.Row="2" Content="{Binding ActiveReport}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"></ContentControl>
+            <ContentControl Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Content="{Binding ActiveReport}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"></ContentControl>
         </Grid>
    </ScrollViewer>
 </PluginUserControl>
