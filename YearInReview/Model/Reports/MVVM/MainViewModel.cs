@@ -19,7 +19,6 @@ namespace YearInReview.Model.Reports.MVVM
 		private Report1970View _activeReport;
 		private ObservableCollection<YearButtonViewModel> _yearButtons = new ObservableCollection<YearButtonViewModel>();
 		private ObservableCollection<ReportButtonViewModel> _reportButtons = new ObservableCollection<ReportButtonViewModel>();
-		private bool _promptToExportReport;
 
 		public MainViewModel(IPlayniteAPI api, ReportManager reportManager)
 		{
