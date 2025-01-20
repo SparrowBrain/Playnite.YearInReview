@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Controls;
 using System.Windows.Input;
 using YearInReview.Model.Reports._1970;
 using YearInReview.Model.Reports._1970.MVVM;
@@ -17,9 +16,10 @@ namespace YearInReview.Model.Reports.MVVM
 		private readonly IPlayniteAPI _api;
 		private readonly ReportManager _reportManager;
 
-		private UserControl _activeReport;
+		private Report1970View _activeReport;
 		private ObservableCollection<YearButtonViewModel> _yearButtons = new ObservableCollection<YearButtonViewModel>();
 		private ObservableCollection<ReportButtonViewModel> _reportButtons = new ObservableCollection<ReportButtonViewModel>();
+		private bool _promptToExportReport;
 
 		public MainViewModel(IPlayniteAPI api, ReportManager reportManager)
 		{
@@ -74,7 +74,7 @@ namespace YearInReview.Model.Reports.MVVM
 			DisplayReport(report, allYearReports);
 		});
 
-		public UserControl ActiveReport
+		public Report1970View ActiveReport
 		{
 			get => _activeReport;
 			set => SetValue(ref _activeReport, value);

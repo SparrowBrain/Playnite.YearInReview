@@ -61,8 +61,6 @@ namespace YearInReview.Settings.MVVM
 
 		protected virtual void OnSettingsSaved()
 		{
-			LogManager.GetLogger().Debug("OnSettingsSaved");
-			LogManager.GetLogger().Debug("SettingsSaved == null: " + (SettingsSaved == null));
 			SettingsSaved?.Invoke();
 		}
 	}

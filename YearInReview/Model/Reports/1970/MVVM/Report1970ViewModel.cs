@@ -109,6 +109,11 @@ namespace YearInReview.Model.Reports._1970.MVVM
 		public string SingleSourceText => string.Format(ResourceProvider.GetString("LOC_YearInReview_Report1970_SingleSourceText"), MostPlayedSources.FirstOrDefault()?.Name);
 
 		public string AddGamesCountText => string.Format(ResourceProvider.GetString("LOC_YearInReview_Report1970_AddedGamesCountHeader"), AddedGamesCount);
+
+		public bool PromptToExportReport => FriendsPlaytimeLeaderboard.Count < 2;
+
+		public RelayCommand ShowSharingHelp => new RelayCommand(() =>
+			System.Diagnostics.Process.Start("https://github.com/SparrowBrain/Playnite.YearInReview?tab=readme-ov-file#sharing-with-friends"));
 	}
 
 	public class FriendPlaytimeLeaderboardViewModel

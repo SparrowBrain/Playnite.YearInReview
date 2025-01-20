@@ -1,6 +1,21 @@
 # Playnite.YearInReview
 Celebrate your last year of play by reviewing some of the play statistics from Playnite GameActivity plugin!
 
+![Main YearInReview view](/ci/screenshots/01.png)
+
+## Sharing with friends
+You can share your report with friends. To share:
+* Click the share button at the top-right corner of the report;
+* Save the report as .json file;
+* Send it to your friends;
+
+And to import you friend's report:
+* Click the import button at the top-right corner of any report;
+* Select the .json file you received from your friend;
+* Click Open;
+
+You should now see your friend's report :).
+
 ## Contributing
 The structure of the code is still in limbo, but here's the general idea:
 * Extensions - contains other extension related code. In this case - GameActivity plugin.
