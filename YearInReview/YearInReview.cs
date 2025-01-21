@@ -71,8 +71,29 @@ namespace YearInReview
 						FontFamily = ResourceProvider.GetResource("FontIcoFont") as FontFamily
 					},
 					Type = SiderbarItemType.View,
-					Opened = GetPluginView,
-					Visible = false
+					Visible = false,
+					Opened = () =>
+					{
+						if (!_isStartupValidationSuccess)
+						{
+							ValidateExtensionStateAndInitialize();
+						}
+
+						if (_initValidationErrors.Any())
+						{
+							var errorsViewModel = new ValidationErrorsViewModel(_initValidationErrors);
+							var errorsView = new ValidationErrorsView(errorsViewModel);
+							return errorsView;
+						}
+
+						if (_mainView == null || _mainViewModel == null)
+						{
+							_mainViewModel = new MainViewModel(Api, _reportManager);
+							_mainView = new MainView(_mainViewModel);
+						}
+
+						return _mainView;
+					}
 				};
 			}
 			
@@ -90,7 +111,7 @@ namespace YearInReview
 				MenuSection = pluginMenuSection,
 				Action = _ =>
 				{
-					var view = GetPluginView();
+					var view = new MainView(new MainViewModel(Api, _reportManager));
 					OpenViewAsDialog(view, pluginName);
 				}
 			};
@@ -204,29 +225,6 @@ namespace YearInReview
 			_reportManager = new ReportManager(reportPersistence, reportGenerator, dateTimeProvider);
 
 			return _reportManager;
-		}
-		
-		private PluginUserControl GetPluginView()
-		{
-			if (!_isStartupValidationSuccess)
-			{
-				ValidateExtensionStateAndInitialize();
-			}
-
-			if (_initValidationErrors.Any())
-			{
-				var errorsViewModel = new ValidationErrorsViewModel(_initValidationErrors);
-				var errorsView = new ValidationErrorsView(errorsViewModel);
-				return errorsView;
-			}
-
-			if (_mainView == null || _mainViewModel == null)
-			{
-				_mainViewModel = new MainViewModel(Api, _reportManager);
-				_mainView = new MainView(_mainViewModel);
-			}
-
-			return _mainView;
 		}
 		
 		private void OpenViewAsDialog(
