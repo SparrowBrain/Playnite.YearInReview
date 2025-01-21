@@ -36,11 +36,12 @@ namespace YearInReview
 		private ReportManager _reportManager;
 		private bool _isStartupValidationSuccess;
 		private IReadOnlyCollection<InitValidationError> _initValidationErrors = new List<InitValidationError>();
-
-		public override Guid Id { get; } = Guid.Parse("a22a7611-3023-4ca8-907e-47f883acd1b2");
+		private SidebarItem _sidebarItem;
 		
 		private const double DefaultDialogWindowHeight = 600;
 		private const double DefaultDialogWindowWidth = 1000;
+		
+		public override Guid Id { get; } = Guid.Parse("a22a7611-3023-4ca8-907e-47f883acd1b2");
 
 		public YearInReview(IPlayniteAPI api) : base(api)
 		{
@@ -59,23 +60,23 @@ namespace YearInReview
 
 		public override IEnumerable<SidebarItem> GetSidebarItems()
 		{
-			var settings = GetSettings(false) as YearInReviewSettingsViewModel;
-			if (settings?.Settings.ShowSidebarItem != true)
+			if (_sidebarItem == null)
 			{
-				yield break;
+				_sidebarItem = new SidebarItem
+				{
+					Title = ResourceProvider.GetString("LOC_YearInReview_PluginName"),
+					Icon = new TextBlock
+					{
+						Text = char.ConvertFromUtf32(0xeffe),
+						FontFamily = ResourceProvider.GetResource("FontIcoFont") as FontFamily
+					},
+					Type = SiderbarItemType.View,
+					Opened = GetPluginView,
+					Visible = false
+				};
 			}
 			
-			yield return new SidebarItem
-			{
-				Title = ResourceProvider.GetString("LOC_YearInReview_PluginName"),
-				Icon = new TextBlock
-				{
-					Text = char.ConvertFromUtf32(0xeffe),
-					FontFamily = ResourceProvider.GetResource("FontIcoFont") as FontFamily
-				},
-				Type = SiderbarItemType.View,
-				Opened = GetPluginView
-			};
+			yield return _sidebarItem;
 		}
 
 		public override IEnumerable<MainMenuItem> GetMainMenuItems(GetMainMenuItemsArgs args)
@@ -99,6 +100,10 @@ namespace YearInReview
 		{
 			_startupSettingsValidator.EnsureCorrectVersionSettingsExist();
 			ValidateExtensionStateAndInitialize();
+
+			GetSettings(false);
+			HandleSidebarItemVisibilityAfterSettingsSaved();
+			_settingsViewModel.SettingsSaved += HandleSidebarItemVisibilityAfterSettingsSaved;
 		}
 
 		public override ISettings GetSettings(bool firstRunSettings)
@@ -115,7 +120,7 @@ namespace YearInReview
 		{
 			if (_settingsViewModel != null)
 			{
-				_settingsViewModel.SettingsSaved -= HandleSettingsViewModelSettingsSaved;
+				_settingsViewModel.SettingsSaved -= HandleValidationAfterSettingsSaved;
 			}
 
 			var extensionStartupValidator = new ExtensionStartupValidator(this, Api);
@@ -133,16 +138,21 @@ namespace YearInReview
 				GetSettings(false);
 				if (_settingsViewModel != null)
 				{
-					_settingsViewModel.SettingsSaved += HandleSettingsViewModelSettingsSaved;
+					_settingsViewModel.SettingsSaved += HandleValidationAfterSettingsSaved;
 				}
 			}
 		}
 
-		private void HandleSettingsViewModelSettingsSaved()
+		private void HandleSidebarItemVisibilityAfterSettingsSaved()
+		{
+			_sidebarItem.Visible = _settingsViewModel.Settings.ShowSidebarItem;
+		}
+
+		private void HandleValidationAfterSettingsSaved()
 		{
 			if (_settingsViewModel != null)
 			{
-				_settingsViewModel.SettingsSaved -= HandleSettingsViewModelSettingsSaved;
+				_settingsViewModel.SettingsSaved -= HandleValidationAfterSettingsSaved;
 			}
 
 			ValidateExtensionStateAndInitialize();
