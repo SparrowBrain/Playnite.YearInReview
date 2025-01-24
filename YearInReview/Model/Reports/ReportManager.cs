@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using YearInReview.Infrastructure.Services;
+using YearInReview.Model.Exceptions;
 using YearInReview.Model.Reports._1970;
 using YearInReview.Model.Reports.Persistence;
 
@@ -105,11 +106,29 @@ namespace YearInReview.Model.Reports
 			_reportPersistence.ExportReport(report, exportPath);
 		}
 
-		public Guid ImportReport(string importPath)
+		public Guid ImportReport(Report1970 report)
 		{
-			var persistedReport = _reportPersistence.ImportReport(importPath);
+			ValidateReport(report);
+
+			var persistedReport = _reportPersistence.ImportReport(report);
 			_reportCache.Add(persistedReport.Id, persistedReport);
 			return persistedReport.Id;
+		}
+
+		private void ValidateReport(Report1970 report)
+		{
+			if (report.Metadata == null
+				|| report.Metadata.Id == Guid.Empty
+				|| report.Metadata.Year == 0
+				|| string.IsNullOrEmpty(report.Metadata.Username))
+			{
+				throw new InvalidReportFileException("Trying to import invalid report file.");
+			}
+
+			if (_reportCache.ContainsKey(report.Metadata.Id))
+			{
+				throw new ReportAlreadyExistsException($"Trying to import report {report.Metadata.Id} that is already in cache.");
+			}
 		}
 	}
 }

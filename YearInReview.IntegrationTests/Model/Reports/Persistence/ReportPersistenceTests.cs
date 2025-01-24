@@ -11,7 +11,7 @@ using YearInReview.Model.Reports.Persistence;
 
 namespace YearInReview.IntegrationTests.Model.Reports.Persistence
 {
-	public class ReportPersistenceTests
+	public class ReportPersistenceTests : IDisposable
 	{
 		private const string ExtensionDataPath = @"Model\Reports\Persistence";
 
@@ -186,16 +186,13 @@ namespace YearInReview.IntegrationTests.Model.Reports.Persistence
 		public void ImportReport_WritesToCorrectFriendFile(Report1970 expected)
 		{
 			// Arrange
-			var importPath = Path.Combine(Path.GetTempPath(), $"{expected.Metadata.Username}_{expected.Metadata.Year}.json");
-			File.WriteAllText(importPath, JsonConvert.SerializeObject(expected));
-
 			Directory.CreateDirectory(_reportsPath);
 			var friendsPath = Path.Combine(_reportsPath, expected.Metadata.Year.ToString(), "Friends");
 			Directory.CreateDirectory(friendsPath);
 			var expectedPath = Path.Combine(friendsPath, $"{expected.Metadata.Username}_{expected.Metadata.Year}.json");
 
 			// Act
-			var persistedReport = _sut.ImportReport(importPath);
+			var persistedReport = _sut.ImportReport(expected);
 
 			// Assert
 			var imported = File.ReadAllText(expectedPath);
@@ -207,23 +204,17 @@ namespace YearInReview.IntegrationTests.Model.Reports.Persistence
 			Assert.Equal(expected.Metadata.Year, persistedReport.Year);
 			Assert.Equal(expected.Metadata.Username, persistedReport.Username);
 			Assert.Equal(expected.TotalPlaytime, persistedReport.TotalPlaytime);
-			File.Delete(importPath);
 		}
 
 		[Theory]
 		[AutoData]
 		public void ImportReport_CreatesFriendsDirectories_WhenTheyDoNotExist(Report1970 expected)
 		{
-			// Arrange
-			var importPath = Path.Combine(Path.GetTempPath(), $"{expected.Metadata.Username}_{expected.Metadata.Year}.json");
-			File.WriteAllText(importPath, JsonConvert.SerializeObject(expected));
-
 			// Act
-			var persistedReport = _sut.ImportReport(importPath);
+			var persistedReport = _sut.ImportReport(expected);
 
 			// Assert
 			Assert.Equal(expected.Metadata.Id, persistedReport.Id);
-			File.Delete(importPath);
 		}
 
 		[Theory]
@@ -232,8 +223,6 @@ namespace YearInReview.IntegrationTests.Model.Reports.Persistence
 		{
 			// Arrange
 			expected.Metadata.Username = "user/name:?<>";
-			var importPath = Path.Combine(Path.GetTempPath(), "to_be_imported.json");
-			File.WriteAllText(importPath, JsonConvert.SerializeObject(expected));
 
 			Directory.CreateDirectory(_reportsPath);
 			var friendsPath = Path.Combine(_reportsPath, expected.Metadata.Year.ToString(), "Friends");
@@ -241,45 +230,20 @@ namespace YearInReview.IntegrationTests.Model.Reports.Persistence
 			var expectedPath = Path.Combine(friendsPath, $"user_name_____{expected.Metadata.Year}.json");
 
 			// Act
-			var persistedReport = _sut.ImportReport(importPath);
+			var persistedReport = _sut.ImportReport(expected);
 
 			// Assert
 			Assert.Equal(expectedPath, persistedReport.FilePath);
-			File.Delete(importPath);
 		}
 
-		[Theory]
-		[InlineAutoData(nameof(Report1970.Metadata))]
-		[InlineAutoData(nameof(Metadata.Id))]
-		[InlineAutoData(nameof(Metadata.Year))]
-		[InlineAutoData(nameof(Metadata.Username))]
-		public void ImportReport_ThrowsException_WhenReportIsInvalid(
-			string propertyName,
-			Report1970 report)
+	
+
+		public void Dispose()
 		{
-			// Arrange
-			if (propertyName == nameof(Report1970.Metadata))
+			if (Directory.Exists(_reportsPath))
 			{
-				report.Metadata = null;
+				Directory.Delete(_reportsPath, true);
 			}
-			else
-			{
-				var metadataProperty = typeof(Report1970).GetProperty(nameof(Report1970.Metadata));
-				var property = metadataProperty.PropertyType.GetProperty(propertyName);
-				property.SetValue(report.Metadata, default);
-			}
-
-			var importPath = Path.Combine(Path.GetTempPath(), "some_file.json");
-			File.WriteAllText(importPath, JsonConvert.SerializeObject(report));
-
-			// Act
-			var exception = Record.Exception(() => _sut.ImportReport(importPath));
-
-			// Assert
-			Assert.NotNull(exception);
-			Assert.IsType<InvalidDataException>(exception);
-			Assert.Equal($"File \"{importPath}\" is not a valid report file.", exception.Message);
-			File.Delete(importPath);
 		}
 	}
 }

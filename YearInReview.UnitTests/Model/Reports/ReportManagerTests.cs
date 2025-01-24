@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using TestTools.Shared;
 using Xunit;
 using YearInReview.Infrastructure.Services;
+using YearInReview.Model.Aggregators.Data;
+using YearInReview.Model.Exceptions;
 using YearInReview.Model.Reports;
 using YearInReview.Model.Reports._1970;
 using YearInReview.Model.Reports.Persistence;
@@ -165,15 +167,15 @@ namespace YearInReview.UnitTests.Model.Reports
 		[AutoFakeItEasyData]
 		public void ImportReport_ReturnsImportedReportId(
 			[Frozen] IReportPersistence reportPersistence,
-			string reportPath,
+			Report1970 report,
 			PersistedReport persistedReport,
 			ReportManager sut)
 		{
 			// Arrange
-			A.CallTo(() => reportPersistence.ImportReport(reportPath)).Returns(persistedReport);
+			A.CallTo(() => reportPersistence.ImportReport(report)).Returns(persistedReport);
 
 			// Act
-			var actual = sut.ImportReport(reportPath);
+			var actual = sut.ImportReport(report);
 
 			// Assert
 			Assert.Equal(persistedReport.Id, actual);
@@ -183,21 +185,73 @@ namespace YearInReview.UnitTests.Model.Reports
 		[AutoFakeItEasyData]
 		public void ImportReport_PersistsReportInCache(
 			[Frozen] IReportPersistence reportPersistence,
-			string reportPath,
 			PersistedReport persistedReport,
 			Report1970 expected,
 			ReportManager sut)
 		{
 			// Arrange
-			A.CallTo(() => reportPersistence.ImportReport(reportPath)).Returns(persistedReport);
+			A.CallTo(() => reportPersistence.ImportReport(expected)).Returns(persistedReport);
 			A.CallTo(() => reportPersistence.LoadReport(persistedReport.FilePath)).Returns(expected);
 
 			// Act
-			var actualId = sut.ImportReport(reportPath);
+			var actualId = sut.ImportReport(expected);
 
 			// Assert
 			var actual = sut.GetReport(actualId);
 			Assert.Equal(expected, actual);
+		}
+
+		[Theory]
+		[InlineAutoFakeItEasyData(nameof(Report1970.Metadata))]
+		[InlineAutoFakeItEasyData(nameof(Metadata.Id))]
+		[InlineAutoFakeItEasyData(nameof(Metadata.Year))]
+		[InlineAutoFakeItEasyData(nameof(Metadata.Username))]
+		public void ImportReport_ThrowsException_WhenReportIsInvalid(
+			string propertyName,
+			Report1970 report,
+			ReportManager sut)
+		{
+			// Arrange
+			if (propertyName == nameof(Report1970.Metadata))
+			{
+				report.Metadata = null;
+			}
+			else
+			{
+				var metadataProperty = typeof(Report1970).GetProperty(nameof(Report1970.Metadata));
+				var property = metadataProperty.PropertyType.GetProperty(propertyName);
+				property.SetValue(report.Metadata, default);
+			}
+
+			// Act
+			var exception = Record.Exception(() => sut.ImportReport(report));
+
+			// Assert
+			Assert.NotNull(exception);
+			Assert.IsType<InvalidReportFileException>(exception);
+			Assert.Equal("Trying to import invalid report file.", exception.Message);
+		}
+
+		[Theory]
+		[AutoFakeItEasyData]
+		public async Task ImportReport_ThrowsException_WhenReportIsAlreadyInCache(
+			[Frozen] IReportPersistence reportPersistence,
+			List<PersistedReport> persistedReports,
+			Report1970 report,
+			ReportManager sut)
+		{
+			// Arrange
+			report.Metadata.Id = persistedReports.Last().Id;
+			A.CallTo(() => reportPersistence.PreLoadAllReports()).Returns(persistedReports);
+			await sut.Init();
+
+			// Act
+			var exception = Record.Exception(() => sut.ImportReport(report));
+
+			// Assert
+			Assert.NotNull(exception);
+			Assert.IsType<ReportAlreadyExistsException>(exception);
+			Assert.Equal($"Trying to import report {report.Metadata.Id} that is already in cache.", exception.Message);
 		}
 	}
 }

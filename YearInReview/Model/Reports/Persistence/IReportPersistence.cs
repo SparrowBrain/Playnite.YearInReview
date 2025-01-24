@@ -13,6 +13,6 @@ namespace YearInReview.Model.Reports.Persistence
 
 		void ExportReport(Report1970 report, string exportPath);
 
-		PersistedReport ImportReport(string importPath);
+		PersistedReport ImportReport(Report1970 importPath);
 	}
 }

@@ -1,9 +1,12 @@
-﻿using Playnite.SDK;
+﻿using Newtonsoft.Json;
+using Playnite.SDK;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Windows.Input;
+using YearInReview.Model.Exceptions;
 using YearInReview.Model.Reports._1970;
 using YearInReview.Model.Reports._1970.MVVM;
 using YearInReview.Model.Reports.Persistence;
@@ -43,34 +46,60 @@ namespace YearInReview.Model.Reports.MVVM
 
 		public ICommand ExportReport => new RelayCommand(() =>
 		{
-			var exportPath = _api.Dialogs.SaveFile("Json files|*.json");
-			if (string.IsNullOrEmpty(exportPath))
+			try
 			{
-				return;
-			}
+				var exportPath = _api.Dialogs.SaveFile("Json files|*.json");
+				if (string.IsNullOrEmpty(exportPath))
+				{
+					return;
+				}
 
-			_reportManager.ExportReport(((Report1970ViewModel)ActiveReport.DataContext).Id, exportPath);
+				_reportManager.ExportReport(((Report1970ViewModel)ActiveReport.DataContext).Id, exportPath);
+			}
+			catch (Exception ex)
+			{
+				_logger.Error(ex, "Error while trying to export report");
+			}
 		});
 
 		public ICommand ImportReport => new RelayCommand(() =>
 		{
 			var importPath = _api.Dialogs.SelectFile("Json files|*.json");
-			if (string.IsNullOrEmpty(importPath))
+			try
 			{
-				return;
+				if (string.IsNullOrEmpty(importPath))
+				{
+					return;
+				}
+
+				var contents = File.ReadAllText(importPath);
+				var reportToImport = JsonConvert.DeserializeObject<Report1970>(contents);
+
+				var importedReportId = _reportManager.ImportReport(reportToImport);
+
+				_yearButtons.Clear();
+				_reportButtons.Clear();
+
+				CreateReportButtons();
+
+				var report = _reportManager.GetReport(importedReportId);
+				DisplaySpecificUserReport(report.Metadata.Year, report.Metadata.Username);
 			}
-
-			var importedReportId = _reportManager.ImportReport(importPath);
-
-			_yearButtons.Clear();
-			_reportButtons.Clear();
-
-			CreateReportButtons();
-
-			var report = _reportManager.GetReport(importedReportId);
-			var preLoadedReports = _reportManager.GetAllPreLoadedReports();
-			var allYearReports = preLoadedReports.Where(p => p.Year == report.Metadata.Year).ToList();
-			DisplayReport(report, allYearReports);
+			catch (ReportAlreadyExistsException ex)
+			{
+				_logger.Warn(ex, $"Trying to import report {importPath} that is already persisted.");
+				_api.Dialogs.ShowMessage(ResourceProvider.GetString("LOC_YearInReview_Notification_ImportError_AlreadyExists"));
+			}
+			catch (InvalidReportFileException ex)
+			{
+				_logger.Warn(ex, $"Trying to import invalid report file {importPath}.");
+				_api.Dialogs.ShowErrorMessage(ResourceProvider.GetString("LOC_YearInReview_Notification_ImportError_InvalidFile"));
+			}
+			catch (Exception ex)
+			{
+				_logger.Error(ex, $"Error while trying to import report {importPath}");
+				_api.Dialogs.ShowErrorMessage(ResourceProvider.GetString("LOC_YearInReview_Notification_ImportError"));
+			}
 		});
 
 		public Report1970View ActiveReport
@@ -139,6 +168,12 @@ namespace YearInReview.Model.Reports.MVVM
 		{
 			YearButtons.FirstOrDefault()?.SwitchYearCommand.Execute(null);
 			ReportButtons.FirstOrDefault()?.DisplayCommand.Execute(null);
+		}
+
+		private void DisplaySpecificUserReport(int year, string username)
+		{
+			YearButtons.FirstOrDefault(x => x.Year == year)?.SwitchYearCommand.Execute(null);
+			ReportButtons.FirstOrDefault(x => x.Username == username)?.DisplayCommand.Execute(null);
 		}
 	}
 }

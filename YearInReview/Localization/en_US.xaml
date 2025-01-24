@@ -3,6 +3,9 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
     <sys:String x:Key="LOC_YearInReview_Main_Export_Tooltip">Export to share with friends</sys:String>
     <sys:String x:Key="LOC_YearInReview_Main_Import_Tooltip">Import friend's report</sys:String>
+    <sys:String x:Key="LOC_YearInReview_Notification_ImportError">An error occurred while trying to import the report. See extensions.log for more details.</sys:String>
+    <sys:String x:Key="LOC_YearInReview_Notification_ImportError_AlreadyExists">Report you are trying to import is already in Playnite. Skipping.</sys:String>
+    <sys:String x:Key="LOC_YearInReview_Notification_ImportError_InvalidFile">Trying to import invalid report file. Please double-check that you're importing file exported with YearInReview extension.</sys:String>
     <sys:String x:Key="LOC_YearInReview_Notification_InstallGameActivity">GameActivity extension not installed. It is mandatory for YearInReview extension to work.</sys:String>
     <sys:String x:Key="LOC_YearInReview_Notification_SetUsername">Please set your username in the Year In Review plugin settings.</sys:String>
     <sys:String x:Key="LOC_YearInReview_PlaytimeCalendar">Total Playtime</sys:String>
