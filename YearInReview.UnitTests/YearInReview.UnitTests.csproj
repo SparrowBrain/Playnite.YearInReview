@@ -98,7 +98,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExtensionStartupValidatorTests.cs" />
+    <Compile Include="Validation\ExtensionStartupValidatorTests.cs" />
     <Compile Include="Extensions\GameActivity\SessionExtensionsTests.cs" />
     <Compile Include="Model\Aggregators\AddedGamesAggregatorTest.cs" />
     <Compile Include="Model\Aggregators\HourlyPlaytimeAggregatorTests.cs" />

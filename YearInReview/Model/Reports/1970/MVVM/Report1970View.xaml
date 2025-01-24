@@ -189,6 +189,17 @@
                     </ItemsControl.ItemTemplate>
                 </ListBox>
             </StackPanel>
+            <StackPanel Visibility="{Binding PromptToExportReport, Converter={StaticResource BoolToCollapsedVisibilityConverter}}">
+                <TextBlock Text="{DynamicResource LOC_YearInReview_Report1970_ShareWithPlayniteFriendsHeader}" FontSize="25" TextAlignment="Left" Margin="10,48,10,10"></TextBlock>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="1" Command="{Binding ShowSharingHelp}" Content="{DynamicResource LOC_YearInReview_Report1970_ShareWithPlayniteFriendsButton}"></Button>
+                </Grid>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </PluginUserControl>

@@ -1,9 +1,12 @@
-﻿using Playnite.SDK;
+﻿using Newtonsoft.Json;
+using Playnite.SDK;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
-using System.Windows.Controls;
+using System.Windows.Input;
+using YearInReview.Model.Exceptions;
 using YearInReview.Model.Reports._1970;
 using YearInReview.Model.Reports._1970.MVVM;
 using YearInReview.Model.Reports.Persistence;
@@ -15,7 +18,8 @@ namespace YearInReview.Model.Reports.MVVM
 		private readonly ILogger _logger = LogManager.GetLogger();
 		private readonly IPlayniteAPI _api;
 		private readonly ReportManager _reportManager;
-		private UserControl _activeReport;
+
+		private Report1970View _activeReport;
 		private ObservableCollection<YearButtonViewModel> _yearButtons = new ObservableCollection<YearButtonViewModel>();
 		private ObservableCollection<ReportButtonViewModel> _reportButtons = new ObservableCollection<ReportButtonViewModel>();
 
@@ -23,46 +27,8 @@ namespace YearInReview.Model.Reports.MVVM
 		{
 			_api = api;
 			_reportManager = reportManager;
-			var preLoadedReports = reportManager.GetAllPreLoadedReports();
-			var years = preLoadedReports.Select(x => x.Year).Distinct().OrderByDescending(x => x);
 
-			foreach (var year in years)
-			{
-				YearButtons.Add(new YearButtonViewModel()
-				{
-					Year = year,
-					SwitchYearCommand =
-						new RelayCommand(() =>
-						{
-							try
-							{
-								ReportButtons = preLoadedReports.Where(x => x.Year == year).OrderBy(x => x.IsOwn).Select(x => new ReportButtonViewModel()
-								{
-									Username = x.Username,
-									DisplayCommand = new RelayCommand(() =>
-									{
-										try
-										{
-											var report = _reportManager.GetReport(x.Id);
-											var allYearReports = preLoadedReports.Where(p => p.Year == year).ToList();
-											DisplayReport(report, allYearReports);
-										}
-										catch (Exception ex)
-										{
-											_logger.Error(ex, "Error while trying to display report");
-										}
-									})
-								}).ToObservable();
-								ReportButtons.FirstOrDefault()?.DisplayCommand.Execute(null);
-							}
-							catch (Exception ex)
-							{
-								_logger.Error(ex, "Error while trying to display report");
-							}
-						})
-				});
-			}
-
+			CreateReportButtons();
 			DisplayMostRecentUserReport();
 		}
 
@@ -78,10 +44,116 @@ namespace YearInReview.Model.Reports.MVVM
 			set => SetValue(ref _reportButtons, value);
 		}
 
-		public UserControl ActiveReport
+		public ICommand ExportReport => new RelayCommand(() =>
+		{
+			try
+			{
+				var exportPath = _api.Dialogs.SaveFile("Json files|*.json");
+				if (string.IsNullOrEmpty(exportPath))
+				{
+					return;
+				}
+
+				_reportManager.ExportReport(((Report1970ViewModel)ActiveReport.DataContext).Id, exportPath);
+			}
+			catch (Exception ex)
+			{
+				_logger.Error(ex, "Error while trying to export report");
+			}
+		});
+
+		public ICommand ImportReport => new RelayCommand(() =>
+		{
+			var importPath = _api.Dialogs.SelectFile("Json files|*.json");
+			try
+			{
+				if (string.IsNullOrEmpty(importPath))
+				{
+					return;
+				}
+
+				var contents = File.ReadAllText(importPath);
+				var reportToImport = JsonConvert.DeserializeObject<Report1970>(contents);
+
+				var importedReportId = _reportManager.ImportReport(reportToImport);
+
+				_yearButtons.Clear();
+				_reportButtons.Clear();
+
+				CreateReportButtons();
+
+				var report = _reportManager.GetReport(importedReportId);
+				DisplaySpecificUserReport(report.Metadata.Year, report.Metadata.Username);
+			}
+			catch (ReportAlreadyExistsException ex)
+			{
+				_logger.Warn(ex, $"Trying to import report {importPath} that is already persisted.");
+				_api.Dialogs.ShowMessage(ResourceProvider.GetString("LOC_YearInReview_Notification_ImportError_AlreadyExists"));
+			}
+			catch (InvalidReportFileException ex)
+			{
+				_logger.Warn(ex, $"Trying to import invalid report file {importPath}.");
+				_api.Dialogs.ShowErrorMessage(ResourceProvider.GetString("LOC_YearInReview_Notification_ImportError_InvalidFile"));
+			}
+			catch (Exception ex)
+			{
+				_logger.Error(ex, $"Error while trying to import report {importPath}");
+				_api.Dialogs.ShowErrorMessage(ResourceProvider.GetString("LOC_YearInReview_Notification_ImportError"));
+			}
+		});
+
+		public Report1970View ActiveReport
 		{
 			get => _activeReport;
 			set => SetValue(ref _activeReport, value);
+		}
+
+		private void CreateReportButtons()
+		{
+			var preLoadedReports = _reportManager.GetAllPreLoadedReports();
+			var years = preLoadedReports.Select(x => x.Year).Distinct().OrderByDescending(x => x);
+
+			foreach (var year in years)
+			{
+				YearButtons.Add(new YearButtonViewModel()
+				{
+					Year = year,
+					SwitchYearCommand =
+						new RelayCommand(() =>
+						{
+							try
+							{
+								ReportButtons = preLoadedReports
+									.Where(x => x.Year == year)
+									.OrderByDescending(x => x.IsOwn)
+									.ThenBy(x => x.Username)
+									.Select(x => new ReportButtonViewModel()
+									{
+										Username = x.Username,
+										DisplayCommand = new RelayCommand(() =>
+										{
+											try
+											{
+												var report = _reportManager.GetReport(x.Id);
+												var allYearReports =
+													preLoadedReports.Where(p => p.Year == year).ToList();
+												DisplayReport(report, allYearReports);
+											}
+											catch (Exception ex)
+											{
+												_logger.Error(ex, "Error while trying to display report");
+											}
+										})
+									}).ToObservable();
+								ReportButtons.FirstOrDefault()?.DisplayCommand.Execute(null);
+							}
+							catch (Exception ex)
+							{
+								_logger.Error(ex, "Error while trying to display report");
+							}
+						})
+				});
+			}
 		}
 
 		private void DisplayReport(Report1970 report, List<PersistedReport> allYearReports)
@@ -96,6 +168,12 @@ namespace YearInReview.Model.Reports.MVVM
 		{
 			YearButtons.FirstOrDefault()?.SwitchYearCommand.Execute(null);
 			ReportButtons.FirstOrDefault()?.DisplayCommand.Execute(null);
+		}
+
+		private void DisplaySpecificUserReport(int year, string username)
+		{
+			YearButtons.FirstOrDefault(x => x.Year == year)?.SwitchYearCommand.Execute(null);
+			ReportButtons.FirstOrDefault(x => x.Username == username)?.DisplayCommand.Execute(null);
 		}
 	}
 }

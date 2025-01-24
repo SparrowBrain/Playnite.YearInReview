@@ -1,6 +1,5 @@
 ﻿using AutoFixture.Xunit2;
 using FakeItEasy;
-using Playnite.SDK.Models;
 using System;
 using System.Collections.Generic;
 using TestTools.Shared;
@@ -19,7 +18,6 @@ namespace YearInReview.UnitTests.Model.Reports._1970
 		public void Compose_AssignsMetadata(
 			[Frozen] IMetadataProvider metadataProviderFake,
 			Metadata metadata,
-			Game mostPlayedGame,
 			int year,
 			List<Activity> activities,
 			Composer1970 sut)
