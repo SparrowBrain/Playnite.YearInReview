@@ -11,6 +11,8 @@ namespace YearInReview.Model.Reports
 {
 	public class ReportGenerator : IReportGenerator
 	{
+		private const string NotificationId = "year_in_review_report_generation_";
+		
 		private readonly IPlayniteAPI _playniteApi;
 		private readonly IDateTimeProvider _dateTimeProvider;
 		private readonly IGameActivityExtension _gameActivityExtension;
@@ -45,6 +47,7 @@ namespace YearInReview.Model.Reports
 				var filteredActivities = _specificYearActivityFilter.GetActivityForYear(year, activities);
 				var report = _composer1970.Compose(year, filteredActivities);
 				reports.Add(report);
+				ShowReportGeneratedNotification(year);
 			}
 
 			return reports;
@@ -55,8 +58,26 @@ namespace YearInReview.Model.Reports
 			var games = _playniteApi.Database.Games;
 			var activities = await _gameActivityExtension.GetActivityForGames(games);
 			var filteredActivities = _specificYearActivityFilter.GetActivityForYear(year, activities);
+			
+			ShowReportGeneratedNotification(year);
 
 			return _composer1970.Compose(year, filteredActivities);
+		}
+
+		private void ShowReportGeneratedNotification(int year)
+		{
+			var description = string.Format(
+				ResourceProvider.GetString("LOC_YearInReview_ReportGeneratedNotification"), 
+				year
+			);
+			
+			_playniteApi.Notifications.Add(
+				new NotificationMessage(
+					NotificationId + year,
+					description,
+					NotificationType.Info
+				)
+			);
 		}
 	}
 }

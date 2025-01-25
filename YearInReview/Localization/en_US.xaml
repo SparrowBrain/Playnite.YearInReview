@@ -16,6 +16,7 @@
     <sys:String x:Key="LOC_YearInReview_Report1970_SingleSourceText">This year is all about {0}. You haven't played on any other libraries.</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_TopGamesHeader">And here's a look at your overall top {0}</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_TopSourcesHeader">Let's see which library was your favourite this year</sys:String>
+    <sys:String x:Key="LOC_YearInReview_ReportGeneratedNotification">Report generated for year {0}</sys:String>
     <sys:String x:Key="LOC_YearInReview_ReadableTime_SecondsOnly">{0} s</sys:String>
     <sys:String x:Key="LOC_YearInReview_ReadableTime_DayPart">{0} d</sys:String>
     <sys:String x:Key="LOC_YearInReview_ReadableTime_HourPart">{0} h</sys:String>
