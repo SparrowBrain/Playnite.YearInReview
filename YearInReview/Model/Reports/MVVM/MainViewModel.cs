@@ -11,6 +11,7 @@ using YearInReview.Model.Exceptions;
 using YearInReview.Model.Reports._1970;
 using YearInReview.Model.Reports._1970.MVVM;
 using YearInReview.Model.Reports.Persistence;
+using YearInReview.Settings;
 
 namespace YearInReview.Model.Reports.MVVM
 {
@@ -19,15 +20,17 @@ namespace YearInReview.Model.Reports.MVVM
 		private readonly ILogger _logger = LogManager.GetLogger();
 		private readonly IPlayniteAPI _api;
 		private readonly ReportManager _reportManager;
+		private readonly IPluginSettingsPersistence _pluginSettingsPersistence;
 
 		private Report1970View _activeReport;
 		private ObservableCollection<YearButtonViewModel> _yearButtons = new ObservableCollection<YearButtonViewModel>();
 		private ObservableCollection<ReportButtonViewModel> _reportButtons = new ObservableCollection<ReportButtonViewModel>();
 
-		public MainViewModel(IPlayniteAPI api, ReportManager reportManager)
+		public MainViewModel(IPlayniteAPI api, ReportManager reportManager, IPluginSettingsPersistence pluginSettingsPersistence)
 		{
 			_api = api;
 			_reportManager = reportManager;
+			_pluginSettingsPersistence = pluginSettingsPersistence;
 
 			CreateReportButtons();
 			DisplayMostRecentUserReport();
@@ -47,25 +50,24 @@ namespace YearInReview.Model.Reports.MVVM
 
 		public ICommand ExportReport => new RelayCommand(() =>
 		{
-			try
+			var settings = _pluginSettingsPersistence.LoadPluginSettings<YearInReviewSettings>();
+			switch (settings.ExportWithImages)
 			{
-				var exportPath = _api.Dialogs.SaveFile("Json files|*.json");
-				if (string.IsNullOrEmpty(exportPath))
-				{
-					return;
-				}
+				case RememberedChoice.Ask:
+					// show dialog
+					break;
 
-				var serializerSettings = new JsonSerializerSettings
-				{
-					ContractResolver = new ImageContractResolver(new Base64ImageConverter(true, null, 400))
-				};
+				case RememberedChoice.Never:
+					ExportActiveReport(false);
+					break;
 
-				_reportManager.ExportReport(((Report1970ViewModel)ActiveReport.DataContext).Id, exportPath, serializerSettings);
-			}
-			catch (Exception ex)
-			{
-				_logger.Error(ex, "Error while trying to export report");
-				_api.Dialogs.ShowErrorMessage(ResourceProvider.GetString("LOC_YearInReview_Notification_ExportError"));
+				case RememberedChoice.Always:
+					ExportActiveReport(true);
+					break;
+
+				default:
+					goto case RememberedChoice.Ask;
+					break;
 			}
 		});
 
@@ -182,5 +184,36 @@ namespace YearInReview.Model.Reports.MVVM
 			YearButtons.FirstOrDefault(x => x.Year == year)?.SwitchYearCommand.Execute(null);
 			ReportButtons.FirstOrDefault(x => x.Username == username)?.DisplayCommand.Execute(null);
 		}
+
+		private void ExportActiveReport(bool exportWithImages)
+		{
+			try
+			{
+				var exportPath = _api.Dialogs.SaveFile("Json files|*.json");
+				if (string.IsNullOrEmpty(exportPath))
+				{
+					return;
+				}
+
+				var serializerSettings = new JsonSerializerSettings
+				{
+					ContractResolver = new ImageContractResolver(new Base64ImageConverter(exportWithImages, null, 400))
+				};
+
+				_reportManager.ExportReport(((Report1970ViewModel)ActiveReport.DataContext).Id, exportPath, serializerSettings);
+			}
+			catch (Exception ex)
+			{
+				_logger.Error(ex, "Error while trying to export report");
+				_api.Dialogs.ShowErrorMessage(ResourceProvider.GetString("LOC_YearInReview_Notification_ExportError"));
+			}
+		}
+	}
+
+	public enum RememberedChoice
+	{
+		Ask,
+		Never,
+		Always,
 	}
 }

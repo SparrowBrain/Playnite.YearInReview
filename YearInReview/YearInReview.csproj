@@ -57,6 +57,7 @@
     <Compile Include="Infrastructure\Services\Base64Helpers.cs" />
     <Compile Include="Infrastructure\Services\UriToPhysicalUriConverter.cs" />
     <Compile Include="Model\Exceptions\InvalidReportFileException.cs" />
+    <Compile Include="Model\Reports\MVVM\ExportWithImagesViewModel.cs" />
     <Compile Include="Model\Reports\MVVM\ReportButtonViewModel.cs" />
     <Compile Include="Model\Exceptions\ReportAlreadyExistsException.cs" />
     <Compile Include="Validation\ExtensionStartupValidator.cs" />

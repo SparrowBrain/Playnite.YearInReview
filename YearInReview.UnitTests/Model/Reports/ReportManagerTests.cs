@@ -161,10 +161,7 @@ namespace YearInReview.UnitTests.Model.Reports
 			await sut.Init();
 
 			// Act
-			sut.ExportReport(persistedReport.Id, reportPath, new JsonSerializerSettings
-			{
-				ContractResolver = new ImageContractResolver(new Base64ImageConverter(true, 10))
-			});
+			sut.ExportReport(persistedReport.Id, reportPath, settings);
 
 			// Assert
 			A.CallTo(() => reportPersistence.ExportReport(report, reportPath, settings)).MustHaveHappened();
