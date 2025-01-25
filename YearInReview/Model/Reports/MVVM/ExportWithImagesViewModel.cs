@@ -1,6 +1,7 @@
 ﻿using Playnite.SDK;
 using System;
 using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Input;
 using YearInReview.Settings;
 
@@ -12,6 +13,7 @@ namespace YearInReview.Model.Reports.MVVM
 		private readonly YearInReviewSettings _settings;
 		private readonly Action<bool> _exportAction;
 
+		private Window _window;
 		private bool _isExportWithImages;
 		private bool _rememberChoice;
 
@@ -20,6 +22,11 @@ namespace YearInReview.Model.Reports.MVVM
 			_pluginSettingsPersistence = pluginSettingsPersistence;
 			_settings = settings;
 			_exportAction = exportAction;
+		}
+
+		public void AssociateWindow(Window window)
+		{
+			_window = window;
 		}
 
 		public bool IsExportWithImages
@@ -53,11 +60,12 @@ namespace YearInReview.Model.Reports.MVVM
 			}
 
 			_exportAction(IsExportWithImages);
+			_window?.Close();
 		});
 
 		public ICommand CancelCommand => new RelayCommand(() =>
 		{
-			_exportAction(false);
+			_window?.Close();
 		});
 	}
 }

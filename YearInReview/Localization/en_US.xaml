@@ -4,8 +4,9 @@
     <sys:String x:Key="LOC_YearInReview_ExportWithImages_EstimatedSize">Estimated size: {0}</sys:String>
     <sys:String x:Key="LOC_YearInReview_ExportWithImages_EstimatedSize_3MB">3 MB</sys:String>
     <sys:String x:Key="LOC_YearInReview_ExportWithImages_EstimatedSize_50kB">50 kB</sys:String>
-    <sys:String x:Key="LOC_YearInReview_ExportWithImages_RememberCheckbox">Remember</sys:String>
     <sys:String x:Key="LOC_YearInReview_ExportWithImages_ExportWithImagesCheckbox">Export With Images</sys:String>
+    <sys:String x:Key="LOC_YearInReview_ExportWithImages_RememberCheckbox">Remember Choice</sys:String>
+    <sys:String x:Key="LOC_YearInReview_ExportWithImages_Title">Export</sys:String>
     <sys:String x:Key="LOC_YearInReview_Generic_Ok">Ok</sys:String>
     <sys:String x:Key="LOC_YearInReview_Generic_Cancel">Cancel</sys:String>
     <sys:String x:Key="LOC_YearInReview_Main_Export_Tooltip">Export to share with friends</sys:String>

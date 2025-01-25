@@ -1,14 +1,14 @@
-﻿using System;
+﻿using Playnite.SDK;
+using Playnite.SDK.Controls;
+using Playnite.SDK.Events;
+using Playnite.SDK.Plugins;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using Playnite.SDK;
-using Playnite.SDK.Controls;
-using Playnite.SDK.Events;
-using Playnite.SDK.Plugins;
 using YearInReview.Extensions.GameActivity;
 using YearInReview.Infrastructure.Services;
 using YearInReview.Model.Aggregators;
@@ -37,10 +37,10 @@ namespace YearInReview
 		private bool _isStartupValidationSuccess;
 		private IReadOnlyCollection<InitValidationError> _initValidationErrors = new List<InitValidationError>();
 		private SidebarItem _sidebarItem;
-		
+
 		private const double DefaultDialogWindowHeight = 600;
 		private const double DefaultDialogWindowWidth = 1000;
-		
+
 		public override Guid Id { get; } = Guid.Parse("a22a7611-3023-4ca8-907e-47f883acd1b2");
 
 		public YearInReview(IPlayniteAPI api) : base(api)
@@ -88,7 +88,7 @@ namespace YearInReview
 
 						if (_mainView == null || _mainViewModel == null)
 						{
-							_mainViewModel = new MainViewModel(Api, _reportManager);
+							_mainViewModel = new MainViewModel(Api, _reportManager, _pluginSettingsPersistence);
 							_mainView = new MainView(_mainViewModel);
 						}
 
@@ -96,7 +96,7 @@ namespace YearInReview
 					}
 				};
 			}
-			
+
 			yield return _sidebarItem;
 		}
 
@@ -104,14 +104,14 @@ namespace YearInReview
 		{
 			var pluginName = ResourceProvider.GetString("LOC_YearInReview_PluginName");
 			var pluginMenuSection = "@" + pluginName;
-			
+
 			yield return new MainMenuItem
 			{
 				Description = ResourceProvider.GetString("LOC_YearInReview_ShowYearInReviewMenuItem"),
 				MenuSection = pluginMenuSection,
 				Action = _ =>
 				{
-					var view = new MainView(new MainViewModel(Api, _reportManager));
+					var view = new MainView(new MainViewModel(Api, _reportManager, _pluginSettingsPersistence));
 					OpenViewAsDialog(view, pluginName);
 				}
 			};
@@ -226,13 +226,13 @@ namespace YearInReview
 
 			return _reportManager;
 		}
-		
+
 		private void OpenViewAsDialog(
 			PluginUserControl view,
 			string title,
 			double height = DefaultDialogWindowHeight,
 			double width = DefaultDialogWindowWidth
-		) 
+		)
 		{
 			var window = PlayniteApi.Dialogs.CreateWindow(new WindowCreationOptions
 			{

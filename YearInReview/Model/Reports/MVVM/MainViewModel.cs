@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using YearInReview.Infrastructure.Serialization;
 using YearInReview.Model.Exceptions;
@@ -17,6 +18,7 @@ namespace YearInReview.Model.Reports.MVVM
 {
 	public class MainViewModel : ObservableObject
 	{
+		private const int MaxImageHeight = 400;
 		private readonly ILogger _logger = LogManager.GetLogger();
 		private readonly IPlayniteAPI _api;
 		private readonly ReportManager _reportManager;
@@ -54,7 +56,7 @@ namespace YearInReview.Model.Reports.MVVM
 			switch (settings.ExportWithImages)
 			{
 				case RememberedChoice.Ask:
-					// show dialog
+					ShowExportDialog(settings);
 					break;
 
 				case RememberedChoice.Never:
@@ -67,7 +69,6 @@ namespace YearInReview.Model.Reports.MVVM
 
 				default:
 					goto case RememberedChoice.Ask;
-					break;
 			}
 		});
 
@@ -185,6 +186,31 @@ namespace YearInReview.Model.Reports.MVVM
 			ReportButtons.FirstOrDefault(x => x.Username == username)?.DisplayCommand.Execute(null);
 		}
 
+		private void ShowExportDialog(YearInReviewSettings settings)
+		{
+			var viewModel = new ExportWithImagesViewModel(_pluginSettingsPersistence, settings, ExportActiveReport);
+			var view = new ExportWithImagesView(viewModel);
+
+			var window = _api.Dialogs.CreateWindow(new WindowCreationOptions()
+			{
+				ShowCloseButton = true,
+				ShowMaximizeButton = false,
+				ShowMinimizeButton = false,
+			});
+
+			window.Height = 200;
+			window.Width = 500;
+			window.Title = ResourceProvider.GetString("LOC_YearInReview_ExportWithImages_Title");
+
+			window.Content = view;
+			viewModel.AssociateWindow(window);
+
+			window.Owner = _api.Dialogs.GetCurrentAppWindow();
+			window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+
+			window.ShowDialog();
+		}
+
 		private void ExportActiveReport(bool exportWithImages)
 		{
 			try
@@ -197,7 +223,7 @@ namespace YearInReview.Model.Reports.MVVM
 
 				var serializerSettings = new JsonSerializerSettings
 				{
-					ContractResolver = new ImageContractResolver(new Base64ImageConverter(exportWithImages, null, 400))
+					ContractResolver = new ImageContractResolver(new Base64ImageConverter(exportWithImages, null, MaxImageHeight))
 				};
 
 				_reportManager.ExportReport(((Report1970ViewModel)ActiveReport.DataContext).Id, exportPath, serializerSettings);

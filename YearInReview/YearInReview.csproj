@@ -57,6 +57,9 @@
     <Compile Include="Infrastructure\Services\Base64Helpers.cs" />
     <Compile Include="Infrastructure\Services\UriToPhysicalUriConverter.cs" />
     <Compile Include="Model\Exceptions\InvalidReportFileException.cs" />
+    <Compile Include="Model\Reports\MVVM\ExportWithImagesView.xaml.cs">
+      <DependentUpon>ExportWithImagesView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Model\Reports\MVVM\ExportWithImagesViewModel.cs" />
     <Compile Include="Model\Reports\MVVM\ReportButtonViewModel.cs" />
     <Compile Include="Model\Exceptions\ReportAlreadyExistsException.cs" />
@@ -182,6 +185,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Model\Reports\1970\MVVM\Report1970View.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Model\Reports\MVVM\ExportWithImagesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
