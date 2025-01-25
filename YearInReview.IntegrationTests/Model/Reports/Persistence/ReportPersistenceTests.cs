@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Xunit;
+using YearInReview.Infrastructure.Serialization;
 using YearInReview.Model.Aggregators.Data;
 using YearInReview.Model.Reports._1970;
 using YearInReview.Model.Reports.Persistence;
@@ -172,7 +173,10 @@ namespace YearInReview.IntegrationTests.Model.Reports.Persistence
 			var exportPath = Path.Combine(Path.GetTempPath(), $"{expected.Metadata.Username}_{expected.Metadata.Year}.json");
 
 			// Act
-			_sut.ExportReport(expected, exportPath);
+			_sut.ExportReport(expected, exportPath, new JsonSerializerSettings
+			{
+				ContractResolver = new ImageContractResolver(new Base64ImageConverter(true,10))
+			});
 
 			// Assert
 			var exported = File.ReadAllText(exportPath);

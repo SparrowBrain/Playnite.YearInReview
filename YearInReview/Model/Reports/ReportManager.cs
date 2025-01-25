@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using YearInReview.Infrastructure.Serialization;
 using YearInReview.Infrastructure.Services;
 using YearInReview.Model.Exceptions;
 using YearInReview.Model.Reports._1970;
@@ -95,7 +97,7 @@ namespace YearInReview.Model.Reports
 			return _reportCache.Values.ToList();
 		}
 
-		public void ExportReport(Guid id, string exportPath)
+		public void ExportReport(Guid id, string exportPath, JsonSerializerSettings serializerSettings)
 		{
 			if (!_reportCache.TryGetValue(id, out var persistedReport))
 			{
@@ -103,7 +105,7 @@ namespace YearInReview.Model.Reports
 			}
 
 			var report = _reportPersistence.LoadReport(persistedReport.FilePath);
-			_reportPersistence.ExportReport(report, exportPath);
+			_reportPersistence.ExportReport(report, exportPath, serializerSettings);
 		}
 
 		public Guid ImportReport(Report1970 report)

@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
+using YearInReview.Infrastructure.Serialization;
 using YearInReview.Model.Exceptions;
 using YearInReview.Model.Reports._1970;
 using YearInReview.Model.Reports._1970.MVVM;
@@ -54,11 +55,17 @@ namespace YearInReview.Model.Reports.MVVM
 					return;
 				}
 
-				_reportManager.ExportReport(((Report1970ViewModel)ActiveReport.DataContext).Id, exportPath);
+				var serializerSettings = new JsonSerializerSettings
+				{
+					ContractResolver = new ImageContractResolver(new Base64ImageConverter(true, null, 400))
+				};
+
+				_reportManager.ExportReport(((Report1970ViewModel)ActiveReport.DataContext).Id, exportPath, serializerSettings);
 			}
 			catch (Exception ex)
 			{
 				_logger.Error(ex, "Error while trying to export report");
+				_api.Dialogs.ShowErrorMessage(ResourceProvider.GetString("LOC_YearInReview_Notification_ExportError"));
 			}
 		});
 

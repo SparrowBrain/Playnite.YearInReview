@@ -1,11 +1,13 @@
 ﻿using AutoFixture.Xunit2;
 using FakeItEasy;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TestTools.Shared;
 using Xunit;
+using YearInReview.Infrastructure.Serialization;
 using YearInReview.Infrastructure.Services;
 using YearInReview.Model.Aggregators.Data;
 using YearInReview.Model.Exceptions;
@@ -130,10 +132,11 @@ namespace YearInReview.UnitTests.Model.Reports
 		public void ExportReport_ThrowsException_WhenReportNotFound(
 			Guid reportId,
 			string reportPath,
+			JsonSerializerSettings settings,
 			ReportManager sut)
 		{
 			// Act
-			var exception = Record.Exception(() => sut.ExportReport(reportId, reportPath));
+			var exception = Record.Exception(() => sut.ExportReport(reportId, reportPath, settings));
 
 			// Assert
 			Assert.NotNull(exception);
@@ -148,6 +151,7 @@ namespace YearInReview.UnitTests.Model.Reports
 			List<PersistedReport> persistedReports,
 			Report1970 report,
 			string reportPath,
+			JsonSerializerSettings settings,
 			ReportManager sut)
 		{
 			// Arrange
@@ -157,10 +161,13 @@ namespace YearInReview.UnitTests.Model.Reports
 			await sut.Init();
 
 			// Act
-			sut.ExportReport(persistedReport.Id, reportPath);
+			sut.ExportReport(persistedReport.Id, reportPath, new JsonSerializerSettings
+			{
+				ContractResolver = new ImageContractResolver(new Base64ImageConverter(true, 10))
+			});
 
 			// Assert
-			A.CallTo(() => reportPersistence.ExportReport(report, reportPath)).MustHaveHappened();
+			A.CallTo(() => reportPersistence.ExportReport(report, reportPath, settings)).MustHaveHappened();
 		}
 
 		[Theory]
