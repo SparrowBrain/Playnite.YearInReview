@@ -3,24 +3,22 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
-using YearInReview.Settings;
+using YearInReview.Settings.MVVM;
 
 namespace YearInReview.Model.Reports.MVVM
 {
 	public class ExportWithImagesViewModel : ObservableObject
 	{
-		private readonly IPluginSettingsPersistence _pluginSettingsPersistence;
-		private readonly YearInReviewSettings _settings;
+		private readonly YearInReviewSettingsViewModel _settingsViewModel;
 		private readonly Action<bool> _exportAction;
 
 		private Window _window;
 		private bool _isExportWithImages;
 		private bool _rememberChoice;
 
-		public ExportWithImagesViewModel(IPluginSettingsPersistence pluginSettingsPersistence, YearInReviewSettings settings, Action<bool> exportAction)
+		public ExportWithImagesViewModel(YearInReviewSettingsViewModel settingsViewModel, Action<bool> exportAction)
 		{
-			_pluginSettingsPersistence = pluginSettingsPersistence;
-			_settings = settings;
+			_settingsViewModel = settingsViewModel;
 			_exportAction = exportAction;
 		}
 
@@ -55,8 +53,8 @@ namespace YearInReview.Model.Reports.MVVM
 		{
 			if (RememberChoice)
 			{
-				_settings.ExportWithImages = IsExportWithImages ? RememberedChoice.Always : RememberedChoice.Never;
-				_pluginSettingsPersistence.SavePluginSettings(_settings);
+				_settingsViewModel.Settings.ExportWithImages = IsExportWithImages ? RememberedChoice.Always : RememberedChoice.Never;
+				_settingsViewModel.EndEdit();
 			}
 
 			_exportAction(IsExportWithImages);

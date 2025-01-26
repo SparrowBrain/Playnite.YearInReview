@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using YearInReview.Model;
 using YearInReview.Model.Reports.MVVM;
 
 namespace YearInReview.Settings

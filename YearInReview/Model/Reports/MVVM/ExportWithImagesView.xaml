@@ -1,10 +1,9 @@
 ﻿<PluginUserControl x:Class="YearInReview.Model.Reports.MVVM.ExportWithImagesView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:YearInReview.Model.Reports.MVVM"
-             mc:Ignorable="d"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                   mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     <PluginUserControl.Resources>
         <Style TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}">
@@ -32,8 +31,8 @@
         <CheckBox Grid.Column="0" Grid.Row="2" IsChecked="{Binding RememberChoice}" Content="{DynamicResource LOC_YearInReview_ExportWithImages_RememberCheckbox}"></CheckBox>
         <TextBlock Grid.Column="0" Grid.Row="3" Text="{Binding EstimatedSize}"></TextBlock>
         <StackPanel Grid.Column="0" Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Command="{Binding CancelCommand}" Content="{DynamicResource LOC_YearInReview_Generic_Cancel}"></Button>
             <Button Command="{Binding ExportCommand}" Content="{DynamicResource LOC_YearInReview_Generic_Ok}"></Button>
+            <Button Command="{Binding CancelCommand}" Content="{DynamicResource LOC_YearInReview_Generic_Cancel}"></Button>
         </StackPanel>
     </Grid>
 </PluginUserControl>

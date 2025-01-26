@@ -13,6 +13,7 @@ using YearInReview.Model.Reports._1970;
 using YearInReview.Model.Reports._1970.MVVM;
 using YearInReview.Model.Reports.Persistence;
 using YearInReview.Settings;
+using YearInReview.Settings.MVVM;
 
 namespace YearInReview.Model.Reports.MVVM
 {
@@ -22,17 +23,17 @@ namespace YearInReview.Model.Reports.MVVM
 		private readonly ILogger _logger = LogManager.GetLogger();
 		private readonly IPlayniteAPI _api;
 		private readonly ReportManager _reportManager;
-		private readonly IPluginSettingsPersistence _pluginSettingsPersistence;
+		private readonly YearInReviewSettingsViewModel _settingsViewModel;
 
 		private Report1970View _activeReport;
 		private ObservableCollection<YearButtonViewModel> _yearButtons = new ObservableCollection<YearButtonViewModel>();
 		private ObservableCollection<ReportButtonViewModel> _reportButtons = new ObservableCollection<ReportButtonViewModel>();
 
-		public MainViewModel(IPlayniteAPI api, ReportManager reportManager, IPluginSettingsPersistence pluginSettingsPersistence)
+		public MainViewModel(IPlayniteAPI api, ReportManager reportManager, YearInReviewSettingsViewModel settingsViewModel)
 		{
 			_api = api;
 			_reportManager = reportManager;
-			_pluginSettingsPersistence = pluginSettingsPersistence;
+			_settingsViewModel = settingsViewModel;
 
 			CreateReportButtons();
 			DisplayMostRecentUserReport();
@@ -52,7 +53,7 @@ namespace YearInReview.Model.Reports.MVVM
 
 		public ICommand ExportReport => new RelayCommand(() =>
 		{
-			var settings = _pluginSettingsPersistence.LoadPluginSettings<YearInReviewSettings>();
+			var settings = _settingsViewModel.Settings;
 			switch (settings.ExportWithImages)
 			{
 				case RememberedChoice.Ask:
@@ -188,7 +189,7 @@ namespace YearInReview.Model.Reports.MVVM
 
 		private void ShowExportDialog(YearInReviewSettings settings)
 		{
-			var viewModel = new ExportWithImagesViewModel(_pluginSettingsPersistence, settings, ExportActiveReport);
+			var viewModel = new ExportWithImagesViewModel(_settingsViewModel, ExportActiveReport);
 			var view = new ExportWithImagesView(viewModel);
 
 			var window = _api.Dialogs.CreateWindow(new WindowCreationOptions()
@@ -234,12 +235,5 @@ namespace YearInReview.Model.Reports.MVVM
 				_api.Dialogs.ShowErrorMessage(ResourceProvider.GetString("LOC_YearInReview_Notification_ExportError"));
 			}
 		}
-	}
-
-	public enum RememberedChoice
-	{
-		Ask,
-		Never,
-		Always,
 	}
 }

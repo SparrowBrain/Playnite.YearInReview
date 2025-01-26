@@ -88,7 +88,7 @@ namespace YearInReview
 
 						if (_mainView == null || _mainViewModel == null)
 						{
-							_mainViewModel = new MainViewModel(Api, _reportManager, _pluginSettingsPersistence);
+							_mainViewModel = new MainViewModel(Api, _reportManager, _settingsViewModel);
 							_mainView = new MainView(_mainViewModel);
 						}
 
@@ -111,7 +111,7 @@ namespace YearInReview
 				MenuSection = pluginMenuSection,
 				Action = _ =>
 				{
-					var view = new MainView(new MainViewModel(Api, _reportManager, _pluginSettingsPersistence));
+					var view = new MainView(new MainViewModel(Api, _reportManager, _settingsViewModel));
 					OpenViewAsDialog(view, pluginName);
 				}
 			};
@@ -124,12 +124,17 @@ namespace YearInReview
 
 			GetSettings(false);
 			HandleSidebarItemVisibilityAfterSettingsSaved();
-			_settingsViewModel.SettingsSaved += HandleSidebarItemVisibilityAfterSettingsSaved;
 		}
 
 		public override ISettings GetSettings(bool firstRunSettings)
 		{
-			return _settingsViewModel ?? (_settingsViewModel = new YearInReviewSettingsViewModel(this));
+			if (_settingsViewModel == null)
+			{
+				_settingsViewModel = new YearInReviewSettingsViewModel(this);
+				_settingsViewModel.SettingsSaved += HandleSidebarItemVisibilityAfterSettingsSaved;
+			}
+
+			return _settingsViewModel;
 		}
 
 		public override UserControl GetSettingsView(bool firstRunSettings)
@@ -174,6 +179,11 @@ namespace YearInReview
 			if (_settingsViewModel != null)
 			{
 				_settingsViewModel.SettingsSaved -= HandleValidationAfterSettingsSaved;
+			}
+
+			if (_isStartupValidationSuccess)
+			{
+				return;
 			}
 
 			ValidateExtensionStateAndInitialize();

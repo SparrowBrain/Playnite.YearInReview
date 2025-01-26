@@ -1,8 +1,8 @@
-﻿<UserControl x:Class="YearInReview.YearInReviewSettingsView"
+﻿<UserControl x:Class="YearInReview.Settings.MVVM.YearInReviewSettingsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
              d:DesignHeight="400" d:DesignWidth="600">
     <UserControl.Resources>
@@ -17,16 +17,14 @@
             <Setter Property="Margin" Value="2.5,2.5,2.5,2.5"></Setter>
         </Style>
         <Style TargetType="RadioButton" BasedOn="{StaticResource {x:Type RadioButton}}">
+            <Setter Property="Margin" Value="10,2.5,0,2.5"></Setter>
+        </Style>
+        <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
             <Setter Property="Margin" Value="0,2.5,0,2.5"></Setter>
         </Style>
     </UserControl.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition></RowDefinition>
-        </Grid.RowDefinitions>
-        <GroupBox Grid.Row="0" Header="{DynamicResource LOC_YearInReview_Settings_UserSettingsHeader}">
+    <StackPanel>
+        <GroupBox Header="{DynamicResource LOC_YearInReview_Settings_UserSettingsHeader}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
@@ -36,12 +34,19 @@
                 <TextBox Grid.Column="1" Text="{Binding Settings.Username}" />
             </Grid>
         </GroupBox>
-        <GroupBox Grid.Row="1" Header="{DynamicResource LOC_YearInReview_Settings_UserInterfaceSettingsHeader}">
+        <GroupBox Header="{DynamicResource LOC_YearInReview_Settings_UserInterfaceSettingsHeader}">
             <StackPanel>
                 <CheckBox IsChecked="{Binding Settings.ShowSidebarItem}" Content="{DynamicResource LOC_YearInReview_Settings_ShowSidebarItem}" />
                 <CheckBox IsChecked="{Binding Settings.ShowNewReportNotifications}" Content="{DynamicResource LOC_YearInReview_Settings_ShowNewReportNotifications}" />
             </StackPanel>
         </GroupBox>
-        
-    </Grid>
+        <GroupBox Header="{DynamicResource LOC_YearInReview_Settings_ExportSettingsHeader}">
+            <StackPanel>
+                <TextBlock Text="{DynamicResource LOC_YearInReview_Settings_ExportWithImages}" Margin="0,10,0,5"></TextBlock>
+                <RadioButton IsChecked="{Binding ExportWithImagesAsk}" Content="{DynamicResource LOC_YearInReview_RememberedChoice_Ask}" ></RadioButton>
+                <RadioButton IsChecked="{Binding ExportWithImagesNever}" Content="{DynamicResource LOC_YearInReview_RememberedChoice_Never}" ></RadioButton>
+                <RadioButton IsChecked="{Binding ExportWithImagesAlways}" Content="{DynamicResource LOC_YearInReview_RememberedChoice_Always}" ></RadioButton>
+            </StackPanel>
+        </GroupBox>
+    </StackPanel>
 </UserControl>

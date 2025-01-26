@@ -61,6 +61,7 @@
       <DependentUpon>ExportWithImagesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\Reports\MVVM\ExportWithImagesViewModel.cs" />
+    <Compile Include="Model\RememberedChoice.cs" />
     <Compile Include="Model\Reports\MVVM\ReportButtonViewModel.cs" />
     <Compile Include="Model\Exceptions\ReportAlreadyExistsException.cs" />
     <Compile Include="Validation\ExtensionStartupValidator.cs" />
