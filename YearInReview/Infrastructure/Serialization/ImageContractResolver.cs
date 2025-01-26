@@ -2,27 +2,29 @@
 using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using YearInReview.Infrastructure.Serialization;
 
-public class ImageContractResolver : DefaultContractResolver
+namespace YearInReview.Infrastructure.Serialization
 {
-	private readonly Base64ImageConverter _base64ImageConverter;
-
-	public ImageContractResolver(Base64ImageConverter base64ImageConverter)
+	public class ImageContractResolver : DefaultContractResolver
 	{
-		_base64ImageConverter = base64ImageConverter;
-	}
+		private readonly Base64ImageConverter _base64ImageConverter;
 
-	protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
-	{
-		var prop = base.CreateProperty(member, memberSerialization);
-		var att = prop.AttributeProvider.GetAttributes(true).OfType<ImageAttribute>().FirstOrDefault();
-		if (att == null)
+		public ImageContractResolver(Base64ImageConverter base64ImageConverter)
 		{
-			return prop;
+			_base64ImageConverter = base64ImageConverter;
 		}
 
-		prop.Converter = _base64ImageConverter;
-		return prop;
+		protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
+		{
+			var prop = base.CreateProperty(member, memberSerialization);
+			var att = prop.AttributeProvider.GetAttributes(true).OfType<ImageAttribute>().FirstOrDefault();
+			if (att == null)
+			{
+				return prop;
+			}
+
+			prop.Converter = _base64ImageConverter;
+			return prop;
+		}
 	}
 }
