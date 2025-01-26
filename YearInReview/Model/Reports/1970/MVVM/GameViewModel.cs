@@ -9,7 +9,7 @@ namespace YearInReview.Model.Reports._1970.MVVM
 	{
 		private readonly IPlayniteAPI _api;
 
-		public GameViewModel(IPlayniteAPI api, int position, ReportGameWithTime game, int maxWidth, int maxPlayTime)
+		public GameViewModel(IPlayniteAPI api, int position, ReportGameWithTime game, int maxPlayTime)
 		{
 			_api = api;
 
@@ -18,7 +18,7 @@ namespace YearInReview.Model.Reports._1970.MVVM
 			Name = game.Name;
 			CoverImage = game.CoverImage;
 			TimePlayed = game.TimePlayed;
-			BarWidth = game.TimePlayed * maxWidth / maxPlayTime;
+			Percentage = (double)game.TimePlayed / maxPlayTime;
 		}
 
 		public Guid Id { get; set; }
@@ -31,7 +31,7 @@ namespace YearInReview.Model.Reports._1970.MVVM
 
 		public int TimePlayed { get; set; }
 
-		public int BarWidth { get; set; }
+		public double Percentage { get; set; }
 
 		public ICommand OpenDetails =>
 			new RelayCommand(() =>

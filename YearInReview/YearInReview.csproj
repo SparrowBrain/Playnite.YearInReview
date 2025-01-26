@@ -51,6 +51,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Infrastructure\Converters\PercentageWithParameterConverter.cs" />
     <Compile Include="Model\Exceptions\InvalidReportFileException.cs" />
     <Compile Include="Model\Reports\MVVM\ReportButtonViewModel.cs" />
     <Compile Include="Model\Exceptions\ReportAlreadyExistsException.cs" />

@@ -5,14 +5,13 @@ namespace YearInReview.Model.Reports._1970.MVVM
 {
 	public class SourceViewModel : ObservableObject
 	{
-		public SourceViewModel(ReportSourceWithTime source, int position, int maxWidth, int maxSourcePlaytime)
+		public SourceViewModel(ReportSourceWithTime source, int position, int maxSourcePlaytime)
 		{
 			Position = position;
 			Id = source.Id;
 			Name = source.Name;
 			TimePlayed = source.TimePlayed;
-			Percentage = (float)source.TimePlayed / maxSourcePlaytime;
-			BarWidth = Percentage * maxWidth;
+			Percentage = (double)source.TimePlayed / maxSourcePlaytime;
 		}
 
 		public Guid Id { get; set; }
@@ -23,8 +22,7 @@ namespace YearInReview.Model.Reports._1970.MVVM
 
 		public int TimePlayed { get; set; }
 
-		public float Percentage { get; set; }
+		public double Percentage { get; set; }
 
-		public float BarWidth { get; set; }
 	}
 }

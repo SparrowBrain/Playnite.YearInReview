@@ -12,7 +12,6 @@ namespace YearInReview.Model.Reports._1970.MVVM
 {
 	public class Report1970ViewModel : ObservableObject
 	{
-		private const int MaxBarWidth = 500;
 		private readonly IPlayniteAPI _api;
 
 		public Report1970ViewModel(IPlayniteAPI api, Report1970 report, List<PersistedReport> allYearReports)
@@ -33,12 +32,12 @@ namespace YearInReview.Model.Reports._1970.MVVM
 			AddedGamesCount = report.AddedGamesCount;
 
 			MostPlayedGames = report.MostPlayedGames
-				.Select((t, i) => new GameViewModel(api, i + 1, t, MaxBarWidth, MostPlayedGame.TimePlayed)).ToList()
+				.Select((t, i) => new GameViewModel(api, i + 1, t, MostPlayedGame.TimePlayed)).ToList()
 				.ToObservable();
 
 			var maxSourcePlaytime = report.MostPlayedSources.OrderByDescending(x => x.TimePlayed).FirstOrDefault()?.TimePlayed ?? 0;
 			MostPlayedSources = report.MostPlayedSources
-				.Select((x, i) => new SourceViewModel(x, i + 1, MaxBarWidth, maxSourcePlaytime)).ToObservable();
+				.Select((x, i) => new SourceViewModel(x, i + 1, maxSourcePlaytime)).ToObservable();
 
 			var maxPlaytimeInDay = report.PlaytimeCalendarDays.Max(x => x.TotalPlaytime);
 			PlaytimeCalendarDays = report.PlaytimeCalendarDays
