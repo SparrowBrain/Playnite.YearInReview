@@ -15,9 +15,9 @@ namespace YearInReview.Infrastructure.Converters
 
 			if (double.TryParse(values[0].ToString(), out var maxValue)
 				&& double.TryParse(values[1].ToString(), out var percentage)
-				&& int.TryParse(values[2].ToString(), out var maxValueShift))
+				&& int.TryParse(values[2].ToString(), out var maxValueOffset))
 			{
-				var intendedValue = (maxValue + maxValueShift) * percentage;
+				var intendedValue = (maxValue + maxValueOffset) * percentage;
 				return intendedValue > 0 ? intendedValue : 0;
 			}
 
