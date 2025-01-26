@@ -12,7 +12,6 @@ using YearInReview.Model.Exceptions;
 using YearInReview.Model.Reports._1970;
 using YearInReview.Model.Reports._1970.MVVM;
 using YearInReview.Model.Reports.Persistence;
-using YearInReview.Settings;
 using YearInReview.Settings.MVVM;
 
 namespace YearInReview.Model.Reports.MVVM
@@ -57,7 +56,7 @@ namespace YearInReview.Model.Reports.MVVM
 			switch (settings.ExportWithImages)
 			{
 				case RememberedChoice.Ask:
-					ShowExportDialog(settings);
+					ShowExportDialog();
 					break;
 
 				case RememberedChoice.Never:
@@ -187,7 +186,7 @@ namespace YearInReview.Model.Reports.MVVM
 			ReportButtons.FirstOrDefault(x => x.Username == username)?.DisplayCommand.Execute(null);
 		}
 
-		private void ShowExportDialog(YearInReviewSettings settings)
+		private void ShowExportDialog()
 		{
 			var viewModel = new ExportWithImagesViewModel(_settingsViewModel, ExportActiveReport);
 			var view = new ExportWithImagesView(viewModel);
@@ -227,7 +226,8 @@ namespace YearInReview.Model.Reports.MVVM
 					ContractResolver = new ImageContractResolver(new Base64ImageConverter(exportWithImages, null, MaxImageHeight))
 				};
 
-				_reportManager.ExportReport(((Report1970ViewModel)ActiveReport.DataContext).Id, exportPath, serializerSettings);
+				var reportId = ((Report1970ViewModel)ActiveReport.DataContext).Id;
+				_reportManager.ExportReport(reportId, exportPath, serializerSettings);
 			}
 			catch (Exception ex)
 			{

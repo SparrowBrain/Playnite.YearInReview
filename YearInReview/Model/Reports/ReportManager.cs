@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Playnite.SDK;
 using YearInReview.Infrastructure.Serialization;
 using YearInReview.Infrastructure.Services;
 using YearInReview.Model.Exceptions;
@@ -13,6 +14,7 @@ namespace YearInReview.Model.Reports
 {
 	public class ReportManager
 	{
+		private readonly ILogger _logger = LogManager.GetLogger();
 		private readonly IReportPersistence _reportPersistence;
 		private readonly IReportGenerator _reportGenerator;
 		private readonly IDateTimeProvider _dateTimeProvider;
@@ -106,6 +108,7 @@ namespace YearInReview.Model.Reports
 
 			var report = _reportPersistence.LoadReport(persistedReport.FilePath);
 			_reportPersistence.ExportReport(report, exportPath, serializerSettings);
+			_logger.Info($"Report {id} exported to \"{exportPath}\"");
 		}
 
 		public Guid ImportReport(Report1970 report)
@@ -114,6 +117,8 @@ namespace YearInReview.Model.Reports
 
 			var persistedReport = _reportPersistence.ImportReport(report);
 			_reportCache.Add(persistedReport.Id, persistedReport);
+
+			_logger.Info($"Report {persistedReport.Id} from {persistedReport.Username} imported to \"{persistedReport.FilePath}\"");
 			return persistedReport.Id;
 		}
 
