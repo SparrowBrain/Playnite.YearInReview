@@ -14,6 +14,8 @@ namespace YearInReview.Model.Reports._1970.MVVM
 	/// </summary>
 	public partial class Report1970View : PluginUserControl
 	{
+		private const double MainGridBreakpoint = 1000;
+
 		public Report1970View(Report1970ViewModel viewModel)
 		{
 			DataContext = viewModel;
@@ -35,6 +37,25 @@ namespace YearInReview.Model.Reports._1970.MVVM
 			};
 			var parent = ((Control)sender).Parent as UIElement;
 			parent?.RaiseEvent(eventArg);
+		}
+
+		private void MainGrid_SizeChanged(object sender, SizeChangedEventArgs e)
+		{
+			if (!(sender is Grid grid))
+			{
+				return;
+			}
+
+			if (grid.ActualWidth < MainGridBreakpoint)
+			{
+				grid.ColumnDefinitions[0].Width = new GridLength(0);
+				grid.ColumnDefinitions[2].Width = new GridLength(0);
+			}
+			else
+			{
+				grid.ColumnDefinitions[0].Width = new GridLength(1, GridUnitType.Star);
+				grid.ColumnDefinitions[2].Width = new GridLength(1, GridUnitType.Star);
+			}
 		}
 
 		private void HourlyPlaytimeScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)

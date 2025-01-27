@@ -46,7 +46,7 @@
         </ResourceDictionary>
     </PluginUserControl.Resources>
 
-    <Grid>
+    <Grid SizeChanged="MainGrid_SizeChanged">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="4*"></ColumnDefinition>
@@ -130,6 +130,11 @@
                                                         <system:Int32>-150</system:Int32>
                                                     </Binding.Source>
                                                 </Binding>
+                                                <Binding>
+                                                    <Binding.Source>
+                                                        <system:Int32>1</system:Int32>
+                                                    </Binding.Source>
+                                                </Binding>
                                             </MultiBinding>
                                         </Rectangle.Width>
                                     </Rectangle>
@@ -170,6 +175,11 @@
                                                 <Binding>
                                                     <Binding.Source>
                                                         <system:Int32>-150</system:Int32>
+                                                    </Binding.Source>
+                                                </Binding>
+                                                <Binding>
+                                                    <Binding.Source>
+                                                        <system:Int32>1</system:Int32>
                                                     </Binding.Source>
                                                 </Binding>
                                             </MultiBinding>
