@@ -11,8 +11,6 @@ namespace YearInReview.Model.Reports
 {
 	public class ReportGenerator : IReportGenerator
 	{
-		private const string NotificationId = "year_in_review_report_generation";
-		
 		private readonly IPlayniteAPI _playniteApi;
 		private readonly IDateTimeProvider _dateTimeProvider;
 		private readonly IGameActivityExtension _gameActivityExtension;
@@ -41,19 +39,12 @@ namespace YearInReview.Model.Reports
 			var allYears = activities.SelectMany(x => x.Items).Select(x => x.DateSession.Year).Distinct();
 
 			var currentYear = _dateTimeProvider.GetNow().Year;
-			int? lastProcessedYear = null;
 			var reports = new List<Report1970>();
 			foreach (var year in allYears.Where(x => x != currentYear))
 			{
 				var filteredActivities = _specificYearActivityFilter.GetActivityForYear(year, activities);
 				var report = _composer1970.Compose(year, filteredActivities);
 				reports.Add(report);
-				lastProcessedYear = year;
-			}
-			
-			if (lastProcessedYear.HasValue)
-			{
-				ShowReportGeneratedNotification(lastProcessedYear.Value);
 			}
 
 			return reports;
@@ -65,25 +56,7 @@ namespace YearInReview.Model.Reports
 			var activities = await _gameActivityExtension.GetActivityForGames(games);
 			var filteredActivities = _specificYearActivityFilter.GetActivityForYear(year, activities);
 			
-			var report = _composer1970.Compose(year, filteredActivities);
-			ShowReportGeneratedNotification(year);
-			return report;
-		}
-
-		private void ShowReportGeneratedNotification(int year)
-		{
-			var description = string.Format(
-				ResourceProvider.GetString("LOC_YearInReview_ReportGeneratedNotification"), 
-				year
-			);
-			
-			_playniteApi.Notifications.Add(
-				new NotificationMessage(
-					NotificationId,
-					description,
-					NotificationType.Info
-				)
-			);
+			return _composer1970.Compose(year, filteredActivities);
 		}
 	}
 }

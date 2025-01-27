@@ -2,28 +2,38 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Playnite.SDK;
 using YearInReview.Infrastructure.Services;
 using YearInReview.Model.Reports._1970;
 using YearInReview.Model.Reports.Persistence;
+using YearInReview.Settings;
 
 namespace YearInReview.Model.Reports
 {
 	public class ReportManager
 	{
+		private const string ReportNotificationId = "year_in_review_report_generation";
+		
 		private readonly IReportPersistence _reportPersistence;
 		private readonly IReportGenerator _reportGenerator;
 		private readonly IDateTimeProvider _dateTimeProvider;
+		private readonly IPlayniteAPI _playniteApi;
+		private readonly YearInReviewSettings _settings;
 
 		private Dictionary<Guid, PersistedReport> _reportCache;
 
 		public ReportManager(
 			IReportPersistence reportPersistence,
 			IReportGenerator reportGenerator,
-			IDateTimeProvider dateTimeProvider)
+			IDateTimeProvider dateTimeProvider,
+			IPlayniteAPI playniteApi,
+			YearInReviewSettings settings)
 		{
 			_reportPersistence = reportPersistence;
 			_reportGenerator = reportGenerator;
 			_dateTimeProvider = dateTimeProvider;
+			_playniteApi = playniteApi;
+			_settings = settings;
 		}
 
 		// TODO Don't forget. There's probably gonna be race condition between report manager and UI.
@@ -61,6 +71,8 @@ namespace YearInReview.Model.Reports
 				_reportPersistence.SaveReport(report);
 			}
 
+			ShowReportsGeneratedNotification(generatedReports);
+
 			var reports = _reportPersistence.PreLoadAllReports();
 			return reports;
 		}
@@ -83,6 +95,8 @@ namespace YearInReview.Model.Reports
 					_reportPersistence.SaveReport(report);
 				}
 
+				ShowReportsGeneratedNotification(generatedReports);
+				
 				reports = _reportPersistence.PreLoadAllReports();
 			}
 
@@ -92,6 +106,29 @@ namespace YearInReview.Model.Reports
 		public IReadOnlyCollection<PersistedReport> GetAllPreLoadedReports()
 		{
 			return _reportCache.Values.ToList();
+		}
+
+		private void ShowReportsGeneratedNotification(IReadOnlyCollection<Report1970> reports)
+		{
+			if (reports.Count == 0 || !_settings.ShowNewReportNotifications)
+			{
+				return;
+			}
+			
+			var lastReport = reports.OrderByDescending(x => x.Metadata.Year).First();
+			
+			var description = string.Format(
+				ResourceProvider.GetString("LOC_YearInReview_ReportGeneratedNotification"), 
+				lastReport.Metadata.Year
+			);
+			
+			_playniteApi.Notifications.Add(
+				new NotificationMessage(
+					ReportNotificationId,
+					description,
+					NotificationType.Info
+				)
+			);
 		}
 	}
 }

@@ -222,7 +222,7 @@ namespace YearInReview
 			var reportPersistence = new ReportPersistence(GetPluginUserDataPath());
 			var reportGenerator = new ReportGenerator(Api, dateTimeProvider, gameActivityExtension,
 				specificYearActivityFilter, composer);
-			_reportManager = new ReportManager(reportPersistence, reportGenerator, dateTimeProvider);
+			_reportManager = new ReportManager(reportPersistence, reportGenerator, dateTimeProvider, Api, _settingsViewModel.Settings);
 
 			return _reportManager;
 		}
