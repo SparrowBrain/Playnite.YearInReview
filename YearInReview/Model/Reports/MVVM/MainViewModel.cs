@@ -5,28 +5,34 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
+using YearInReview.Infrastructure.Serialization;
 using YearInReview.Model.Exceptions;
 using YearInReview.Model.Reports._1970;
 using YearInReview.Model.Reports._1970.MVVM;
 using YearInReview.Model.Reports.Persistence;
+using YearInReview.Settings.MVVM;
 
 namespace YearInReview.Model.Reports.MVVM
 {
 	public class MainViewModel : ObservableObject
 	{
+		private const int MaxImageHeight = 400;
 		private readonly ILogger _logger = LogManager.GetLogger();
 		private readonly IPlayniteAPI _api;
 		private readonly ReportManager _reportManager;
+		private readonly YearInReviewSettingsViewModel _settingsViewModel;
 
 		private Report1970View _activeReport;
 		private ObservableCollection<YearButtonViewModel> _yearButtons = new ObservableCollection<YearButtonViewModel>();
 		private ObservableCollection<ReportButtonViewModel> _reportButtons = new ObservableCollection<ReportButtonViewModel>();
 
-		public MainViewModel(IPlayniteAPI api, ReportManager reportManager)
+		public MainViewModel(IPlayniteAPI api, ReportManager reportManager, YearInReviewSettingsViewModel settingsViewModel)
 		{
 			_api = api;
 			_reportManager = reportManager;
+			_settingsViewModel = settingsViewModel;
 
 			CreateReportButtons();
 			DisplayMostRecentUserReport();
@@ -46,19 +52,23 @@ namespace YearInReview.Model.Reports.MVVM
 
 		public ICommand ExportReport => new RelayCommand(() =>
 		{
-			try
+			var settings = _settingsViewModel.Settings;
+			switch (settings.ExportWithImages)
 			{
-				var exportPath = _api.Dialogs.SaveFile("Json files|*.json");
-				if (string.IsNullOrEmpty(exportPath))
-				{
-					return;
-				}
+				case RememberedChoice.Ask:
+					ShowExportDialog();
+					break;
 
-				_reportManager.ExportReport(((Report1970ViewModel)ActiveReport.DataContext).Id, exportPath);
-			}
-			catch (Exception ex)
-			{
-				_logger.Error(ex, "Error while trying to export report");
+				case RememberedChoice.Never:
+					ExportActiveReport(false);
+					break;
+
+				case RememberedChoice.Always:
+					ExportActiveReport(true);
+					break;
+
+				default:
+					goto case RememberedChoice.Ask;
 			}
 		});
 
@@ -174,6 +184,56 @@ namespace YearInReview.Model.Reports.MVVM
 		{
 			YearButtons.FirstOrDefault(x => x.Year == year)?.SwitchYearCommand.Execute(null);
 			ReportButtons.FirstOrDefault(x => x.Username == username)?.DisplayCommand.Execute(null);
+		}
+
+		private void ShowExportDialog()
+		{
+			var viewModel = new ExportWithImagesViewModel(_settingsViewModel, ExportActiveReport);
+			var view = new ExportWithImagesView(viewModel);
+
+			var window = _api.Dialogs.CreateWindow(new WindowCreationOptions()
+			{
+				ShowCloseButton = true,
+				ShowMaximizeButton = false,
+				ShowMinimizeButton = false,
+			});
+
+			window.Height = 200;
+			window.Width = 500;
+			window.Title = ResourceProvider.GetString("LOC_YearInReview_ExportWithImages_Title");
+
+			window.Content = view;
+			viewModel.AssociateWindow(window);
+
+			window.Owner = _api.Dialogs.GetCurrentAppWindow();
+			window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+
+			window.ShowDialog();
+		}
+
+		private void ExportActiveReport(bool exportWithImages)
+		{
+			try
+			{
+				var exportPath = _api.Dialogs.SaveFile("Json files|*.json");
+				if (string.IsNullOrEmpty(exportPath))
+				{
+					return;
+				}
+
+				var serializerSettings = new JsonSerializerSettings
+				{
+					ContractResolver = new ImageContractResolver(new Base64ImageConverter(exportWithImages, null, MaxImageHeight))
+				};
+
+				var reportId = ((Report1970ViewModel)ActiveReport.DataContext).Id;
+				_reportManager.ExportReport(reportId, exportPath, serializerSettings);
+			}
+			catch (Exception ex)
+			{
+				_logger.Error(ex, "Error while trying to export report");
+				_api.Dialogs.ShowErrorMessage(ResourceProvider.GetString("LOC_YearInReview_Notification_ExportError"));
+			}
 		}
 	}
 }
