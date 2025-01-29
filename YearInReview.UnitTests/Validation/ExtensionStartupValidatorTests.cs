@@ -1,17 +1,17 @@
-﻿using AutoFixture.Xunit2;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using AutoFixture.Xunit2;
 using FakeItEasy;
 using Playnite.SDK;
 using Playnite.SDK.Plugins;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using TestTools.Shared;
 using Xunit;
 using YearInReview.Extensions.GameActivity;
 using YearInReview.Settings;
 using YearInReview.Validation;
 
-namespace YearInReview.UnitTests
+namespace YearInReview.UnitTests.Validation
 {
 	public class ExtensionStartupValidatorTests
 	{

@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+using YearInReview.Infrastructure.Serialization;
 using YearInReview.Model.Reports._1970;
 
 namespace YearInReview.Model.Reports.Persistence
@@ -85,6 +85,47 @@ namespace YearInReview.Model.Reports.Persistence
 		{
 			var contents = File.ReadAllText(filePath);
 			return JsonConvert.DeserializeObject<Report1970>(contents);
+		}
+
+		public void ExportReport(Report1970 report, string exportPath, JsonSerializerSettings serializerSettings)
+		{
+			var serialized = JsonConvert.SerializeObject(report, serializerSettings);
+			File.WriteAllText(exportPath, serialized);
+		}
+
+		public PersistedReport ImportReport(Report1970 report)
+		{
+			var friendsPath = Path.Combine(_reportsPath, report.Metadata.Year.ToString(), "Friends");
+			var importedFilePath = Path.Combine(friendsPath, GetSanitizedFriendFileName(report));
+
+			if (!Directory.Exists(friendsPath))
+			{
+				Directory.CreateDirectory(friendsPath);
+			}
+
+			var contents = JsonConvert.SerializeObject(report);
+			File.WriteAllText(importedFilePath, contents);
+
+			return new PersistedReport()
+			{
+				Id = report.Metadata.Id,
+				IsOwn = false,
+				FilePath = importedFilePath,
+				Username = report.Metadata.Username,
+				Year = report.Metadata.Year,
+				TotalPlaytime = report.TotalPlaytime,
+			};
+		}
+
+		private static string GetSanitizedFriendFileName(Report1970 report)
+		{
+			var fileName = $"{report.Metadata.Username}_{report.Metadata.Year}.json";
+			foreach (var invalidChar in Path.GetInvalidFileNameChars())
+			{
+				fileName = fileName.Replace(invalidChar, '_');
+			}
+
+			return fileName;
 		}
 	}
 }

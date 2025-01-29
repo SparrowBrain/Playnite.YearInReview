@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
 using YearInReview.Model.Reports._1970;
 
 namespace YearInReview.Model.Reports.Persistence
@@ -11,5 +11,9 @@ namespace YearInReview.Model.Reports.Persistence
 		IReadOnlyCollection<PersistedReport> PreLoadAllReports();
 
 		Report1970 LoadReport(string filePath);
+
+		void ExportReport(Report1970 report, string exportPath, JsonSerializerSettings serializerSettings);
+
+		PersistedReport ImportReport(Report1970 importPath);
 	}
 }

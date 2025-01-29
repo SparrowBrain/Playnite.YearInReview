@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Playnite.SDK;
+using YearInReview.Infrastructure.Serialization;
 using YearInReview.Infrastructure.Services;
+using YearInReview.Model.Exceptions;
 using YearInReview.Model.Reports._1970;
 using YearInReview.Model.Reports.Persistence;
 using YearInReview.Settings;
@@ -14,13 +17,14 @@ namespace YearInReview.Model.Reports
 	{
 		private const string ReportNotificationId = "year_in_review_report_generation";
 		
+		private readonly ILogger _logger = LogManager.GetLogger();
 		private readonly IReportPersistence _reportPersistence;
 		private readonly IReportGenerator _reportGenerator;
 		private readonly IDateTimeProvider _dateTimeProvider;
 		private readonly IPlayniteAPI _playniteApi;
 		private readonly YearInReviewSettings _settings;
 
-		private Dictionary<Guid, PersistedReport> _reportCache;
+		private Dictionary<Guid, PersistedReport> _reportCache = new Dictionary<Guid, PersistedReport>();
 
 		public ReportManager(
 			IReportPersistence reportPersistence,
@@ -106,6 +110,45 @@ namespace YearInReview.Model.Reports
 		public IReadOnlyCollection<PersistedReport> GetAllPreLoadedReports()
 		{
 			return _reportCache.Values.ToList();
+		}
+
+		public void ExportReport(Guid id, string exportPath, JsonSerializerSettings serializerSettings)
+		{
+			if (!_reportCache.TryGetValue(id, out var persistedReport))
+			{
+				throw new InvalidOperationException($"Report {id} not persisted in cache.");
+			}
+
+			var report = _reportPersistence.LoadReport(persistedReport.FilePath);
+			_reportPersistence.ExportReport(report, exportPath, serializerSettings);
+			_logger.Info($"Report {id} exported to \"{exportPath}\"");
+		}
+
+		public Guid ImportReport(Report1970 report)
+		{
+			ValidateReport(report);
+
+			var persistedReport = _reportPersistence.ImportReport(report);
+			_reportCache.Add(persistedReport.Id, persistedReport);
+
+			_logger.Info($"Report {persistedReport.Id} from {persistedReport.Username} imported to \"{persistedReport.FilePath}\"");
+			return persistedReport.Id;
+		}
+
+		private void ValidateReport(Report1970 report)
+		{
+			if (report.Metadata == null
+				|| report.Metadata.Id == Guid.Empty
+				|| report.Metadata.Year == 0
+				|| string.IsNullOrEmpty(report.Metadata.Username))
+			{
+				throw new InvalidReportFileException("Trying to import invalid report file.");
+			}
+
+			if (_reportCache.ContainsKey(report.Metadata.Id))
+			{
+				throw new ReportAlreadyExistsException($"Trying to import report {report.Metadata.Id} that is already in cache.");
+			}
 		}
 
 		private void ShowReportsGeneratedNotification(IReadOnlyCollection<Report1970> reports)

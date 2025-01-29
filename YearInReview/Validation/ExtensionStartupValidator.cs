@@ -1,13 +1,12 @@
-﻿using Playnite.SDK;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Playnite.SDK;
 using YearInReview.Extensions.GameActivity;
 using YearInReview.Settings;
-using YearInReview.Validation;
 
-namespace YearInReview
+namespace YearInReview.Validation
 {
 	public class ExtensionStartupValidator
 	{
