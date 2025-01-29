@@ -144,7 +144,6 @@
     <Compile Include="Settings\PluginSettingsPersistence.cs" />
     <Compile Include="Settings\StartupSettingsValidator.cs" />
     <Compile Include="Settings\VersionedSettings.cs" />
-    <Compile Include="Validation\MVVM\ValidationErrorsViewModel.cs" />
     <Compile Include="Validation\MVVM\ValidationErrorsView.xaml.cs">
       <DependentUpon>ValidationErrorsView.xaml</DependentUpon>
     </Compile>
