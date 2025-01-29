@@ -4,7 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TestTools.Shared;
 using Xunit;
+using YearInReview.Infrastructure.Serialization;
 using YearInReview.Model.Aggregators.Data;
 using YearInReview.Model.Reports._1970;
 using YearInReview.Model.Reports.Persistence;
@@ -17,6 +19,7 @@ namespace YearInReview.IntegrationTests.Model.Reports.Persistence
 
 		private readonly ReportPersistence _sut;
 		private readonly string _reportsPath = Path.Combine(ExtensionDataPath, "Reports");
+		private readonly JsonSerializerSettings _settings = new JsonSerializerSettings();
 
 		public ReportPersistenceTests()
 		{
@@ -165,14 +168,14 @@ namespace YearInReview.IntegrationTests.Model.Reports.Persistence
 		}
 
 		[Theory]
-		[AutoData]
+		[AutoFakeItEasyData]
 		public void ExportReport_WritesToGivenPath(Report1970 expected)
 		{
 			// Arrange
 			var exportPath = Path.Combine(Path.GetTempPath(), $"{expected.Metadata.Username}_{expected.Metadata.Year}.json");
 
 			// Act
-			_sut.ExportReport(expected, exportPath);
+			_sut.ExportReport(expected, exportPath, _settings);
 
 			// Assert
 			var exported = File.ReadAllText(exportPath);

@@ -39,7 +39,7 @@
                 <Setter Property="BorderBrush" Value="{DynamicResource PopupBorderBrush}" />
                 <Setter Property="BorderThickness" Value="{DynamicResource PopupBorderThickness}" />
             </Style>
-            <converters:UriToBitmapImageConverter x:Key="UriToBitmapImageConverter" />
+            <converters:Base64OrUriToBitmapImageConverter x:Key="Base64OrUriToBitmapImageConverter" />
             <converters:SecondsToReadableTextConverter x:Key="SecondsToReadableTextConverter" />
             <converters:BoolToCollapsedVisibilityConverter x:Key="BoolToCollapsedVisibilityConverter" />
             <converters:PercentageWithParameterConverter x:Key="PercentageWithParameterConverter" />
@@ -80,7 +80,7 @@
                 </Grid.RowDefinitions>
                 <Button Grid.Row="0" Grid.Column="1" Command="{Binding OpenMostPlayedDetails}" Background="Transparent">
                     <Image Height="400" Source="{Binding MostPlayedGame.CoverImage,
-                    Converter={StaticResource UriToBitmapImageConverter},
+                    Converter={StaticResource Base64OrUriToBitmapImageConverter},
                     ConverterParameter=400,
                     Mode=OneWay,
                     FallbackValue={StaticResource DefaultGameCover},
@@ -109,8 +109,8 @@
                                     <ColumnDefinition x:Name="GameBarColumn" Width="*" />
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0" Text="{Binding Position}" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                                <Image Grid.Column="1" Width="75" Source="{Binding CoverImage,
-                                 Converter={StaticResource UriToBitmapImageConverter},
+                                <Image Grid.Column="1" Height="75" Source="{Binding CoverImage,
+                                 Converter={StaticResource Base64OrUriToBitmapImageConverter},
                                  ConverterParameter=75,
                                  Mode=OneWay,
                                  FallbackValue={StaticResource DefaultGameCover},

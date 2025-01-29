@@ -8,6 +8,7 @@ namespace YearInReview.Model.Reports._1970
 
 		public string Name { get; set; }
 
+		[Image]
 		public string CoverImage { get; set; }
 
 		public string FlavourText { get; set; }

@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using YearInReview.Model;
+using YearInReview.Model.Reports.MVVM;
 
 namespace YearInReview.Settings
 {
@@ -40,5 +42,7 @@ namespace YearInReview.Settings
 			get => _showNewReportNotifications;
 			set => SetValue(ref _showNewReportNotifications, value);
 		}
+
+		public RememberedChoice ExportWithImages { get; set; }
 	}
 }

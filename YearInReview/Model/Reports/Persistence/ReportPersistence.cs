@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using YearInReview.Infrastructure.Serialization;
 using YearInReview.Model.Reports._1970;
 
 namespace YearInReview.Model.Reports.Persistence
@@ -86,9 +87,9 @@ namespace YearInReview.Model.Reports.Persistence
 			return JsonConvert.DeserializeObject<Report1970>(contents);
 		}
 
-		public void ExportReport(Report1970 report, string exportPath)
+		public void ExportReport(Report1970 report, string exportPath, JsonSerializerSettings serializerSettings)
 		{
-			var serialized = JsonConvert.SerializeObject(report);
+			var serialized = JsonConvert.SerializeObject(report, serializerSettings);
 			File.WriteAllText(exportPath, serialized);
 		}
 
