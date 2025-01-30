@@ -136,7 +136,7 @@ namespace YearInReview
 
 		private void RunValidationInitialize()
 		{
-			Task.Run(() =>
+			Task.Run(async () =>
 			{
 				try
 				{
@@ -152,8 +152,8 @@ namespace YearInReview
 						new GameActivityExtension(Api.Paths.ExtensionsDataPath),
 						new DateTimeProvider());
 
-					_initValidationErrors = extensionStartupValidator.IsOkToRun().Result;
-			_mainViewModel?.SetValidationErrors(_initValidationErrors);
+					_initValidationErrors = await extensionStartupValidator.IsOkToRun();
+					_mainViewModel?.SetValidationErrors(_initValidationErrors);
 
 					if (_initValidationErrors.Count == 0)
 					{
