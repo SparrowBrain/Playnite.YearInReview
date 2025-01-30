@@ -89,11 +89,12 @@ namespace YearInReview.Validation
 				{
 					_logger.Warn("No GameActivity sessions found for previous years. Cannot run YearInReview.");
 
-					CreateValidationError(
-						errors,
-						InitValidationError.NoActivityInPreviousYears,
-						"LOC_YearInReview_Notification_NoActivityInPreviousYears",
-						null);
+					var message = ResourceProvider.GetString("LOC_YearInReview_Notification_NoActivityInPreviousYears");
+					errors.Add(new InitValidationError()
+					{
+						Id = InitValidationError.NoActivityInPreviousYears,
+						Message = message,
+					});
 				}
 			}
 		}

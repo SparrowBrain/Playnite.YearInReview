@@ -84,12 +84,11 @@ namespace YearInReview.UnitTests.Validation
 
 		[Theory]
 		[AutoFakeItEasyData]
-		public async Task Validate_CreatesNotification_WhenNoReportsFoundAndNoGameActivityForPreviousYearsExists(
+		public async Task Validate_AddsError_WhenNoReportsFoundAndNoGameActivityForPreviousYearsExists(
 			int currentYear,
 			List<Activity> activities)
 		{
 			// Arrange
-
 			activities.ForEach(x => x.Items.ForEach(y => y.DateSession = new DateTime(currentYear, y.DateSession.Month, y.DateSession.Day)));
 			SetupSuccessfulValidation();
 			A.CallTo(() => _reportPersistence.PreLoadAllReports()).Returns(new List<PersistedReport>());
@@ -101,7 +100,6 @@ namespace YearInReview.UnitTests.Validation
 
 			// Assert
 			Assert.Contains(result, x => x.Id == InitValidationError.NoActivityInPreviousYears);
-			A.CallTo(() => _playniteApi.Notifications.Add(A<NotificationMessage>.That.Matches(x => x.Id == InitValidationError.NoActivityInPreviousYears))).MustHaveHappened();
 		}
 
 		[Theory]
