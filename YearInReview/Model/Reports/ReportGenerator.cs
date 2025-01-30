@@ -55,7 +55,7 @@ namespace YearInReview.Model.Reports
 			var games = _playniteApi.Database.Games;
 			var activities = await _gameActivityExtension.GetActivityForGames(games);
 			var filteredActivities = _specificYearActivityFilter.GetActivityForYear(year, activities);
-
+			
 			return _composer1970.Compose(year, filteredActivities);
 		}
 	}
