@@ -1,18 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Playnite.SDK.Controls;
+using System.Collections.ObjectModel;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Playnite.SDK.Controls;
 
 namespace YearInReview.Validation.MVVM
 {
@@ -21,10 +9,22 @@ namespace YearInReview.Validation.MVVM
 	/// </summary>
 	public partial class ValidationErrorsView : PluginUserControl
 	{
-		public ValidationErrorsView(ValidationErrorsViewModel viewModel)
+		public ValidationErrorsView()
 		{
-			DataContext = viewModel;
 			InitializeComponent();
+		}
+
+		public static readonly DependencyProperty ValidationErrorsProperty =
+			DependencyProperty.Register(
+				nameof(ValidationErrors),
+				typeof(ObservableCollection<ValidationErrorViewModel>),
+				typeof(ValidationErrorsView),
+				new PropertyMetadata(new ObservableCollection<ValidationErrorViewModel>()));
+
+		public ObservableCollection<ValidationErrorViewModel> ValidationErrors
+		{
+			get => (ObservableCollection<ValidationErrorViewModel>)GetValue(ValidationErrorsProperty);
+			set => SetValue(ValidationErrorsProperty, value);
 		}
 	}
 }

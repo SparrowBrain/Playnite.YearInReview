@@ -1,73 +1,76 @@
 ﻿<PluginUserControl x:Class="YearInReview.Model.Reports.MVVM.MainView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:YearInReview.Model.Reports.MVVM"
-             xmlns:converters="clr-namespace:YearInReview.Infrastructure.Converters"
-             mc:Ignorable="d"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                   xmlns:converters="clr-namespace:YearInReview.Infrastructure.Converters"
+                   xmlns:mvvm="clr-namespace:YearInReview.Validation.MVVM"
+                   mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     <PluginUserControl.Resources>
         <converters:BoolToCollapsedVisibilityConverter x:Key="BoolToCollapsedVisibilityConverter" />
     </PluginUserControl.Resources>
     <ScrollViewer>
-        <Grid Margin="0,75,0,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition></RowDefinition>
-                <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="100"></RowDefinition>
-            </Grid.RowDefinitions>
-            <ListBox Grid.Row="0" Grid.Column="0" ItemsSource="{Binding YearButtons}" Margin="25,0,25,0" Background="Transparent">
-                <ListBox.ItemContainerStyle>
-                    <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
-                        <Setter Property="Focusable" Value="False" />
-                        <Setter Property="Padding" Value="0" />
-                    </Style>
-                </ListBox.ItemContainerStyle>
-                <ListBox.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Orientation='Horizontal' />
-                    </ItemsPanelTemplate>
-                </ListBox.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Button Content="{Binding Year}" Command="{Binding SwitchYearCommand}"></Button>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ListBox>
-            <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="25,0,25,0">
-                <Button Command="{Binding ExportReport}" Margin="5,0,5,0" ToolTip="{DynamicResource LOC_YearInReview_Main_Export_Tooltip}">
-                    <TextBlock FontFamily="{DynamicResource FontIcoFont}" Text="&#xefe5;"></TextBlock>
-                </Button>
-                <Button Command="{Binding ImportReport}" Margin="5,0,5,0" ToolTip="{DynamicResource LOC_YearInReview_Main_Import_Tooltip}">
-                    <TextBlock FontFamily="{DynamicResource FontIcoFont}" Text="&#xef08;"></TextBlock>
-                </Button>
-            </StackPanel>
-            <ListBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding ReportButtons}" Margin="25,0,25,0" Background="Transparent">
-                <ListBox.ItemContainerStyle>
-                    <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
-                        <Setter Property="Focusable" Value="False" />
-                        <Setter Property="Padding" Value="0" />
-                    </Style>
-                </ListBox.ItemContainerStyle>
-                <ListBox.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Orientation='Horizontal' />
-                    </ItemsPanelTemplate>
-                </ListBox.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Button Content="{Binding Username}" Command="{Binding DisplayCommand}"></Button>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ListBox>
-            <ContentControl Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Content="{Binding ActiveReport}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"></ContentControl>
+        <Grid>
+            <mvvm:ValidationErrorsView ValidationErrors="{Binding ValidationErrors}" Visibility="{Binding HasErrors, Converter={StaticResource BoolToCollapsedVisibilityConverter}}"></mvvm:ValidationErrorsView>
+            <Grid Margin="0,75,0,0"  Visibility="{Binding HasErrors, Converter={StaticResource BoolToCollapsedVisibilityConverter}, ConverterParameter=True}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="100"></RowDefinition>
+                </Grid.RowDefinitions>
+                <ListBox Grid.Row="0" Grid.Column="0" ItemsSource="{Binding YearButtons}" Margin="25,0,25,0" Background="Transparent">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                            <Setter Property="Focusable" Value="False" />
+                            <Setter Property="Padding" Value="0" />
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation='Horizontal' />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Content="{Binding Year}" Command="{Binding SwitchYearCommand}"></Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ListBox>
+                <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="25,0,25,0">
+                    <Button Command="{Binding ExportReport}" Margin="5,0,5,0" ToolTip="{DynamicResource LOC_YearInReview_Main_Export_Tooltip}">
+                        <TextBlock FontFamily="{DynamicResource FontIcoFont}" Text="&#xefe5;"></TextBlock>
+                    </Button>
+                    <Button Command="{Binding ImportReport}" Margin="5,0,5,0" ToolTip="{DynamicResource LOC_YearInReview_Main_Import_Tooltip}">
+                        <TextBlock FontFamily="{DynamicResource FontIcoFont}" Text="&#xef08;"></TextBlock>
+                    </Button>
+                </StackPanel>
+                <ListBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding ReportButtons}" Margin="25,0,25,0" Background="Transparent">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                            <Setter Property="Focusable" Value="False" />
+                            <Setter Property="Padding" Value="0" />
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation='Horizontal' />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Content="{Binding Username}" Command="{Binding DisplayCommand}"></Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ListBox>
+                <ContentControl Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Content="{Binding ActiveReport}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"></ContentControl>
+            </Grid>
         </Grid>
     </ScrollViewer>
 </PluginUserControl>

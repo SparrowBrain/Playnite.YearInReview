@@ -13,6 +13,8 @@ using YearInReview.Model.Reports._1970;
 using YearInReview.Model.Reports._1970.MVVM;
 using YearInReview.Model.Reports.Persistence;
 using YearInReview.Settings.MVVM;
+using YearInReview.Validation;
+using YearInReview.Validation.MVVM;
 
 namespace YearInReview.Model.Reports.MVVM
 {
@@ -27,15 +29,32 @@ namespace YearInReview.Model.Reports.MVVM
 		private Report1970View _activeReport;
 		private ObservableCollection<YearButtonViewModel> _yearButtons = new ObservableCollection<YearButtonViewModel>();
 		private ObservableCollection<ReportButtonViewModel> _reportButtons = new ObservableCollection<ReportButtonViewModel>();
+		private ObservableCollection<ValidationErrorViewModel> _validationErrors;
 
-		public MainViewModel(IPlayniteAPI api, ReportManager reportManager, YearInReviewSettingsViewModel settingsViewModel)
+		public MainViewModel(
+			IPlayniteAPI api,
+			ReportManager reportManager,
+			YearInReviewSettingsViewModel settingsViewModel,
+			IReadOnlyCollection<InitValidationError> validationErrors)
 		{
 			_api = api;
 			_reportManager = reportManager;
 			_settingsViewModel = settingsViewModel;
+			SetValidationErrors(validationErrors);
 
-			CreateReportButtons();
-			DisplayMostRecentUserReport();
+			if (!HasErrors)
+			{
+				Init();
+			}
+		}
+
+		public void Init()
+		{
+			_api.MainView.UIDispatcher.Invoke(() =>
+			{
+				CreateReportButtons();
+				DisplayMostRecentUserReport();
+			});
 		}
 
 		public ObservableCollection<YearButtonViewModel> YearButtons
@@ -87,9 +106,6 @@ namespace YearInReview.Model.Reports.MVVM
 
 				var importedReportId = _reportManager.ImportReport(reportToImport);
 
-				_yearButtons.Clear();
-				_reportButtons.Clear();
-
 				CreateReportButtons();
 
 				var report = _reportManager.GetReport(importedReportId);
@@ -118,52 +134,67 @@ namespace YearInReview.Model.Reports.MVVM
 			set => SetValue(ref _activeReport, value);
 		}
 
+		public ObservableCollection<ValidationErrorViewModel> ValidationErrors
+		{
+			get => _validationErrors;
+			set
+			{
+				SetValue(ref _validationErrors, value);
+				OnPropertyChanged(nameof(HasErrors));
+			}
+		}
+
+		public bool HasErrors => ValidationErrors.Any();
+
+		public void SetValidationErrors(IReadOnlyCollection<InitValidationError> validationErrors)
+		{
+			ValidationErrors = validationErrors
+				.Select(x => new ValidationErrorViewModel(x.Message, x.CallToAction))
+				.ToObservable();
+		}
+
 		private void CreateReportButtons()
 		{
 			var preLoadedReports = _reportManager.GetAllPreLoadedReports();
 			var years = preLoadedReports.Select(x => x.Year).Distinct().OrderByDescending(x => x);
 
-			foreach (var year in years)
+			YearButtons = years.Select(year => new YearButtonViewModel()
 			{
-				YearButtons.Add(new YearButtonViewModel()
+				Year = year,
+				SwitchYearCommand = new RelayCommand(() =>
 				{
-					Year = year,
-					SwitchYearCommand =
-						new RelayCommand(() =>
-						{
-							try
+					try
+					{
+						ReportButtons = preLoadedReports
+							.Where(x => x.Year == year)
+							.OrderByDescending(x => x.IsOwn)
+							.ThenBy(x => x.Username)
+							.Select(x => new ReportButtonViewModel()
 							{
-								ReportButtons = preLoadedReports
-									.Where(x => x.Year == year)
-									.OrderByDescending(x => x.IsOwn)
-									.ThenBy(x => x.Username)
-									.Select(x => new ReportButtonViewModel()
+								Username = x.Username,
+								DisplayCommand = new RelayCommand(() =>
+								{
+									try
 									{
-										Username = x.Username,
-										DisplayCommand = new RelayCommand(() =>
-										{
-											try
-											{
-												var report = _reportManager.GetReport(x.Id);
-												var allYearReports =
-													preLoadedReports.Where(p => p.Year == year).ToList();
-												DisplayReport(report, allYearReports);
-											}
-											catch (Exception ex)
-											{
-												_logger.Error(ex, "Error while trying to display report");
-											}
-										})
-									}).ToObservable();
-								ReportButtons.FirstOrDefault()?.DisplayCommand.Execute(null);
-							}
-							catch (Exception ex)
-							{
-								_logger.Error(ex, "Error while trying to display report");
-							}
-						})
-				});
-			}
+										var report = _reportManager.GetReport(x.Id);
+										var allYearReports =
+											preLoadedReports.Where(p => p.Year == year).ToList();
+										DisplayReport(report, allYearReports);
+									}
+									catch (Exception ex)
+									{
+										_logger.Error(ex, "Error while trying to display report");
+									}
+								})
+							}).ToObservable();
+						ReportButtons.FirstOrDefault()?.DisplayCommand.Execute(null);
+					}
+					catch (Exception ex)
+					{
+						_logger.Error(ex, "Error while trying to display report");
+					}
+				})
+			}).ToObservable();
 		}
 
 		private void DisplayReport(Report1970 report, List<PersistedReport> allYearReports)
