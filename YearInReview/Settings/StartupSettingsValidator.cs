@@ -28,7 +28,7 @@ namespace YearInReview.Settings
 				return;
 			}
 
-			//if (versionedSettings.Version < PlayNextSettings.CurrentVersion)
+			//if (versionedSettings.Version < YearInReviewSettings.CurrentVersion)
 			//{
 			//	var newSettings = _settingsMigrator.LoadAndMigrateToNewest(versionedSettings.Version);
 			//	_pluginSettingsPersistence.SavePluginSettings(newSettings);
