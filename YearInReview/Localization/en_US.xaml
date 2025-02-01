@@ -16,6 +16,7 @@
     <sys:String x:Key="LOC_YearInReview_Notification_ImportError_AlreadyExists">Report you are trying to import is already in Playnite. Skipping.</sys:String>
     <sys:String x:Key="LOC_YearInReview_Notification_ImportError_InvalidFile">Trying to import invalid report file. Please double-check that you're importing file exported with YearInReview extension.</sys:String>
     <sys:String x:Key="LOC_YearInReview_Notification_InstallGameActivity">GameActivity extension not installed. It is mandatory for YearInReview extension to work.</sys:String>
+    <sys:String x:Key="LOC_YearInReview_Notification_NoActivityInPreviousYears">No GameActivity sessions found in previous years. Cannot generate any reports. Keep on playing and wait for the New Year! :)</sys:String>
     <sys:String x:Key="LOC_YearInReview_Notification_SetUsername">Please set your username in the Year In Review plugin settings.</sys:String>
     <sys:String x:Key="LOC_YearInReview_PlaytimeCalendar">Total Playtime</sys:String>
     <sys:String x:Key="LOC_YearInReview_PluginName">Year in Review</sys:String>

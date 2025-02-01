@@ -148,9 +148,12 @@ namespace YearInReview.Model.Reports.MVVM
 
 		public void SetValidationErrors(IReadOnlyCollection<InitValidationError> validationErrors)
 		{
-			ValidationErrors = validationErrors
-				.Select(x => new ValidationErrorViewModel(x.Message, x.CallToAction))
-				.ToObservable();
+			_api.MainView.UIDispatcher.Invoke(() =>
+			{
+				ValidationErrors = validationErrors
+					.Select(x => new ValidationErrorViewModel(x.Message, x.CallToAction))
+					.ToObservable();
+			});
 		}
 
 		private void CreateReportButtons()

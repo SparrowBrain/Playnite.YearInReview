@@ -75,7 +75,7 @@ namespace YearInReview
 					{
 						if (!_isStartupValidationSuccess)
 						{
-							ValidateExtensionStateAndInitialize();
+							RunValidationInitialize();
 						}
 
 						if (_mainView == null || _mainViewModel == null)
@@ -112,7 +112,7 @@ namespace YearInReview
 		public override void OnApplicationStarted(OnApplicationStartedEventArgs args)
 		{
 			_startupSettingsValidator.EnsureCorrectVersionSettingsExist();
-			ValidateExtensionStateAndInitialize();
+			RunValidationInitialize();
 
 			GetSettings(false);
 			HandleSidebarItemVisibilityAfterSettingsSaved();
@@ -134,32 +134,48 @@ namespace YearInReview
 			return new YearInReviewSettingsView();
 		}
 
-		private void ValidateExtensionStateAndInitialize()
+		private void RunValidationInitialize()
 		{
-			if (_settingsViewModel != null)
+			Task.Run(async () =>
 			{
-				_settingsViewModel.SettingsSaved -= HandleValidationAfterSettingsSaved;
-			}
-
-			var extensionStartupValidator = new ExtensionStartupValidator(this, Api);
-			_initValidationErrors = extensionStartupValidator.IsOkToRun().Result;
-			_mainViewModel?.SetValidationErrors(_initValidationErrors);
-
-			if (_initValidationErrors.Count == 0)
-			{
-				_isStartupValidationSuccess = true;
-				RunInit();
-				return;
-			}
-
-			if (_initValidationErrors.Any(x => x.Id == InitValidationError.UsernameNotSetError))
-			{
-				GetSettings(false);
-				if (_settingsViewModel != null)
+				try
 				{
-					_settingsViewModel.SettingsSaved += HandleValidationAfterSettingsSaved;
+					if (_settingsViewModel != null)
+					{
+						_settingsViewModel.SettingsSaved -= HandleValidationAfterSettingsSaved;
+					}
+
+					var extensionStartupValidator = new ExtensionStartupValidator(
+						this,
+						Api,
+						new ReportPersistence(GetPluginUserDataPath()),
+						new GameActivityExtension(Api.Paths.ExtensionsDataPath),
+						new DateTimeProvider());
+
+					_initValidationErrors = await extensionStartupValidator.IsOkToRun();
+					_mainViewModel?.SetValidationErrors(_initValidationErrors);
+
+					if (_initValidationErrors.Count == 0)
+					{
+						_isStartupValidationSuccess = true;
+						RunInit();
+						return;
+					}
+
+					if (_initValidationErrors.Any(x => x.Id == InitValidationError.UsernameNotSetError))
+					{
+						GetSettings(false);
+						if (_settingsViewModel != null)
+						{
+							_settingsViewModel.SettingsSaved += HandleValidationAfterSettingsSaved;
+						}
+					}
 				}
-			}
+				catch (Exception e)
+				{
+					Logger.Error(e, "Failed to run validation or initialize.");
+				}
+			});
 		}
 
 		private void HandleSidebarItemVisibilityAfterSettingsSaved()
@@ -179,7 +195,7 @@ namespace YearInReview
 				return;
 			}
 
-			ValidateExtensionStateAndInitialize();
+			RunValidationInitialize();
 		}
 
 		private void RunInit()
