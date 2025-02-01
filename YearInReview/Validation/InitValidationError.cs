@@ -6,6 +6,7 @@ namespace YearInReview.Validation
 	{
 		public const string UsernameNotSetError = "year_in_review_missing_username";
 		public const string GameActivityExtensionNotInstalled = "year_in_review_game_activity_not_installed";
+		public const string NoActivityInPreviousYears = "no_activity_in_previous_years";
 
 		public string Id { get; set; }
 
