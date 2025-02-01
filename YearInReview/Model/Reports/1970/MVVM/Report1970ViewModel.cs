@@ -107,7 +107,9 @@ namespace YearInReview.Model.Reports._1970.MVVM
 
 		public string SingleSourceText => string.Format(ResourceProvider.GetString("LOC_YearInReview_Report1970_SingleSourceText"), MostPlayedSources.FirstOrDefault()?.Name);
 
-		public string AddGamesCountText => string.Format(ResourceProvider.GetString("LOC_YearInReview_Report1970_AddedGamesCountHeader"), AddedGamesCount);
+		public string AddGamesCountHeader => string.Format(ResourceProvider.GetString("LOC_YearInReview_Report1970_AddedGamesCountHeader"), AddedGamesCount);
+
+		public string AddGamesCountText => string.Format(ResourceProvider.GetString("LOC_YearInReview_Report1970_AddedGamesCountMessage"), AddedGamesCount);
 
 		public bool PromptToExportReport => FriendsPlaytimeLeaderboard.Count < 2;
 
