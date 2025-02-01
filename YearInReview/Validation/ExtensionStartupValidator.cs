@@ -39,7 +39,11 @@ namespace YearInReview.Validation
 
 			ValidateGameActivityExtensionInstalled(errors);
 			ValidateUsernameSet(errors);
-			await ValidateGameActivitySessionsExistForPreviousYears(errors);
+
+			if (errors.All(x => x.Id != InitValidationError.GameActivityExtensionNotInstalled))
+			{
+				await ValidateGameActivitySessionsExistForPreviousYears(errors);
+			}
 
 			return errors;
 		}

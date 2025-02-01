@@ -89,11 +89,9 @@ namespace YearInReview.UnitTests.Validation
 			List<Activity> activities)
 		{
 			// Arrange
-			activities.ForEach(x => x.Items.ForEach(y => y.DateSession = new DateTime(currentYear, y.DateSession.Month, y.DateSession.Day)));
 			SetupSuccessfulValidation();
+			SetupGameActivitiesForYear(activities, currentYear, currentYear);
 			A.CallTo(() => _reportPersistence.PreLoadAllReports()).Returns(new List<PersistedReport>());
-			A.CallTo(() => _gameActivityExtension.GetActivityForGames(An<IEnumerable<Game>>._)).Returns(activities);
-			A.CallTo(() => _dateTimeProvider.GetNow()).Returns(new DateTime(currentYear, 1, 1));
 
 			// Act
 			var result = await _sut.IsOkToRun();
@@ -110,16 +108,33 @@ namespace YearInReview.UnitTests.Validation
 		{
 			// Arrange
 			SetupSuccessfulValidation();
-			activities.ForEach(x => x.Items.ForEach(y => y.DateSession = new DateTime(currentYear - 1, y.DateSession.Month, y.DateSession.Day)));
+			SetupGameActivitiesForYear(activities, currentYear - 1, currentYear);
 			A.CallTo(() => _reportPersistence.PreLoadAllReports()).Returns(new List<PersistedReport>());
-			A.CallTo(() => _gameActivityExtension.GetActivityForGames(An<IEnumerable<Game>>._)).Returns(activities);
-			A.CallTo(() => _dateTimeProvider.GetNow()).Returns(new DateTime(currentYear, 1, 1));
 
 			// Act
 			var result = await _sut.IsOkToRun();
 
 			// Assert
 			Assert.Empty(result);
+		}
+
+		[Theory]
+		[AutoFakeItEasyData]
+		public async Task Validate_DoesNotAddActivitiesInPreviousYearError_WhenGameActivityExtensionNotFound(
+			int currentYear,
+			List<Activity> activities)
+		{
+			// Arrange
+			SetupSuccessfulValidation();
+			_loadedPlugins.Remove(_gameActivityPlugin);
+			SetupGameActivitiesForYear(activities, currentYear, currentYear);
+			A.CallTo(() => _reportPersistence.PreLoadAllReports()).Returns(new List<PersistedReport>());
+
+			// Act
+			var result = await _sut.IsOkToRun();
+
+			// Assert
+			Assert.DoesNotContain(result, x => x.Id == InitValidationError.NoActivityInPreviousYears);
 		}
 
 		[Fact]
@@ -144,6 +159,13 @@ namespace YearInReview.UnitTests.Validation
 			A.CallTo(() => _playniteApi.Database.Games).Returns(_gameCollection);
 			A.CallTo(() => _addons.Plugins).Returns(_loadedPlugins);
 			A.CallTo(() => _reportPersistence.PreLoadAllReports()).Returns(_persistedReports);
+		}
+
+		private void SetupGameActivitiesForYear(List<Activity> activities, int activitiesYear, int currentYear)
+		{
+			activities.ForEach(x => x.Items.ForEach(y => y.DateSession = new DateTime(activitiesYear, y.DateSession.Month, y.DateSession.Day)));
+			A.CallTo(() => _gameActivityExtension.GetActivityForGames(An<IEnumerable<Game>>._)).Returns(activities);
+			A.CallTo(() => _dateTimeProvider.GetNow()).Returns(new DateTime(currentYear, 1, 1));
 		}
 	}
 }
