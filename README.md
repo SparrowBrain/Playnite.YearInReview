@@ -1,4 +1,10 @@
-﻿# What is it?
+﻿# Playnite Year In Review
+![DownloadCountTotal](https://img.shields.io/github/downloads/sparrowbrain/playnite.yearinreview/total?label=total%20downloads&style=for-the-badge)
+![LatestVersion](https://img.shields.io/github/v/release/SparrowBrain/Playnite.YearInReview?label=Latest%20version&style=for-the-badge)
+![DownloadCountLatest](https://img.shields.io/github/downloads/SparrowBrain/Playnite.YearInReview/latest/total?style=for-the-badge)
+
+
+## What is it?
 Celebrate your last year of play by reviewing some of the play statistics from Playnite GameActivity plugin!
 
 ![Main YearInReview view](/ci/screenshots/01.png)
