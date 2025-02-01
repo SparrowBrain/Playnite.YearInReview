@@ -129,7 +129,8 @@ namespace YearInReview.Model.Reports
 			ValidateReport(report);
 
 			var persistedReport = _reportPersistence.ImportReport(report);
-			_reportCache.Add(persistedReport.Id, persistedReport);
+			var reports = _reportPersistence.PreLoadAllReports();
+			_reportCache = reports.ToDictionary(x => x.Id, x => x);
 
 			_logger.Info($"Report {persistedReport.Id} from {persistedReport.Username} imported to \"{persistedReport.FilePath}\"");
 			return persistedReport.Id;

@@ -7,7 +7,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using TestTools.Shared;
 using Xunit;
-using YearInReview.Infrastructure.Serialization;
 using YearInReview.Infrastructure.Services;
 using YearInReview.Model.Aggregators.Data;
 using YearInReview.Model.Exceptions;
@@ -195,6 +194,7 @@ namespace YearInReview.UnitTests.Model.Reports
 		{
 			// Arrange
 			A.CallTo(() => reportPersistence.ImportReport(expected)).Returns(persistedReport);
+			A.CallTo(() => reportPersistence.PreLoadAllReports()).Returns(new List<PersistedReport> { persistedReport });
 			A.CallTo(() => reportPersistence.LoadReport(persistedReport.FilePath)).Returns(expected);
 
 			// Act
