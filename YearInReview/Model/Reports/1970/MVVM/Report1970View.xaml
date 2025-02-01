@@ -185,7 +185,6 @@
                                             </MultiBinding>
                                         </Rectangle.Width>
                                     </Rectangle>
-
                                     <TextBlock Text="{Binding TimePlayed, Converter={StaticResource SecondsToReadableTextConverter}}" VerticalAlignment="Center" Margin="10, 0" />
                                 </StackPanel>
                             </Grid>
@@ -214,16 +213,33 @@
                     </ListBox.ItemContainerStyle>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Grid Margin="0,2.5,0,2.5">
+                            <Grid Margin="0,2.5,0,2.5" SizeChanged="FriendsGrid_SizeChanged">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="25" />
                                     <ColumnDefinition Width="300" />
-                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition x:Name="FriendBarColumn" Width="*" />
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0" Text="{Binding Position}" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 <TextBlock Grid.Column="1" Text="{Binding Name}" VerticalAlignment="Center" />
                                 <StackPanel Grid.Column="2" Orientation="Horizontal">
-                                    <Rectangle  Fill="{DynamicResource GlyphBrush}" Height="50" Width="{Binding BarWidth}" />
+                                    <Rectangle x:Name="FriendBar" Fill="{DynamicResource GlyphBrush}" Height="50">
+                                        <Rectangle.Width>
+                                            <MultiBinding Converter="{StaticResource PercentageWithParameterConverter}">
+                                                <Binding Path="MaxWidth" RelativeSource="{RelativeSource Mode=Self}" />
+                                                <Binding Path="Percentage" />
+                                                <Binding>
+                                                    <Binding.Source>
+                                                        <system:Int32>-150</system:Int32>
+                                                    </Binding.Source>
+                                                </Binding>
+                                                <Binding>
+                                                    <Binding.Source>
+                                                        <system:Int32>1</system:Int32>
+                                                    </Binding.Source>
+                                                </Binding>
+                                            </MultiBinding>
+                                        </Rectangle.Width>
+                                    </Rectangle>
                                     <TextBlock Text="{Binding Playtime, Converter={StaticResource SecondsToReadableTextConverter}}" VerticalAlignment="Center" Margin="10, 0" />
                                 </StackPanel>
                             </Grid>

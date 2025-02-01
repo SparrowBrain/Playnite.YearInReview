@@ -91,6 +91,11 @@ namespace YearInReview.Model.Reports._1970.MVVM
 			UpdateBarMaxWidth(sender, "SourceBarColumn", "SourceBar");
 		}
 
+		private void FriendsGrid_SizeChanged(object sender, SizeChangedEventArgs e)
+		{
+			UpdateBarMaxWidth(sender, "FriendBarColumn", "FriendBar");
+		}
+
 		private static void UpdateBarMaxWidth(object sender, string columnName, string barName)
 		{
 			if (!(sender is Grid grid))
@@ -140,5 +145,7 @@ namespace YearInReview.Model.Reports._1970.MVVM
 				}
 			}
 		}
+
+	
 	}
 }

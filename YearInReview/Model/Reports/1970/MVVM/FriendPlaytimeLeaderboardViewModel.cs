@@ -9,8 +9,7 @@
 			Position = position;
 			Name = name;
 			Playtime = playtime;
-
-			BarWidth = (float)playtime * MaxBarWidth / maxPlaytime;
+			Percentage = (double)playtime / maxPlaytime;
 		}
 
 		public int Position { get; }
@@ -19,6 +18,6 @@
 
 		public int Playtime { get; }
 
-		public float BarWidth { get; set; }
+		public double Percentage { get; set; }
 	}
 }
