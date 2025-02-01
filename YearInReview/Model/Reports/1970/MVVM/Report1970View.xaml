@@ -88,7 +88,7 @@
                     </Image>
                 </Button>
                 <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding MostPlayedGame.Name}" FontSize="25"></TextBlock>
-                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding MostPlayedGameMessage}"></TextBlock>
+                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Texts.LOC_YearInReview_Report1970_MostPlayedGameMessage}"></TextBlock>
             </Grid>
             <TextBlock Text="{Binding Texts.LOC_YearInReview_Report1970_TopGamesHeader}" FontSize="25" TextAlignment="Left" Margin="10,48,10,10"></TextBlock>
             <ListBox ItemsSource="{Binding MostPlayedGames}" PreviewMouseWheel="HandlePreviewMouseWheel" Margin="0,0,0,0" Background="Transparent">
