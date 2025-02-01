@@ -20,7 +20,6 @@ using YearInReview.Model.Reports.Persistence;
 using YearInReview.Settings;
 using YearInReview.Settings.MVVM;
 using YearInReview.Validation;
-using YearInReview.Validation.MVVM;
 
 namespace YearInReview
 {
@@ -79,16 +78,9 @@ namespace YearInReview
 							ValidateExtensionStateAndInitialize();
 						}
 
-						if (_initValidationErrors.Any())
-						{
-							var errorsViewModel = new ValidationErrorsViewModel(_initValidationErrors);
-							var errorsView = new ValidationErrorsView(errorsViewModel);
-							return errorsView;
-						}
-
 						if (_mainView == null || _mainViewModel == null)
 						{
-							_mainViewModel = new MainViewModel(Api, _reportManager, _settingsViewModel);
+							_mainViewModel = new MainViewModel(Api, GetReportManager(), _settingsViewModel, _initValidationErrors);
 							_mainView = new MainView(_mainViewModel);
 						}
 
@@ -111,7 +103,7 @@ namespace YearInReview
 				MenuSection = pluginMenuSection,
 				Action = _ =>
 				{
-					var view = new MainView(new MainViewModel(Api, _reportManager, _settingsViewModel));
+					var view = new MainView(new MainViewModel(Api, GetReportManager(), _settingsViewModel, _initValidationErrors));
 					OpenViewAsDialog(view, pluginName);
 				}
 			};
@@ -151,6 +143,7 @@ namespace YearInReview
 
 			var extensionStartupValidator = new ExtensionStartupValidator(this, Api);
 			_initValidationErrors = extensionStartupValidator.IsOkToRun().Result;
+			_mainViewModel?.SetValidationErrors(_initValidationErrors);
 
 			if (_initValidationErrors.Count == 0)
 			{
@@ -196,6 +189,7 @@ namespace YearInReview
 				try
 				{
 					await GetReportManager().Init();
+					_mainViewModel?.Init();
 				}
 				catch (Exception e)
 				{
