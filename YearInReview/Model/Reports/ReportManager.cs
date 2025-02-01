@@ -161,7 +161,7 @@ namespace YearInReview.Model.Reports
 			var lastReport = reports.OrderByDescending(x => x.Metadata.Year).First();
 			
 			var description = string.Format(
-				ResourceProvider.GetString("LOC_YearInReview_ReportGeneratedNotification"), 
+				ResourceProvider.GetString("LOC_YearInReview_Notification_ReportGenerated"), 
 				lastReport.Metadata.Year
 			);
 			

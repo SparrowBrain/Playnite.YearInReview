@@ -14,18 +14,13 @@ namespace YearInReview.Model.Reports._1970.MVVM
 	{
 		private readonly IPlayniteAPI _api;
 
-		public Report1970ViewModel(IPlayniteAPI api, Report1970 report, List<PersistedReport> allYearReports)
+		public Report1970ViewModel(IPlayniteAPI api, Report1970 report, bool isOwn, List<PersistedReport> allYearReports)
 		{
 			_api = api;
 
 			Id = report.Metadata.Id;
 			Year = report.Metadata.Year;
 			Username = report.Metadata.Username;
-
-			IntroMessage = string.Format(ResourceProvider.GetString("LOC_YearInReview_Report1970_Intro"), Year, Username);
-			IntroMessageSubtext = string.Format(ResourceProvider.GetString("LOC_YearInReview_Report1970_IntroSubtext"),
-				ReadableTimeFormatter.FormatTime(report.TotalPlaytime),
-				Year);
 
 			MostPlayedGame = report.MostPlayedGames.First();
 
@@ -59,6 +54,16 @@ namespace YearInReview.Model.Reports._1970.MVVM
 					.Select((x, i) => new FriendPlaytimeLeaderboardViewModel(i + 1, x.Username, x.TotalPlaytime, maxFriendPlaytime))
 					.ToObservable();
 			}
+
+			Texts = new ReportTexts(
+				isOwn,
+				Username,
+				Year, AddedGamesCount,
+				report.TotalPlaytime,
+				MostPlayedGame.Name,
+				MostPlayedGame.TimePlayed,
+				MostPlayedSources.FirstOrDefault()?.Name,
+				MostPlayedGames.Count);
 		}
 
 		public Guid Id { get; set; }
@@ -66,10 +71,6 @@ namespace YearInReview.Model.Reports._1970.MVVM
 		public int Year { get; set; }
 
 		public string Username { get; set; }
-
-		public string IntroMessage { get; set; }
-
-		public string IntroMessageSubtext { get; set; }
 
 		public int AddedGamesCount { get; set; }
 
@@ -92,8 +93,6 @@ namespace YearInReview.Model.Reports._1970.MVVM
 		public ObservableCollection<FriendPlaytimeLeaderboardViewModel> FriendsPlaytimeLeaderboard { get; set; } =
 			new ObservableCollection<FriendPlaytimeLeaderboardViewModel>();
 
-		public string MostPlayedGameMessage => string.Format(ResourceProvider.GetString("LOC_YearInReview_Report1970_MostPlayedGameMessage"), MostPlayedGame.Name, ReadableTimeFormatter.FormatTime(MostPlayedGame.TimePlayed));
-
 		public ICommand OpenMostPlayedDetails =>
 			new RelayCommand(() =>
 			{
@@ -101,41 +100,11 @@ namespace YearInReview.Model.Reports._1970.MVVM
 				_api.MainView.SwitchToLibraryView();
 			});
 
-		public string TopGamesHeader => string.Format(ResourceProvider.GetString("LOC_YearInReview_Report1970_TopGamesHeader"), MostPlayedGames.Count);
-
-		public string TopSourcesHeader => string.Format(ResourceProvider.GetString("LOC_YearInReview_Report1970_TopSourcesHeader"));
-
-		public string SingleSourceText => string.Format(ResourceProvider.GetString("LOC_YearInReview_Report1970_SingleSourceText"), MostPlayedSources.FirstOrDefault()?.Name);
-
-		public string AddGamesCountHeader => string.Format(ResourceProvider.GetString("LOC_YearInReview_Report1970_AddedGamesCountHeader"), AddedGamesCount);
-
-		public string AddGamesCountText => string.Format(ResourceProvider.GetString("LOC_YearInReview_Report1970_AddedGamesCountMessage"), AddedGamesCount);
+		public ReportTexts Texts { get; set; }
 
 		public bool PromptToExportReport => FriendsPlaytimeLeaderboard.Count < 2;
 
 		public RelayCommand ShowSharingHelp => new RelayCommand(() =>
 			System.Diagnostics.Process.Start("https://github.com/SparrowBrain/Playnite.YearInReview?tab=readme-ov-file#sharing-with-friends"));
-	}
-
-	public class FriendPlaytimeLeaderboardViewModel
-	{
-		private const int MaxBarWidth = 500;
-
-		public FriendPlaytimeLeaderboardViewModel(int position, string name, int playtime, int maxPlaytime)
-		{
-			Position = position;
-			Name = name;
-			Playtime = playtime;
-
-			BarWidth = (float)playtime * MaxBarWidth / maxPlaytime;
-		}
-
-		public int Position { get; }
-
-		public string Name { get; }
-
-		public int Playtime { get; }
-
-		public float BarWidth { get; set; }
 	}
 }

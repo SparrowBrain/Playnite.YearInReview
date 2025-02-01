@@ -182,7 +182,7 @@ namespace YearInReview.Model.Reports.MVVM
 										var report = _reportManager.GetReport(x.Id);
 										var allYearReports =
 											preLoadedReports.Where(p => p.Year == year).ToList();
-										DisplayReport(report, allYearReports);
+										DisplayReport(report, x.IsOwn, allYearReports);
 									}
 									catch (Exception ex)
 									{
@@ -200,9 +200,9 @@ namespace YearInReview.Model.Reports.MVVM
 			}).ToObservable();
 		}
 
-		private void DisplayReport(Report1970 report, List<PersistedReport> allYearReports)
+		private void DisplayReport(Report1970 report, bool isOwn, List<PersistedReport> allYearReports)
 		{
-			var viewModel = new Report1970ViewModel(_api, report, allYearReports);
+			var viewModel = new Report1970ViewModel(_api, report, isOwn, allYearReports);
 			var view = new Report1970View(viewModel);
 
 			ActiveReport = view;

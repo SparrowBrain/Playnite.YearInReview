@@ -58,6 +58,8 @@
     <Compile Include="Infrastructure\Services\UriToPhysicalUriConverter.cs" />
     <Compile Include="Infrastructure\Converters\PercentageWithParameterConverter.cs" />
     <Compile Include="Model\Exceptions\InvalidReportFileException.cs" />
+    <Compile Include="Model\Reports\1970\MVVM\FriendPlaytimeLeaderboardViewModel.cs" />
+    <Compile Include="Model\Reports\1970\MVVM\ReportTexts.cs" />
     <Compile Include="Model\Reports\MVVM\ExportWithImagesView.xaml.cs">
       <DependentUpon>ExportWithImagesView.xaml</DependentUpon>
     </Compile>
