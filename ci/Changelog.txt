@@ -1,2 +1,5 @@
+v1.0.1
+- Fixed missing cover art for notable added games
+
 v1.0.0
 - Initial release

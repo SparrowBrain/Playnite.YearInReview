@@ -10,6 +10,7 @@ namespace YearInReview.Model.Reports._1970
 
 		public string SourceName { get; set; }
 
+		[Image]
 		public string CoverImage { get; set; }
 
 		public DateTime AddedDate { get; set; }
