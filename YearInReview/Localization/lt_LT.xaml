@@ -23,6 +23,8 @@
     <sys:String x:Key="LOC_YearInReview_RememberedChoice_Always">Visada</sys:String>
     <sys:String x:Key="LOC_YearInReview_RememberedChoice_Ask">Klausti</sys:String>
     <sys:String x:Key="LOC_YearInReview_RememberedChoice_Never">Niekada</sys:String>
+    <sys:String x:Key="LOC_YearInReview_Report1970_AddedGameAddedDateText">Pridėta: {0}</sys:String>
+    <sys:String x:Key="LOC_YearInReview_Report1970_AddedGameCriticScoreText">Kritikų įvertinimas: {0}</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_AddedGamesCountHeader">Pažiūrėkime, kiek šiais metais paaugo tavo biblioteka</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_AddedGamesCountHeader_Friend">Pažiūrėkime, kiek šiais metais paaugo {0} biblioteka</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_AddedGamesCountMessage">Per šiuos metus tu pridėjai žaidimų: {0}.</sys:String>
@@ -36,6 +38,7 @@
     <sys:String x:Key="LOC_YearInReview_Report1970_FriendsLeaderboardHeader_Friend">Palyginkime {0} žaidimo laiką su tavo draugais</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_MostPlayedGameMessage">Atrodo negalėjai atsižaisti {0}. Iš viso šį žaidimą žaidei {1}.</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_MostPlayedGameMessage_Friend">Atrodo {0} negalėjo atsižaisti {1}. Iš viso šį žaidimą žaidė {2}.</sys:String>
+    <sys:String x:Key="LOC_YearInReview_Report1970_NotableAddedGamesHeader">Kai kurie žymesni pridėti žaidimai</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_PlaytimeCalendarHeader">Štai kaip tu žaidei per šiuos metus</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_PlaytimeCalendarHeader_Friend">Štai, kaip {0} žaidė per šiuos metus</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_PlaytimeCalendarMostPlayedGame">Daugiausiai: {0} ({1})</sys:String>

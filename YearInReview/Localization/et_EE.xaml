@@ -23,6 +23,8 @@
     <sys:String x:Key="LOC_YearInReview_RememberedChoice_Always">Always</sys:String>
     <sys:String x:Key="LOC_YearInReview_RememberedChoice_Ask">Ask</sys:String>
     <sys:String x:Key="LOC_YearInReview_RememberedChoice_Never">Never</sys:String>
+    <sys:String x:Key="LOC_YearInReview_Report1970_AddedGameAddedDateText">Added on {0}</sys:String>
+    <sys:String x:Key="LOC_YearInReview_Report1970_AddedGameCriticScoreText">Critic Score: {0}</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_AddedGamesCountHeader">Let's see how much your library grew this year</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_AddedGamesCountHeader_Friend">Let's see how much {0} library grew this year</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_AddedGamesCountMessage">You've added {0} games throughout the year to your library.</sys:String>
@@ -36,6 +38,7 @@
     <sys:String x:Key="LOC_YearInReview_Report1970_FriendsLeaderboardHeader_Friend">Let's see how {0} ranks amongst your friends regarding playtime</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_MostPlayedGameMessage">It looks like you could not get enough of {0}. You've spent {1} playing it.</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_MostPlayedGameMessage_Friend">It looks like {0} could not get enough of {1}. They have spent {2} playing it.</sys:String>
+    <sys:String x:Key="LOC_YearInReview_Report1970_NotableAddedGamesHeader">Some of the notable added games</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_PlaytimeCalendarHeader">Here's how your playtime looked over the year</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_PlaytimeCalendarHeader_Friend">Here's how {0} playtime looked over the year</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_PlaytimeCalendarMostPlayedGame">Mostly: {0} ({1})</sys:String>
