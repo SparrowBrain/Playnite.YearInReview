@@ -29,7 +29,7 @@ And to import you friend's report:
 You should now see your friend's report :).
 
 ## Installation
-You can install it either from Playnite's addon browser, or from [the web addon browser](https://playnite.link/addons.html#YearInReview_a22a7611-3023-4ca8-907e-47f883acd1b2).
+You can install it either from Playnite's addon browser, or from [the web addon browser](https://playnite.link/addons.html#SparrowBrain_YearInReview).
 
 ## Contributing
 The structure of the code is experimental, so expect some mess. Most of the code is grouped by "domain" or feature.

@@ -1,4 +1,4 @@
-AddonId: YearInReview_a22a7611-3023-4ca8-907e-47f883acd1b2
+AddonId: SparrowBrain_YearInReview
 Packages:
   - Version: 1.0.1
     RequiredApiVersion: 6.8.0
