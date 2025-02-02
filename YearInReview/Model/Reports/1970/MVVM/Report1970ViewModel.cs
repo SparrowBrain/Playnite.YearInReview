@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
-using YearInReview.Infrastructure.Services;
 using YearInReview.Infrastructure.UserControls;
 using YearInReview.Model.Reports.Persistence;
 
@@ -25,6 +24,8 @@ namespace YearInReview.Model.Reports._1970.MVVM
 			MostPlayedGame = report.MostPlayedGames.First();
 
 			AddedGamesCount = report.AddedGamesCount;
+
+			NotableAddedGames = report.NotableAddedGames.Select(x => new AddedGameViewModel(api, x)).ToList().ToObservable();
 
 			MostPlayedGames = report.MostPlayedGames
 				.Select((t, i) => new GameViewModel(api, i + 1, t, MostPlayedGame.TimePlayed)).ToList()
@@ -92,6 +93,10 @@ namespace YearInReview.Model.Reports._1970.MVVM
 
 		public ObservableCollection<FriendPlaytimeLeaderboardViewModel> FriendsPlaytimeLeaderboard { get; set; } =
 			new ObservableCollection<FriendPlaytimeLeaderboardViewModel>();
+
+		public bool ShowNotableAddedGames => NotableAddedGames.Any();
+
+		public ObservableCollection<AddedGameViewModel> NotableAddedGames { get; set; }
 
 		public ICommand OpenMostPlayedDetails =>
 			new RelayCommand(() =>

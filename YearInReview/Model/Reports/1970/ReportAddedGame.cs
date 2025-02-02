@@ -2,15 +2,18 @@
 
 namespace YearInReview.Model.Reports._1970
 {
-	public class ReportGameWithTime
+	public class ReportAddedGame
 	{
 		public Guid Id { get; set; }
 
 		public string Name { get; set; }
 
-		[Image]
+		public string SourceName { get; set; }
+
 		public string CoverImage { get; set; }
 
-		public int TimePlayed { get; set; }
+		public DateTime AddedDate { get; set; }
+
+		public int CriticScore { get; set; }
 	}
 }

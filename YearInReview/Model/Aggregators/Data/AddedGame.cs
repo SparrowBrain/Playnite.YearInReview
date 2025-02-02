@@ -8,5 +8,7 @@ namespace YearInReview.Model.Aggregators.Data
         public DateTime AddedDate { get; set; }
 
         public Game Game { get; set; }
+
+        public GameSource Source { get; set; }
     }
 }

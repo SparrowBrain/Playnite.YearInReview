@@ -36,6 +36,7 @@ namespace YearInReview.Model.Reports._1970
 		public Report1970 Compose(int year, IReadOnlyCollection<Activity> activities)
 		{
 			var mostPlayedGames = _mostPlayedGameAggregator.GetMostPlayedGames(activities, 10);
+			var addedGames = _addedGamesAggregator.GetAddedGames(year);
 
 			return new Report1970()
 			{
@@ -47,31 +48,43 @@ namespace YearInReview.Model.Reports._1970
 					Name = x.Game.Name,
 					CoverImage = x.Game.CoverImage,
 					TimePlayed = x.TimePlayed,
-					FlavourText = "Most played game of the year"
 				}).ToList(),
-				MostPlayedSources = _mostPlayedSourcesAggregator.GetMostPlayedSources(activities).Select(x => new ReportSourceWithTime()
-				{
-					Id = x.Source.Id,
-					Name = x.Source.Name,
-					TimePlayed = x.TimePlayed,
-				}).ToList(),
-				PlaytimeCalendarDays = _playtimeCalendarAggregator.GetCalendar(year, activities).Values.Select(x => new ReportCalendarDay()
-				{
-					Date = x.Date,
-					TotalPlaytime = x.TotalPlaytime,
-					Games = x.Games.Select(g => new ReportCalendarGame()
+				MostPlayedSources = _mostPlayedSourcesAggregator.GetMostPlayedSources(activities).Select(x =>
+					new ReportSourceWithTime()
 					{
-						Id = g.Game.Id,
-						Name = g.Game.Name,
-						TimePlayed = g.TimePlayed
-					}).ToList()
-				}).ToList(),
+						Id = x.Source.Id,
+						Name = x.Source.Name,
+						TimePlayed = x.TimePlayed,
+					}).ToList(),
+				PlaytimeCalendarDays = _playtimeCalendarAggregator.GetCalendar(year, activities).Values.Select(x =>
+					new ReportCalendarDay()
+					{
+						Date = x.Date,
+						TotalPlaytime = x.TotalPlaytime,
+						Games = x.Games.Select(g => new ReportCalendarGame()
+						{
+							Id = g.Game.Id,
+							Name = g.Game.Name,
+							TimePlayed = g.TimePlayed
+						}).ToList()
+					}).ToList(),
 				HourlyPlaytime = _hourlyPlaytimeAggregator.GetHours(activities).Select(x => new ReportHourlyPlaytime()
 				{
 					Hour = x.Key,
 					Playtime = x.Value
 				}).ToList(),
-				AddedGamesCount = _addedGamesAggregator.GetAddedGames(year).Count
+				AddedGamesCount = addedGames.Count,
+				NotableAddedGames = addedGames.Where(x => x.Game.CriticScore >= 80)
+					.OrderByDescending(x => x.Game.CriticScore).Take(3).Select(x =>
+						new ReportAddedGame()
+						{
+							Id = x.Game.Id,
+							Name = x.Game.Name,
+							SourceName = x.Source.Name,
+							CoverImage = x.Game.CoverImage,
+							AddedDate = x.AddedDate,
+							CriticScore = x.Game.CriticScore ?? 0
+						}).ToList(),
 			};
 		}
 	}

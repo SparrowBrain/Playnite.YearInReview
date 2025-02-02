@@ -195,6 +195,39 @@
             <TextBlock Visibility="{Binding ShowSingleSource, Converter={StaticResource BoolToCollapsedVisibilityConverter}}" Text="{Binding Texts.LOC_YearInReview_Report1970_SingleSourceText}" FontSize="25" Margin="10,48,10,10"></TextBlock>
             <TextBlock Text="{Binding Texts.LOC_YearInReview_Report1970_AddedGamesCountHeader}" FontSize="25" TextAlignment="Left" Margin="10,48,10,10"></TextBlock>
             <TextBlock Text="{Binding Texts.LOC_YearInReview_Report1970_AddedGamesCountMessage}" TextAlignment="Left" ></TextBlock>
+            <TextBlock Text="{DynamicResource LOC_YearInReview_Report1970_NotableAddedGamesHeader}" FontSize="25" TextAlignment="Left" Margin="10,48,10,10"></TextBlock>
+            <ListBox ItemsSource="{Binding NotableAddedGames}" PreviewMouseWheel="HandlePreviewMouseWheel" Margin="0,0,0,0" Background="Transparent">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                        <Setter Property="Focusable" Value="False" />
+                        <Setter Property="Padding" Value="0" />
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Command="{Binding OpenDetails}" Background="Transparent" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                            <Grid Margin="0,2.5,0,2.5" SizeChanged="GameGrid_SizeChanged" HorizontalAlignment="Stretch">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="100" />
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Image Grid.Column="0" Height="75" Source="{Binding CoverImage,
+                                     Converter={StaticResource Base64OrUriToBitmapImageConverter},
+                                     ConverterParameter=75,
+                                     Mode=OneWay,
+                                     FallbackValue={StaticResource DefaultGameCover},
+                                     TargetNullValue={StaticResource DefaultGameCover}}">
+                                </Image>
+                                <TextBlock Grid.Column="1" Text="{Binding NameWithLibrary}" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                                <TextBlock Grid.Column="2" Text="{Binding CriticScoreText}" VerticalAlignment="Center" HorizontalAlignment="Left" TextWrapping="Wrap"/>
+                                <TextBlock Grid.Column="3" Text="{Binding AddedDateText}" VerticalAlignment="Center" HorizontalAlignment="Left" TextWrapping="Wrap" />
+                            </Grid>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ListBox>
             <TextBlock Text="{Binding Texts.LOC_YearInReview_Report1970_PlaytimeCalendarHeader}" FontSize="25" TextAlignment="Left" Margin="10,48,10,10"></TextBlock>
             <userControls:PlaytimeCalendar ItemsSource="{Binding PlaytimeCalendarDays}" />
             <TextBlock Text="{Binding Texts.LOC_YearInReview_Report1970_HourlyPlaytimeHeader}" FontSize="25" TextAlignment="Left" Margin="10,48,10,10"></TextBlock>
