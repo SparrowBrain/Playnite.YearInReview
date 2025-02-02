@@ -46,7 +46,7 @@ namespace ReleaseTools
             CreateRelease(changeEntry, releaseChangelog, releasePackage);
 
             UpdateInstallerManifest(pathToSolution, extensionPackageNameGuesser, changeEntry);
-            //CommitAndPush($@"v{changeEntry.Version} installer-manifest.yaml update");
+            CommitAndPush($@"v{changeEntry.Version} installer-manifest.yaml update");
         }
 
         private static async Task EnsureGitHubAuthentication()
