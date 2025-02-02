@@ -21,7 +21,7 @@ namespace ReleaseTools
             var pathToSolution = "..";
 
             var msBuild = @"""C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe""";
-            var testRunner = $@"""{pathToSolution}\packages\xunit.runner.console.2.4.2\tools\net462\xunit.console.exe""";
+            var testRunner = $@"""{pathToSolution}\packages\xunit.runner.console.2.9.2\tools\net462\xunit.console.exe""";
             var toolbox = @"""C:\Users\Qwx\AppData\Local\Playnite\Toolbox.exe""";
 
             await EnsureGitHubAuthentication();
