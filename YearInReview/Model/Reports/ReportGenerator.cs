@@ -15,6 +15,7 @@ namespace YearInReview.Model.Reports
 		private readonly IDateTimeProvider _dateTimeProvider;
 		private readonly IGameActivityExtension _gameActivityExtension;
 		private readonly ISpecificYearActivityFilter _specificYearActivityFilter;
+		private readonly IEmptyActivityFilter _emptyActivityFilter;
 		private readonly IComposer1970 _composer1970;
 
 		public ReportGenerator(
@@ -22,16 +23,17 @@ namespace YearInReview.Model.Reports
 			IDateTimeProvider dateTimeProvider,
 			IGameActivityExtension gameActivityExtension,
 			ISpecificYearActivityFilter specificYearActivityFilter,
+			IEmptyActivityFilter emptyActivityFilter,
 			IComposer1970 composer1970)
 		{
 			_playniteApi = playniteApi;
 			_dateTimeProvider = dateTimeProvider;
 			_gameActivityExtension = gameActivityExtension;
 			_specificYearActivityFilter = specificYearActivityFilter;
+			_emptyActivityFilter = emptyActivityFilter;
 			_composer1970 = composer1970;
 		}
 
-		// TODO what happens when no activity / sessions?
 		public async Task<IReadOnlyCollection<Report1970>> GenerateAllYears()
 		{
 			var games = _playniteApi.Database.Games;
@@ -42,8 +44,9 @@ namespace YearInReview.Model.Reports
 			var reports = new List<Report1970>();
 			foreach (var year in allYears.Where(x => x != currentYear))
 			{
-				var filteredActivities = _specificYearActivityFilter.GetActivityForYear(year, activities);
-				var report = _composer1970.Compose(year, filteredActivities);
+				var specificYearActivities = _specificYearActivityFilter.GetActivityForYear(year, activities);
+				var nonEmptyActivities = _emptyActivityFilter.RemoveEmpty(specificYearActivities);
+				var report = _composer1970.Compose(year, nonEmptyActivities);
 				reports.Add(report);
 			}
 
@@ -54,9 +57,10 @@ namespace YearInReview.Model.Reports
 		{
 			var games = _playniteApi.Database.Games;
 			var activities = await _gameActivityExtension.GetActivityForGames(games);
-			var filteredActivities = _specificYearActivityFilter.GetActivityForYear(year, activities);
-			
-			return _composer1970.Compose(year, filteredActivities);
+			var specificYearActivities = _specificYearActivityFilter.GetActivityForYear(year, activities);
+			var nonEmptyActivities = _emptyActivityFilter.RemoveEmpty(specificYearActivities);
+
+			return _composer1970.Compose(year, nonEmptyActivities);
 		}
 	}
 }

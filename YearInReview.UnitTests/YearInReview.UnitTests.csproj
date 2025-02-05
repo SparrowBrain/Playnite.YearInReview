@@ -101,6 +101,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\Filters\EmptyActivityFilterTests.cs" />
     <Compile Include="Validation\ExtensionStartupValidatorTests.cs" />
     <Compile Include="Extensions\GameActivity\SessionExtensionsTests.cs" />
     <Compile Include="Model\Aggregators\AddedGamesAggregatorTest.cs" />

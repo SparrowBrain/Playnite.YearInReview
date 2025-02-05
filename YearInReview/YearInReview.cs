@@ -240,8 +240,14 @@ namespace YearInReview
 			var gameActivityExtension = new GameActivityExtension(Api.Paths.ExtensionsDataPath);
 			var specificYearActivityFilter = new SpecificYearActivityFilter();
 			var reportPersistence = new ReportPersistence(GetPluginUserDataPath());
-			var reportGenerator = new ReportGenerator(Api, dateTimeProvider, gameActivityExtension,
-				specificYearActivityFilter, composer);
+			var emptyActivityFilter = new EmptyActivityFilter();
+			var reportGenerator = new ReportGenerator(
+				Api,
+				dateTimeProvider,
+				gameActivityExtension,
+				specificYearActivityFilter,
+				emptyActivityFilter,
+				composer);
 			_reportManager = new ReportManager(reportPersistence, reportGenerator, dateTimeProvider, Api, _settingsViewModel.Settings);
 
 			return _reportManager;

@@ -1,3 +1,6 @@
+--v1.0.2
+- Fixed a failure to generate reports when zero time activities are found
+
 v1.0.1
 - Fixed missing cover art for notable added games
 

@@ -25,10 +25,12 @@ namespace YearInReview.UnitTests.Model.Reports
 			[Frozen] IGameDatabaseAPI gameDatabaseApi,
 			[Frozen] IGameActivityExtension gameActivityExtension,
 			[Frozen] ISpecificYearActivityFilter specificYearActivityFilter,
+			[Frozen] IEmptyActivityFilter emptyActivityFilter,
 			[Frozen] IComposer1970 composer,
 			TestableItemCollection<Game> games,
 			List<Activity> activities,
-			List<Activity> filteredActivities,
+			List<Activity> specificYearActivities,
+			List<Activity> nonEmptyActivities,
 			Report1970 expected,
 			int year,
 			ReportGenerator sut)
@@ -37,8 +39,9 @@ namespace YearInReview.UnitTests.Model.Reports
 			A.CallTo(() => playniteApi.Database).Returns(gameDatabaseApi);
 			A.CallTo(() => gameDatabaseApi.Games).Returns(games);
 			A.CallTo(() => gameActivityExtension.GetActivityForGames(games)).Returns(activities);
-			A.CallTo(() => specificYearActivityFilter.GetActivityForYear(year, activities)).Returns(filteredActivities);
-			A.CallTo(() => composer.Compose(year, filteredActivities)).Returns(expected);
+			A.CallTo(() => specificYearActivityFilter.GetActivityForYear(year, activities)).Returns(specificYearActivities);
+			A.CallTo(() => emptyActivityFilter.RemoveEmpty(specificYearActivities)).Returns(nonEmptyActivities);
+			A.CallTo(() => composer.Compose(year, nonEmptyActivities)).Returns(expected);
 
 			// Act
 			var actual = await sut.Generate(year);
@@ -54,11 +57,14 @@ namespace YearInReview.UnitTests.Model.Reports
 			[Frozen] IGameDatabaseAPI gameDatabaseApi,
 			[Frozen] IGameActivityExtension gameActivityExtension,
 			[Frozen] ISpecificYearActivityFilter specificYearActivityFilter,
+			[Frozen] IEmptyActivityFilter emptyActivityFilter,
 			[Frozen] IComposer1970 composer,
 			TestableItemCollection<Game> games,
 			List<Activity> activities,
-			List<Activity> filteredActivities1,
-			List<Activity> filteredActivities2,
+			List<Activity> specificYearActivities1,
+			List<Activity> specificYearActivities2,
+			List<Activity> nonEmptyActivities1,
+			List<Activity> nonEmptyActivities2,
 			Report1970 expected1,
 			Report1970 expected2,
 			int year1,
@@ -79,10 +85,12 @@ namespace YearInReview.UnitTests.Model.Reports
 			A.CallTo(() => playniteApi.Database).Returns(gameDatabaseApi);
 			A.CallTo(() => gameDatabaseApi.Games).Returns(games);
 			A.CallTo(() => gameActivityExtension.GetActivityForGames(games)).Returns(activities);
-			A.CallTo(() => specificYearActivityFilter.GetActivityForYear(year1, activities)).Returns(filteredActivities1);
-			A.CallTo(() => specificYearActivityFilter.GetActivityForYear(year2, activities)).Returns(filteredActivities2);
-			A.CallTo(() => composer.Compose(year1, filteredActivities1)).Returns(expected1);
-			A.CallTo(() => composer.Compose(year2, filteredActivities2)).Returns(expected2);
+			A.CallTo(() => specificYearActivityFilter.GetActivityForYear(year1, activities)).Returns(specificYearActivities1);
+			A.CallTo(() => specificYearActivityFilter.GetActivityForYear(year2, activities)).Returns(specificYearActivities2);
+			A.CallTo(() => emptyActivityFilter.RemoveEmpty(specificYearActivities1)).Returns(nonEmptyActivities1);
+			A.CallTo(() => emptyActivityFilter.RemoveEmpty(specificYearActivities2)).Returns(nonEmptyActivities2);
+			A.CallTo(() => composer.Compose(year1, nonEmptyActivities1)).Returns(expected1);
+			A.CallTo(() => composer.Compose(year2, nonEmptyActivities2)).Returns(expected2);
 
 			// Act
 			var actual = await sut.GenerateAllYears();
@@ -100,10 +108,12 @@ namespace YearInReview.UnitTests.Model.Reports
 			[Frozen] IGameDatabaseAPI gameDatabaseApi,
 			[Frozen] IGameActivityExtension gameActivityExtension,
 			[Frozen] ISpecificYearActivityFilter specificYearActivityFilter,
+			[Frozen] IEmptyActivityFilter emptyActivityFilter,
 			[Frozen] IDateTimeProvider dateTimeProvider,
 			TestableItemCollection<Game> games,
 			List<Activity> activities,
-			List<Activity> filteredActivities,
+			List<Activity> specificYearActivities,
+			List<Activity> nonEmptyActivities,
 			int currentYear,
 			ReportGenerator sut)
 		{
@@ -117,7 +127,8 @@ namespace YearInReview.UnitTests.Model.Reports
 			A.CallTo(() => playniteApi.Database).Returns(gameDatabaseApi);
 			A.CallTo(() => gameDatabaseApi.Games).Returns(games);
 			A.CallTo(() => gameActivityExtension.GetActivityForGames(games)).Returns(activities);
-			A.CallTo(() => specificYearActivityFilter.GetActivityForYear(currentYear, activities)).Returns(filteredActivities);
+			A.CallTo(() => specificYearActivityFilter.GetActivityForYear(currentYear, activities)).Returns(specificYearActivities);
+			A.CallTo(() => emptyActivityFilter.RemoveEmpty(specificYearActivities)).Returns(nonEmptyActivities);
 
 			// Act
 			var actual = await sut.GenerateAllYears();

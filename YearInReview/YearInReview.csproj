@@ -58,6 +58,8 @@
     <Compile Include="Infrastructure\Services\UriToPhysicalUriConverter.cs" />
     <Compile Include="Infrastructure\Converters\PercentageWithParameterConverter.cs" />
     <Compile Include="Model\Exceptions\InvalidReportFileException.cs" />
+    <Compile Include="Model\Filters\EmptyActivityFilter.cs" />
+    <Compile Include="Model\Filters\IEmptyActivityFilter.cs" />
     <Compile Include="Model\Reports\1970\MVVM\AddedGameViewModel.cs" />
     <Compile Include="Model\Reports\1970\MVVM\FriendPlaytimeLeaderboardViewModel.cs" />
     <Compile Include="Model\Reports\1970\MVVM\ReportTexts.cs" />
