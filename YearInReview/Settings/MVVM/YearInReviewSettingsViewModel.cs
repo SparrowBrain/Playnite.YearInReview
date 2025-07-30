@@ -6,7 +6,7 @@ using YearInReview.Model;
 
 namespace YearInReview.Settings.MVVM
 {
-	public class YearInReviewSettingsViewModel : ObservableObject, ISettings
+	public class YearInReviewSettingsViewModel : ObservableObject, ISettings, ISettingsViewModel
 	{
 		private readonly YearInReview _plugin;
 
@@ -30,30 +30,12 @@ namespace YearInReview.Settings.MVVM
 			{
 				_settings = value;
 				OnPropertyChanged();
-				switch (value.ExportWithImages)
-				{
-					case RememberedChoice.Ask:
-						ExportWithImagesAsk = true;
-						ExportWithImagesNever = false;
-						ExportWithImagesAlways = false;
-						break;
 
-					case RememberedChoice.Never:
-						ExportWithImagesAsk = false;
-						ExportWithImagesNever = true;
-						ExportWithImagesAlways = false;
-
-						break;
-
-					case RememberedChoice.Always:
-						ExportWithImagesAsk = false;
-						ExportWithImagesNever = false;
-						ExportWithImagesAlways = true;
-						break;
-
-					default:
-						throw new ArgumentOutOfRangeException(nameof(value.ExportWithImages));
-				}
+				InitRememberedChoiceSetting(
+					value.ExportWithImages,
+					ask => ExportWithImagesAsk = ask,
+					never => ExportWithImagesNever = never,
+					always => ExportWithImagesAlways = always);
 			}
 		}
 
@@ -105,6 +87,34 @@ namespace YearInReview.Settings.MVVM
 		protected virtual void OnSettingsSaved()
 		{
 			SettingsSaved?.Invoke();
+		}
+
+		private void InitRememberedChoiceSetting(RememberedChoice choice, Action<bool> assignAsk, Action<bool> assignNever, Action<bool> assignAlways)
+		{
+			switch (choice)
+			{
+				case RememberedChoice.Ask:
+					assignAsk.Invoke(true);
+					assignNever.Invoke(false);
+					assignAlways.Invoke(false);
+					break;
+
+				case RememberedChoice.Never:
+					assignAsk.Invoke(false);
+					assignNever.Invoke(true);
+					assignAlways.Invoke(false);
+
+					break;
+
+				case RememberedChoice.Always:
+					assignAsk.Invoke(false);
+					assignNever.Invoke(false);
+					assignAlways.Invoke(true);
+					break;
+
+				default:
+					throw new ArgumentOutOfRangeException(nameof(choice));
+			}
 		}
 
 		private void SetExportWithImagesRadioButtonValue(

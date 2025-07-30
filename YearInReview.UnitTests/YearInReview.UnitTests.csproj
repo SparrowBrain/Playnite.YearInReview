@@ -21,6 +21,8 @@
     <TestProjectType>UnitTest</TestProjectType>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <RunSettingsFilePath>
+    </RunSettingsFilePath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -102,6 +104,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\Filters\EmptyActivityFilterTests.cs" />
+    <Compile Include="Settings\Old\SettingsV0Tests.cs" />
+    <Compile Include="Settings\SettingsMigratorTests.cs" />
     <Compile Include="Validation\ExtensionStartupValidatorTests.cs" />
     <Compile Include="Extensions\GameActivity\SessionExtensionsTests.cs" />
     <Compile Include="Model\Aggregators\AddedGamesAggregatorTest.cs" />

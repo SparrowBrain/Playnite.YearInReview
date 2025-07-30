@@ -52,7 +52,7 @@ namespace YearInReview
 			};
 
 			_pluginSettingsPersistence = new PluginSettingsPersistence(this);
-			_startupSettingsValidator = new StartupSettingsValidator(_pluginSettingsPersistence);
+			_startupSettingsValidator = new StartupSettingsValidator(_pluginSettingsPersistence, new SettingsMigrator(_pluginSettingsPersistence));
 		}
 
 		public static IPlayniteAPI Api { get; private set; }
@@ -248,7 +248,7 @@ namespace YearInReview
 				specificYearActivityFilter,
 				emptyActivityFilter,
 				composer);
-			_reportManager = new ReportManager(reportPersistence, reportGenerator, dateTimeProvider, Api, _settingsViewModel.Settings);
+			_reportManager = new ReportManager(reportPersistence, reportGenerator, dateTimeProvider, Api, _settingsViewModel);
 
 			return _reportManager;
 		}

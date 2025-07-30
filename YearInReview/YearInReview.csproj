@@ -71,6 +71,11 @@
     <Compile Include="Model\RememberedChoice.cs" />
     <Compile Include="Model\Reports\MVVM\ReportButtonViewModel.cs" />
     <Compile Include="Model\Exceptions\ReportAlreadyExistsException.cs" />
+    <Compile Include="Settings\IMigratableSettings.cs" />
+    <Compile Include="Settings\ISettingsMigrator.cs" />
+    <Compile Include="Settings\MVVM\ISettingsViewModel.cs" />
+    <Compile Include="Settings\Old\SettingsV0.cs" />
+    <Compile Include="Settings\SettingsMigrator.cs" />
     <Compile Include="Validation\ExtensionStartupValidator.cs" />
     <Compile Include="Extensions\GameActivity\Activity.cs" />
     <Compile Include="Extensions\GameActivity\GameActivityExtension.cs" />
@@ -167,159 +172,8 @@
     <None Include="extension.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Localization\ar_SA.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </None>
-    <None Include="Localization\bg_BG.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </None>
-    <None Include="Localization\ca_ES.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </None>
-    <None Include="Localization\cs_CZ.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </None>
-    <None Include="Localization\da_DK.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </None>
-    <None Include="Localization\de_DE.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </None>
-    <None Include="Localization\el_GR.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </None>
-    <None Include="Localization\en_US.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </None>
-    <None Include="Localization\es_ES.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </None>
-    <None Include="Localization\et_EE.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </None>
-    <None Include="Localization\fa_IR.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </None>
-    <None Include="Localization\fi_FI.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </None>
-    <None Include="Localization\fr_FR.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </None>
-    <None Include="Localization\gl_ES.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </None>
-    <None Include="Localization\he_IL.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </None>
-    <None Include="Localization\hr_HR.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </None>
-    <None Include="Localization\hu_HU.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </None>
-    <None Include="Localization\id_ID.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </None>
-    <None Include="Localization\it_IT.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </None>
-    <None Include="Localization\ja_JP.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </None>
-    <None Include="Localization\ko_KR.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </None>
-    <None Include="Localization\lt_LT.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </None>
-    <None Include="Localization\lv_LV.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </None>
-    <None Include="Localization\mr_IN.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </None>
-    <None Include="Localization\nl_NL.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </None>
-    <None Include="Localization\no_NO.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </None>
-    <None Include="Localization\pl_PL.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </None>
-    <None Include="Localization\pt_BR.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </None>
-    <None Include="Localization\pt_PT.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </None>
-    <None Include="Localization\ro_RO.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </None>
-    <None Include="Localization\sk_SK.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </None>
-    <None Include="Localization\sr_SP.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </None>
-    <None Include="Localization\sv_SE.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </None>
-    <None Include="Localization\tr_TR.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </None>
-    <None Include="Localization\uk_UA.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </None>
-    <None Include="Localization\vi_VN.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </None>
-    <None Include="Localization\zh_CN.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </None>
-    <None Include="Localization\zh_TW.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </None>
     <None Include="packages.config" />
+    <None Include="Settings\Old\SettingsVersions.md" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Localization\ar_SA.xaml">

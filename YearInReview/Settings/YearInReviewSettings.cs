@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
 using YearInReview.Model;
-using YearInReview.Model.Reports.MVVM;
 
 namespace YearInReview.Settings
 {
 	public class YearInReviewSettings : ObservableObject, IVersionedSettings
 	{
-		public const int CurrentVersion = 0;
+		public const int CurrentVersion = 1;
 
 		private string _username;
 		private bool _showSidebarItem;
 		private bool _showNewReportNotifications;
+		private bool _saveWithImages;
 
 		public YearInReviewSettings()
 		{
@@ -21,9 +21,10 @@ namespace YearInReview.Settings
 		{
 			ShowSidebarItem = true,
 			ShowNewReportNotifications = true,
+			SaveWithImages = true,
 		};
 
-		public int Version { get; set; }
+		public int Version { get; }
 
 		public string Username
 		{
@@ -44,5 +45,11 @@ namespace YearInReview.Settings
 		}
 
 		public RememberedChoice ExportWithImages { get; set; }
+
+		public bool SaveWithImages
+		{
+			get => _saveWithImages;
+			set => SetValue(ref _saveWithImages, value);
+		}
 	}
 }

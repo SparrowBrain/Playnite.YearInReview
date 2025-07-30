@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using YearInReview.Infrastructure.Serialization;
 using YearInReview.Model.Exceptions;
 using YearInReview.Model.Reports._1970;
 using YearInReview.Model.Reports._1970.MVVM;
@@ -20,7 +19,7 @@ namespace YearInReview.Model.Reports.MVVM
 {
 	public class MainViewModel : ObservableObject
 	{
-		private const int MaxImageHeight = 400;
+		public const int MaxImageHeight = 400;
 		private readonly ILogger _logger = LogManager.GetLogger();
 		private readonly IPlayniteAPI _api;
 		private readonly ReportManager _reportManager;
@@ -255,13 +254,8 @@ namespace YearInReview.Model.Reports.MVVM
 					return;
 				}
 
-				var serializerSettings = new JsonSerializerSettings
-				{
-					ContractResolver = new ImageContractResolver(new Base64ImageConverter(exportWithImages, null, MaxImageHeight))
-				};
-
 				var reportId = ((Report1970ViewModel)ActiveReport.DataContext).Id;
-				_reportManager.ExportReport(reportId, exportPath, serializerSettings);
+				_reportManager.ExportReport(reportId, exportPath, exportWithImages);
 			}
 			catch (Exception ex)
 			{

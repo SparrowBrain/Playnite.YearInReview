@@ -19,7 +19,11 @@ namespace TestTools.Shared
 		private readonly MemberDataAttribute _memberDataAttribute;
 
 		public MemberAutoFakeItEasyDataAttribute(string memberName, params object[] parameters)
-			: this(memberName, parameters, () => new Fixture().Customize(new AutoFakeItEasyCustomization()))
+			: this(memberName, parameters, () =>
+			{
+				var fixture = new Fixture().Customize(new AutoFakeItEasyCustomization() { ConfigureMembers = true });
+				return fixture;
+			})
 		{
 		}
 

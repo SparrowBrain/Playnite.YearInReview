@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using YearInReview.Infrastructure.Serialization;
 using YearInReview.Model.Reports._1970;
+using YearInReview.Model.Reports.MVVM;
 
 namespace YearInReview.Model.Reports.Persistence
 {
@@ -16,7 +17,7 @@ namespace YearInReview.Model.Reports.Persistence
 			_reportsPath = Path.Combine(extensionPath, "Reports");
 		}
 
-		public void SaveReport(Report1970 report)
+		public void SaveReport(Report1970 report, bool saveWithImages)
 		{
 			if (report == null)
 			{
@@ -30,7 +31,12 @@ namespace YearInReview.Model.Reports.Persistence
 			}
 
 			var userReportPath = Path.Combine(yearDirectory, "user.json");
-			var json = JsonConvert.SerializeObject(report);
+
+			var serializerSettings = new JsonSerializerSettings
+			{
+				ContractResolver = new ImageContractResolver(new Base64ImageConverter(saveWithImages, null, MainViewModel.MaxImageHeight))
+			};
+			var json = JsonConvert.SerializeObject(report, serializerSettings);
 			File.WriteAllText(userReportPath, json);
 		}
 
@@ -87,8 +93,12 @@ namespace YearInReview.Model.Reports.Persistence
 			return JsonConvert.DeserializeObject<Report1970>(contents);
 		}
 
-		public void ExportReport(Report1970 report, string exportPath, JsonSerializerSettings serializerSettings)
+		public void ExportReport(Report1970 report, string exportPath, bool exportWithImages)
 		{
+			var serializerSettings = new JsonSerializerSettings
+			{
+				ContractResolver = new ImageContractResolver(new Base64ImageConverter(exportWithImages, null, MainViewModel.MaxImageHeight))
+			};
 			var serialized = JsonConvert.SerializeObject(report, serializerSettings);
 			File.WriteAllText(exportPath, serialized);
 		}

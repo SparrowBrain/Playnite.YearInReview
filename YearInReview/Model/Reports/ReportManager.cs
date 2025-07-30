@@ -1,28 +1,26 @@
-﻿using System;
+﻿using Playnite.SDK;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Playnite.SDK;
-using YearInReview.Infrastructure.Serialization;
 using YearInReview.Infrastructure.Services;
 using YearInReview.Model.Exceptions;
 using YearInReview.Model.Reports._1970;
 using YearInReview.Model.Reports.Persistence;
-using YearInReview.Settings;
+using YearInReview.Settings.MVVM;
 
 namespace YearInReview.Model.Reports
 {
 	public class ReportManager
 	{
 		private const string ReportNotificationId = "year_in_review_report_generation";
-		
+
 		private readonly ILogger _logger = LogManager.GetLogger();
 		private readonly IReportPersistence _reportPersistence;
 		private readonly IReportGenerator _reportGenerator;
 		private readonly IDateTimeProvider _dateTimeProvider;
 		private readonly IPlayniteAPI _playniteApi;
-		private readonly YearInReviewSettings _settings;
+		private readonly ISettingsViewModel _settingsViewModel;
 
 		private Dictionary<Guid, PersistedReport> _reportCache = new Dictionary<Guid, PersistedReport>();
 
@@ -31,13 +29,13 @@ namespace YearInReview.Model.Reports
 			IReportGenerator reportGenerator,
 			IDateTimeProvider dateTimeProvider,
 			IPlayniteAPI playniteApi,
-			YearInReviewSettings settings)
+			ISettingsViewModel settingsViewModel)
 		{
 			_reportPersistence = reportPersistence;
 			_reportGenerator = reportGenerator;
 			_dateTimeProvider = dateTimeProvider;
 			_playniteApi = playniteApi;
-			_settings = settings;
+			_settingsViewModel = settingsViewModel;
 		}
 
 		// TODO Don't forget. There's probably gonna be race condition between report manager and UI.
@@ -72,7 +70,7 @@ namespace YearInReview.Model.Reports
 			var generatedReports = await _reportGenerator.GenerateAllYears();
 			foreach (var report in generatedReports)
 			{
-				_reportPersistence.SaveReport(report);
+				_reportPersistence.SaveReport(report, _settingsViewModel.Settings.SaveWithImages);
 			}
 
 			ShowReportsGeneratedNotification(generatedReports);
@@ -96,11 +94,11 @@ namespace YearInReview.Model.Reports
 				var generatedReports = await Task.WhenAll(yearsToGenerate.Select(year => _reportGenerator.Generate(year)));
 				foreach (var report in generatedReports)
 				{
-					_reportPersistence.SaveReport(report);
+					_reportPersistence.SaveReport(report, _settingsViewModel.Settings.SaveWithImages);
 				}
 
 				ShowReportsGeneratedNotification(generatedReports);
-				
+
 				reports = _reportPersistence.PreLoadAllReports();
 			}
 
@@ -112,7 +110,7 @@ namespace YearInReview.Model.Reports
 			return _reportCache.Values.ToList();
 		}
 
-		public void ExportReport(Guid id, string exportPath, JsonSerializerSettings serializerSettings)
+		public void ExportReport(Guid id, string exportPath, bool exportWithImages)
 		{
 			if (!_reportCache.TryGetValue(id, out var persistedReport))
 			{
@@ -120,7 +118,7 @@ namespace YearInReview.Model.Reports
 			}
 
 			var report = _reportPersistence.LoadReport(persistedReport.FilePath);
-			_reportPersistence.ExportReport(report, exportPath, serializerSettings);
+			_reportPersistence.ExportReport(report, exportPath, exportWithImages);
 			_logger.Info($"Report {id} exported to \"{exportPath}\"");
 		}
 
@@ -154,18 +152,18 @@ namespace YearInReview.Model.Reports
 
 		private void ShowReportsGeneratedNotification(IReadOnlyCollection<Report1970> reports)
 		{
-			if (reports.Count == 0 || !_settings.ShowNewReportNotifications)
+			if (reports.Count == 0 || !_settingsViewModel.Settings.ShowNewReportNotifications)
 			{
 				return;
 			}
-			
+
 			var lastReport = reports.OrderByDescending(x => x.Metadata.Year).First();
-			
+
 			var description = string.Format(
-				ResourceProvider.GetString("LOC_YearInReview_Notification_ReportGenerated"), 
+				ResourceProvider.GetString("LOC_YearInReview_Notification_ReportGenerated"),
 				lastReport.Metadata.Year
 			);
-			
+
 			_playniteApi.Notifications.Add(
 				new NotificationMessage(
 					ReportNotificationId,

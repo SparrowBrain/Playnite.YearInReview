@@ -1,6 +1,5 @@
 ﻿using AutoFixture.Xunit2;
 using FakeItEasy;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +12,7 @@ using YearInReview.Model.Exceptions;
 using YearInReview.Model.Reports;
 using YearInReview.Model.Reports._1970;
 using YearInReview.Model.Reports.Persistence;
+using YearInReview.Settings.MVVM;
 
 namespace YearInReview.UnitTests.Model.Reports
 {
@@ -43,6 +43,7 @@ namespace YearInReview.UnitTests.Model.Reports
 		public async Task Init_GeneratesReportsAndSavesThem_WhenNoOwnReportExists(
 			[Frozen] IReportPersistence reportPersistence,
 			[Frozen] IReportGenerator reportGenerator,
+			[Frozen] ISettingsViewModel settingsViewModel,
 			List<Report1970> generatedReports,
 			List<PersistedReport> persistedReports,
 			ReportManager sut)
@@ -58,7 +59,7 @@ namespace YearInReview.UnitTests.Model.Reports
 			await sut.Init();
 
 			// Assert
-			generatedReports.ForEach(report => A.CallTo(() => reportPersistence.SaveReport(report)).MustHaveHappened());
+			generatedReports.ForEach(report => A.CallTo(() => reportPersistence.SaveReport(report, settingsViewModel.Settings.SaveWithImages)).MustHaveHappened());
 			var reports = sut.GetAllPreLoadedReports();
 			Assert.Equivalent(persistedReports, reports);
 		}
@@ -69,6 +70,7 @@ namespace YearInReview.UnitTests.Model.Reports
 			[Frozen] IReportPersistence reportPersistence,
 			[Frozen] IReportGenerator reportGenerator,
 			[Frozen] IDateTimeProvider dateTimeProvider,
+			[Frozen] ISettingsViewModel settingsViewModel,
 			int currentYear,
 			DateTime now,
 			List<PersistedReport> persistedReports1,
@@ -98,8 +100,8 @@ namespace YearInReview.UnitTests.Model.Reports
 			await sut.Init();
 
 			// Assert
-			A.CallTo(() => reportPersistence.SaveReport(generatedReport1)).MustHaveHappened();
-			A.CallTo(() => reportPersistence.SaveReport(generatedReport2)).MustHaveHappened();
+			A.CallTo(() => reportPersistence.SaveReport(generatedReport1, settingsViewModel.Settings.SaveWithImages)).MustHaveHappened();
+			A.CallTo(() => reportPersistence.SaveReport(generatedReport2, settingsViewModel.Settings.SaveWithImages)).MustHaveHappened();
 			var reports = sut.GetAllPreLoadedReports();
 			Assert.Equivalent(persistedReports2, reports);
 		}
@@ -131,11 +133,11 @@ namespace YearInReview.UnitTests.Model.Reports
 		public void ExportReport_ThrowsException_WhenReportNotFound(
 			Guid reportId,
 			string reportPath,
-			JsonSerializerSettings settings,
+			bool exportWithImages,
 			ReportManager sut)
 		{
 			// Act
-			var exception = Record.Exception(() => sut.ExportReport(reportId, reportPath, settings));
+			var exception = Record.Exception(() => sut.ExportReport(reportId, reportPath, exportWithImages));
 
 			// Assert
 			Assert.NotNull(exception);
@@ -150,7 +152,7 @@ namespace YearInReview.UnitTests.Model.Reports
 			List<PersistedReport> persistedReports,
 			Report1970 report,
 			string reportPath,
-			JsonSerializerSettings settings,
+			bool exportWithImages,
 			ReportManager sut)
 		{
 			// Arrange
@@ -160,10 +162,10 @@ namespace YearInReview.UnitTests.Model.Reports
 			await sut.Init();
 
 			// Act
-			sut.ExportReport(persistedReport.Id, reportPath, settings);
+			sut.ExportReport(persistedReport.Id, reportPath, exportWithImages);
 
 			// Assert
-			A.CallTo(() => reportPersistence.ExportReport(report, reportPath, settings)).MustHaveHappened();
+			A.CallTo(() => reportPersistence.ExportReport(report, reportPath, exportWithImages)).MustHaveHappened();
 		}
 
 		[Theory]

@@ -6,8 +6,6 @@ using System.IO;
 using System.Linq;
 using TestTools.Shared;
 using Xunit;
-using YearInReview.Infrastructure.Serialization;
-using YearInReview.Model.Aggregators.Data;
 using YearInReview.Model.Reports._1970;
 using YearInReview.Model.Reports.Persistence;
 
@@ -19,7 +17,6 @@ namespace YearInReview.IntegrationTests.Model.Reports.Persistence
 
 		private readonly ReportPersistence _sut;
 		private readonly string _reportsPath = Path.Combine(ExtensionDataPath, "Reports");
-		private readonly JsonSerializerSettings _settings = new JsonSerializerSettings();
 
 		public ReportPersistenceTests()
 		{
@@ -30,7 +27,7 @@ namespace YearInReview.IntegrationTests.Model.Reports.Persistence
 		public void SaveReport_ThrowsArgumentNullException_WhenReportIsNull()
 		{
 			// Act
-			var exception = Record.Exception(() => _sut.SaveReport(null));
+			var exception = Record.Exception(() => _sut.SaveReport(null, false));
 
 			// Assert
 			Assert.IsType<ArgumentNullException>(exception);
@@ -41,7 +38,7 @@ namespace YearInReview.IntegrationTests.Model.Reports.Persistence
 		public void SaveReport_PersistsReport_WhenReportIsNotNull(Report1970 report)
 		{
 			// Act
-			_sut.SaveReport(report);
+			_sut.SaveReport(report, false);
 
 			// Assert
 			var userReportPath = Path.Combine(_reportsPath, report.Metadata.Year.ToString(), "user.json");
@@ -175,7 +172,7 @@ namespace YearInReview.IntegrationTests.Model.Reports.Persistence
 			var exportPath = Path.Combine(Path.GetTempPath(), $"{expected.Metadata.Username}_{expected.Metadata.Year}.json");
 
 			// Act
-			_sut.ExportReport(expected, exportPath, _settings);
+			_sut.ExportReport(expected, exportPath, false);
 
 			// Assert
 			var exported = File.ReadAllText(exportPath);
@@ -238,8 +235,6 @@ namespace YearInReview.IntegrationTests.Model.Reports.Persistence
 			// Assert
 			Assert.Equal(expectedPath, persistedReport.FilePath);
 		}
-
-	
 
 		public void Dispose()
 		{

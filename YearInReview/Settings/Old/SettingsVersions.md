@@ -1,0 +1,8 @@
+﻿v1
+SaveWithImages
+
+v0
+Username
+ShowSidebarItem
+ShowNewReportNotifications
+ExportWithImages

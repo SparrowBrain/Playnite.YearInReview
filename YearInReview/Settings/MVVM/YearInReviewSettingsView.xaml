@@ -40,6 +40,11 @@
                 <CheckBox IsChecked="{Binding Settings.ShowNewReportNotifications}" Content="{DynamicResource LOC_YearInReview_Settings_ShowNewReportNotifications}" />
             </StackPanel>
         </GroupBox>
+        <GroupBox Header="{DynamicResource LOC_YearInReview_Settings_PersistenceSettingsHeader}">
+            <StackPanel>
+                <CheckBox IsChecked="{Binding Settings.SaveWithImages}" Content="{DynamicResource LOC_YearInReview_Settings_SaveWithImages}" />
+            </StackPanel>
+        </GroupBox>
         <GroupBox Header="{DynamicResource LOC_YearInReview_Settings_ExportSettingsHeader}">
             <StackPanel>
                 <TextBlock Text="{DynamicResource LOC_YearInReview_Settings_ExportWithImages}" Margin="0,10,0,5"></TextBlock>

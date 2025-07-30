@@ -7,8 +7,11 @@ namespace TestTools.Shared
 	public class AutoFakeItEasyDataAttribute : AutoDataAttribute
 	{
 		public AutoFakeItEasyDataAttribute()
-			: base(() => new Fixture()
-				.Customize(new AutoFakeItEasyCustomization()))
+			: base(() =>
+			{
+				var fixture = new Fixture().Customize(new AutoFakeItEasyCustomization());
+				return fixture;
+			})
 		{
 		}
 	}

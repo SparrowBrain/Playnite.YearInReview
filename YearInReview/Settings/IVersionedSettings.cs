@@ -2,6 +2,6 @@
 {
 	public interface IVersionedSettings
 	{
-		int Version { get; set; }
+		int Version { get; }
 	}
 }

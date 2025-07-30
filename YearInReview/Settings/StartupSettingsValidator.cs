@@ -1,22 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace YearInReview.Settings
+﻿namespace YearInReview.Settings
 {
 	public class StartupSettingsValidator
 	{
 		private readonly IPluginSettingsPersistence _pluginSettingsPersistence;
-		//private readonly ISettingsMigrator _settingsMigrator;
+		private readonly ISettingsMigrator _settingsMigrator;
 
-		public StartupSettingsValidator(IPluginSettingsPersistence pluginSettingsPersistence
-			//ISettingsMigrator settingsMigrator
-			)
+		public StartupSettingsValidator(IPluginSettingsPersistence pluginSettingsPersistence, ISettingsMigrator settingsMigrator)
 		{
 			_pluginSettingsPersistence = pluginSettingsPersistence;
-			//_settingsMigrator = settingsMigrator;
+			_settingsMigrator = settingsMigrator;
 		}
 
 		public void EnsureCorrectVersionSettingsExist()
@@ -28,11 +20,11 @@ namespace YearInReview.Settings
 				return;
 			}
 
-			//if (versionedSettings.Version < YearInReviewSettings.CurrentVersion)
-			//{
-			//	var newSettings = _settingsMigrator.LoadAndMigrateToNewest(versionedSettings.Version);
-			//	_pluginSettingsPersistence.SavePluginSettings(newSettings);
-			//}
+			if (versionedSettings.Version < YearInReviewSettings.CurrentVersion)
+			{
+				var newSettings = _settingsMigrator.LoadAndMigrateToNewest(versionedSettings.Version);
+				_pluginSettingsPersistence.SavePluginSettings(newSettings);
+			}
 		}
 	}
 }
