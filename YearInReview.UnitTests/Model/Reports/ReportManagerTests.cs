@@ -130,6 +130,101 @@ namespace YearInReview.UnitTests.Model.Reports
 
 		[Theory]
 		[AutoFakeItEasyData]
+		public async Task RegenerateReport_ThrowsException_WhenReportNotFound(
+			Guid reportId,
+			ReportManager sut)
+		{
+			// Act
+			var exception = await Record.ExceptionAsync(() => sut.RegenerateReport(reportId));
+
+			// Assert
+			Assert.NotNull(exception);
+			Assert.IsType<InvalidOperationException>(exception);
+			Assert.Equal($"Report {reportId} not persisted in cache.", exception.Message);
+		}
+
+		[Theory]
+		[AutoFakeItEasyData]
+		public async Task RegenerateReport_ThrowsException_WhenReportIsNotOwn(
+			[Frozen] IReportPersistence reportPersistence,
+			List<PersistedReport> persistedReports,
+			ReportManager sut)
+		{
+			// Arrange
+			var persistedReport = persistedReports.Last();
+			persistedReport.IsOwn = false;
+			A.CallTo(() => reportPersistence.PreLoadAllReports()).Returns(persistedReports);
+			await sut.Init();
+
+			// Act
+			var exception = await Record.ExceptionAsync(() => sut.RegenerateReport(persistedReport.Id));
+
+			// Assert
+			Assert.NotNull(exception);
+			Assert.IsType<InvalidOperationException>(exception);
+			Assert.Equal($"Cannot regenerate not own report (reportId: {persistedReport.Id}).", exception.Message);
+		}
+
+		[Theory]
+		[AutoFakeItEasyData]
+		public async Task RegenerateReport_DeletesAndGeneratesReportFile_WhenReportExists(
+			[Frozen] IReportPersistence reportPersistence,
+			[Frozen] IReportGenerator reportGenerator,
+			[Frozen] ISettingsViewModel settingsViewModel,
+			List<PersistedReport> persistedReports,
+			Report1970 newReport,
+			ReportManager sut)
+		{
+			// Arrange
+			var persistedReport = persistedReports.Last();
+			A.CallTo(() => reportPersistence.PreLoadAllReports()).Returns(persistedReports);
+			await sut.Init();
+
+			A.CallTo(() => reportGenerator.Generate(persistedReport.Year)).Returns(newReport);
+
+			// Act
+			await sut.RegenerateReport(persistedReport.Id);
+
+			// Assert
+			A.CallTo(() => reportPersistence.DeleteReport(persistedReport.FilePath)).MustHaveHappenedOnceExactly();
+			A.CallTo(() => reportPersistence.SaveReport(newReport, settingsViewModel.Settings.SaveWithImages)).MustHaveHappenedOnceExactly();
+		}
+
+		[Theory]
+		[AutoFakeItEasyData]
+		public async Task RegenerateReport_DeletesAndPersistsReportInCache_WhenReportExists(
+			[Frozen] IReportPersistence reportPersistence,
+			[Frozen] IReportGenerator reportGenerator,
+			List<PersistedReport> oldReports,
+			List<PersistedReport> newReports,
+			Report1970 expected,
+			ReportManager sut)
+		{
+			// Arrange
+			var oldReport = oldReports.Last();
+			var newReport = newReports.Last();
+			newReport.Id = expected.Metadata.Id;
+			A.CallTo(() => reportPersistence.PreLoadAllReports()).ReturnsNextFromSequence(oldReports, newReports);
+			await sut.Init();
+
+			A.CallTo(() => reportGenerator.Generate(oldReport.Year)).Returns(expected);
+			A.CallTo(() => reportPersistence.LoadReport(newReport.FilePath)).Returns(expected);
+
+			// Act
+			var newId = await sut.RegenerateReport(oldReport.Id);
+
+			// Assert
+			var exception = Record.Exception(() => sut.GetReport(oldReport.Id));
+			Assert.NotNull(exception);
+			Assert.IsType<Exception>(exception);
+			Assert.Equal($"Report {oldReport.Id} not persisted in cache.", exception.Message);
+
+			var actual = sut.GetReport(newId);
+			Assert.Equal(expected, actual);
+		}
+
+		[Theory]
+		[AutoFakeItEasyData]
 		public void ExportReport_ThrowsException_WhenReportNotFound(
 			Guid reportId,
 			string reportPath,

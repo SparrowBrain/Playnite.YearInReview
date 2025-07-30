@@ -127,6 +127,11 @@ namespace YearInReview.Model.Reports.Persistence
 			};
 		}
 
+		public void DeleteReport(string filePath)
+		{
+			throw new NotImplementedException();
+		}
+
 		private static string GetSanitizedFriendFileName(Report1970 report)
 		{
 			var fileName = $"{report.Metadata.Username}_{report.Metadata.Year}.json";

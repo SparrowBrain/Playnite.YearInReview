@@ -18,6 +18,7 @@
     <sys:String x:Key="LOC_YearInReview_Notification_InstallGameActivity">GameActivity extension not installed. It is mandatory for YearInReview extension to work.</sys:String>
     <sys:String x:Key="LOC_YearInReview_Notification_NoActivityInPreviousYears">No GameActivity sessions found in previous years. Cannot generate any reports. Keep on playing and wait for the New Year! :)</sys:String>
     <sys:String x:Key="LOC_YearInReview_Notification_ReportGenerated">Report generated for year {0}</sys:String>
+    <sys:String x:Key="LOC_YearInReview_Notification_ReportRegenerationError">Failed to regenerate report. See extensions.log for more details.</sys:String>
     <sys:String x:Key="LOC_YearInReview_Notification_SetUsername">Please set your username in the Year In Review plugin settings.</sys:String>
     <sys:String x:Key="LOC_YearInReview_PlaytimeCalendar">Total Playtime</sys:String>
     <sys:String x:Key="LOC_YearInReview_PluginName">Year in Review</sys:String>

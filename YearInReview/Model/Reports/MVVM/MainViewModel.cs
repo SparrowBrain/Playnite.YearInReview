@@ -68,6 +68,20 @@ namespace YearInReview.Model.Reports.MVVM
 			set => SetValue(ref _reportButtons, value);
 		}
 
+		public ICommand RegenerateReport => new RelayCommand(() =>
+		{
+			try
+			{
+				var reportId = ((Report1970ViewModel)ActiveReport.DataContext).Id;
+				_reportManager.RegenerateReport(reportId);
+			}
+			catch (Exception ex)
+			{
+				_logger.Error(ex, "Error while trying to regenerate report");
+				_api.Dialogs.ShowErrorMessage(ResourceProvider.GetString("LOC_YearInReview_Notification_ReportRegenerationError"));
+			}
+		});
+
 		public ICommand ExportReport => new RelayCommand(() =>
 		{
 			var settings = _settingsViewModel.Settings;

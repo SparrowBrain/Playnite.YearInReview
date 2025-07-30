@@ -65,49 +65,33 @@ namespace YearInReview.Model.Reports
 			return report;
 		}
 
-		private async Task<IReadOnlyCollection<PersistedReport>> GenerateAll()
-		{
-			var generatedReports = await _reportGenerator.GenerateAllYears();
-			foreach (var report in generatedReports)
-			{
-				_reportPersistence.SaveReport(report, _settingsViewModel.Settings.SaveWithImages);
-			}
-
-			ShowReportsGeneratedNotification(generatedReports);
-
-			var reports = _reportPersistence.PreLoadAllReports();
-			return reports;
-		}
-
-		private async Task<IReadOnlyCollection<PersistedReport>> GenerateNewYears(
-			IReadOnlyCollection<PersistedReport> reports)
-		{
-			var mostRecentOwnReport = reports.Where(x => x.IsOwn).OrderByDescending(x => x.Year).FirstOrDefault();
-			if (mostRecentOwnReport?.Year < _dateTimeProvider.GetNow().Year - 1)
-			{
-				var yearsToGenerate = new List<int>();
-				for (var i = mostRecentOwnReport.Year + 1; i < _dateTimeProvider.GetNow().Year; i++)
-				{
-					yearsToGenerate.Add(i);
-				}
-
-				var generatedReports = await Task.WhenAll(yearsToGenerate.Select(year => _reportGenerator.Generate(year)));
-				foreach (var report in generatedReports)
-				{
-					_reportPersistence.SaveReport(report, _settingsViewModel.Settings.SaveWithImages);
-				}
-
-				ShowReportsGeneratedNotification(generatedReports);
-
-				reports = _reportPersistence.PreLoadAllReports();
-			}
-
-			return reports;
-		}
-
 		public IReadOnlyCollection<PersistedReport> GetAllPreLoadedReports()
 		{
 			return _reportCache.Values.ToList();
+		}
+
+		public async Task<Guid> RegenerateReport(Guid id)
+		{
+			if (!_reportCache.TryGetValue(id, out var persistedReport))
+			{
+				throw new InvalidOperationException($"Report {id} not persisted in cache.");
+			}
+
+			if (!persistedReport.IsOwn)
+			{
+				throw new InvalidOperationException($"Cannot regenerate not own report (reportId: {id}).");
+			}
+
+			_reportPersistence.DeleteReport(persistedReport.FilePath);
+
+			var newReport = await _reportGenerator.Generate(persistedReport.Year);
+			_reportPersistence.SaveReport(newReport, _settingsViewModel.Settings.SaveWithImages);
+
+			var reports = _reportPersistence.PreLoadAllReports();
+			_reportCache = reports.ToDictionary(x => x.Id, x => x);
+
+			_logger.Info($"Report {newReport.Metadata.Id} regenerated for year {newReport.Metadata.Year}.");
+			return newReport.Metadata.Id;
 		}
 
 		public void ExportReport(Guid id, string exportPath, bool exportWithImages)
@@ -134,20 +118,43 @@ namespace YearInReview.Model.Reports
 			return persistedReport.Id;
 		}
 
-		private void ValidateReport(Report1970 report)
+		private async Task<IReadOnlyCollection<PersistedReport>> GenerateAll()
 		{
-			if (report.Metadata == null
-				|| report.Metadata.Id == Guid.Empty
-				|| report.Metadata.Year == 0
-				|| string.IsNullOrEmpty(report.Metadata.Username))
+			var generatedReports = await _reportGenerator.GenerateAllYears();
+			foreach (var report in generatedReports)
 			{
-				throw new InvalidReportFileException("Trying to import invalid report file.");
+				_reportPersistence.SaveReport(report, _settingsViewModel.Settings.SaveWithImages);
 			}
 
-			if (_reportCache.ContainsKey(report.Metadata.Id))
+			ShowReportsGeneratedNotification(generatedReports);
+
+			var reports = _reportPersistence.PreLoadAllReports();
+			return reports;
+		}
+
+		private async Task<IReadOnlyCollection<PersistedReport>> GenerateNewYears(IReadOnlyCollection<PersistedReport> reports)
+		{
+			var mostRecentOwnReport = reports.Where(x => x.IsOwn).OrderByDescending(x => x.Year).FirstOrDefault();
+			if (mostRecentOwnReport?.Year < _dateTimeProvider.GetNow().Year - 1)
 			{
-				throw new ReportAlreadyExistsException($"Trying to import report {report.Metadata.Id} that is already in cache.");
+				var yearsToGenerate = new List<int>();
+				for (var i = mostRecentOwnReport.Year + 1; i < _dateTimeProvider.GetNow().Year; i++)
+				{
+					yearsToGenerate.Add(i);
+				}
+
+				var generatedReports = await Task.WhenAll(yearsToGenerate.Select(year => _reportGenerator.Generate(year)));
+				foreach (var report in generatedReports)
+				{
+					_reportPersistence.SaveReport(report, _settingsViewModel.Settings.SaveWithImages);
+				}
+
+				ShowReportsGeneratedNotification(generatedReports);
+
+				reports = _reportPersistence.PreLoadAllReports();
 			}
+
+			return reports;
 		}
 
 		private void ShowReportsGeneratedNotification(IReadOnlyCollection<Report1970> reports)
@@ -171,6 +178,22 @@ namespace YearInReview.Model.Reports
 					NotificationType.Info
 				)
 			);
+		}
+
+		private void ValidateReport(Report1970 report)
+		{
+			if (report.Metadata == null
+				|| report.Metadata.Id == Guid.Empty
+				|| report.Metadata.Year == 0
+				|| string.IsNullOrEmpty(report.Metadata.Username))
+			{
+				throw new InvalidReportFileException("Trying to import invalid report file.");
+			}
+
+			if (_reportCache.ContainsKey(report.Metadata.Id))
+			{
+				throw new ReportAlreadyExistsException($"Trying to import report {report.Metadata.Id} that is already in cache.");
+			}
 		}
 	}
 }
