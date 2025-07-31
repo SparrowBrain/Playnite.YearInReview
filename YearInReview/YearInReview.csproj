@@ -71,6 +71,10 @@
     <Compile Include="Model\RememberedChoice.cs" />
     <Compile Include="Model\Reports\MVVM\ReportButtonViewModel.cs" />
     <Compile Include="Model\Exceptions\ReportAlreadyExistsException.cs" />
+    <Compile Include="Progress\MVVM\ProgressView.xaml.cs">
+      <DependentUpon>ProgressView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Progress\MVVM\ProgressViewModel.cs" />
     <Compile Include="Settings\IMigratableSettings.cs" />
     <Compile Include="Settings\ISettingsMigrator.cs" />
     <Compile Include="Settings\MVVM\ISettingsViewModel.cs" />
@@ -391,6 +395,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Model\Reports\MVVM\MainView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Progress\MVVM\ProgressView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -5,12 +5,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using YearInReview.Model.Exceptions;
 using YearInReview.Model.Reports._1970;
 using YearInReview.Model.Reports._1970.MVVM;
 using YearInReview.Model.Reports.Persistence;
+using YearInReview.Progress.MVVM;
 using YearInReview.Settings.MVVM;
 using YearInReview.Validation;
 using YearInReview.Validation.MVVM;
@@ -24,21 +26,25 @@ namespace YearInReview.Model.Reports.MVVM
 		private readonly IPlayniteAPI _api;
 		private readonly ReportManager _reportManager;
 		private readonly YearInReviewSettingsViewModel _settingsViewModel;
+		private readonly Func<ProgressViewModel> _progressViewModelFactory;
 
 		private Report1970View _activeReport;
 		private ObservableCollection<YearButtonViewModel> _yearButtons = new ObservableCollection<YearButtonViewModel>();
 		private ObservableCollection<ReportButtonViewModel> _reportButtons = new ObservableCollection<ReportButtonViewModel>();
 		private ObservableCollection<ValidationErrorViewModel> _validationErrors;
+		private bool _showOwnReportActionButtons;
 
 		public MainViewModel(
 			IPlayniteAPI api,
 			ReportManager reportManager,
 			YearInReviewSettingsViewModel settingsViewModel,
+			Func<ProgressViewModel> progressViewModelFactory,
 			IReadOnlyCollection<InitValidationError> validationErrors)
 		{
 			_api = api;
 			_reportManager = reportManager;
 			_settingsViewModel = settingsViewModel;
+			_progressViewModelFactory = progressViewModelFactory;
 			SetValidationErrors(validationErrors);
 
 			if (!HasErrors)
@@ -68,17 +74,40 @@ namespace YearInReview.Model.Reports.MVVM
 			set => SetValue(ref _reportButtons, value);
 		}
 
+		public bool ShowOwnReportActionButtons
+		{
+			get => _showOwnReportActionButtons;
+			set => SetValue(ref _showOwnReportActionButtons, value);
+		}
+
 		public ICommand RegenerateReport => new RelayCommand(() =>
 		{
 			try
 			{
-				var reportId = ((Report1970ViewModel)ActiveReport.DataContext).Id;
-				_reportManager.RegenerateReport(reportId);
+				var reportId = ActiveReportId;
+				Task.Run(async () =>
+				{
+					try
+					{
+						using (var _ = _progressViewModelFactory.Invoke())
+						{
+							var newReportId = await _reportManager.RegenerateReport(reportId);
+							_api.MainView.UIDispatcher.Invoke(() => RefreshButtonsAndDisplayReport(newReportId));
+						}
+					}
+					catch (Exception ex)
+					{
+						_logger.Error(ex, "Error while trying to regenerate report");
+						_api.Dialogs.ShowErrorMessage(
+							ResourceProvider.GetString("LOC_YearInReview_Notification_ReportRegenerationError"));
+					}
+				});
 			}
 			catch (Exception ex)
 			{
 				_logger.Error(ex, "Error while trying to regenerate report");
-				_api.Dialogs.ShowErrorMessage(ResourceProvider.GetString("LOC_YearInReview_Notification_ReportRegenerationError"));
+				_api.Dialogs.ShowErrorMessage(
+					ResourceProvider.GetString("LOC_YearInReview_Notification_ReportRegenerationError"));
 			}
 		});
 
@@ -119,10 +148,7 @@ namespace YearInReview.Model.Reports.MVVM
 
 				var importedReportId = _reportManager.ImportReport(reportToImport);
 
-				CreateReportButtons();
-
-				var report = _reportManager.GetReport(importedReportId);
-				DisplaySpecificUserReport(report.Metadata.Year, report.Metadata.Username);
+				RefreshButtonsAndDisplayReport(importedReportId);
 			}
 			catch (ReportAlreadyExistsException ex)
 			{
@@ -169,6 +195,8 @@ namespace YearInReview.Model.Reports.MVVM
 			});
 		}
 
+		private Guid ActiveReportId => ((Report1970ViewModel)ActiveReport.DataContext).Id;
+
 		private void CreateReportButtons()
 		{
 			var preLoadedReports = _reportManager.GetAllPreLoadedReports();
@@ -195,7 +223,7 @@ namespace YearInReview.Model.Reports.MVVM
 										var report = _reportManager.GetReport(x.Id);
 										var allYearReports =
 											preLoadedReports.Where(p => p.Year == year).ToList();
-										DisplayReport(report, x.IsOwn, allYearReports);
+										ActivateReport(report, x.IsOwn, allYearReports);
 									}
 									catch (Exception ex)
 									{
@@ -213,11 +241,12 @@ namespace YearInReview.Model.Reports.MVVM
 			}).ToObservable();
 		}
 
-		private void DisplayReport(Report1970 report, bool isOwn, List<PersistedReport> allYearReports)
+		private void ActivateReport(Report1970 report, bool isOwn, List<PersistedReport> allYearReports)
 		{
 			var viewModel = new Report1970ViewModel(_api, report, isOwn, allYearReports);
 			var view = new Report1970View(viewModel);
 
+			ShowOwnReportActionButtons = isOwn;
 			ActiveReport = view;
 		}
 
@@ -276,6 +305,14 @@ namespace YearInReview.Model.Reports.MVVM
 				_logger.Error(ex, "Error while trying to export report");
 				_api.Dialogs.ShowErrorMessage(ResourceProvider.GetString("LOC_YearInReview_Notification_ExportError"));
 			}
+		}
+
+		private void RefreshButtonsAndDisplayReport(Guid reportId)
+		{
+			CreateReportButtons();
+
+			var report = _reportManager.GetReport(reportId);
+			DisplaySpecificUserReport(report.Metadata.Year, report.Metadata.Username);
 		}
 	}
 }

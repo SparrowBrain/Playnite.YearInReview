@@ -44,7 +44,10 @@
                     </ItemsControl.ItemTemplate>
                 </ListBox>
                 <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="25,0,25,0">
-                    <Button Command="{Binding ExportReport}" Margin="5,0,5,0" ToolTip="{DynamicResource LOC_YearInReview_Main_Export_Tooltip}">
+                    <Button Command="{Binding RegenerateReport}" Margin="5,0,5,0" ToolTip="{DynamicResource LOC_YearInReview_Main_Regenerate_Tooltip}" Visibility="{Binding ShowOwnReportActionButtons, Converter={StaticResource BoolToCollapsedVisibilityConverter}}">
+                        <TextBlock FontFamily="{DynamicResource FontIcoFont}" Text="&#xefd1;"></TextBlock>
+                    </Button>
+                    <Button Command="{Binding ExportReport}" Margin="5,0,5,0" ToolTip="{DynamicResource LOC_YearInReview_Main_Export_Tooltip}" Visibility="{Binding ShowOwnReportActionButtons, Converter={StaticResource BoolToCollapsedVisibilityConverter}}">
                         <TextBlock FontFamily="{DynamicResource FontIcoFont}" Text="&#xefe5;"></TextBlock>
                     </Button>
                     <Button Command="{Binding ImportReport}" Margin="5,0,5,0" ToolTip="{DynamicResource LOC_YearInReview_Main_Import_Tooltip}">

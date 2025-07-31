@@ -1,5 +1,4 @@
 ﻿using Playnite.SDK;
-using Playnite.SDK.Controls;
 using Playnite.SDK.Events;
 using Playnite.SDK.Plugins;
 using System;
@@ -17,6 +16,7 @@ using YearInReview.Model.Reports;
 using YearInReview.Model.Reports._1970;
 using YearInReview.Model.Reports.MVVM;
 using YearInReview.Model.Reports.Persistence;
+using YearInReview.Progress.MVVM;
 using YearInReview.Settings;
 using YearInReview.Settings.MVVM;
 using YearInReview.Validation;
@@ -80,7 +80,7 @@ namespace YearInReview
 
 						if (_mainView == null || _mainViewModel == null)
 						{
-							_mainViewModel = new MainViewModel(Api, GetReportManager(), _settingsViewModel, _initValidationErrors);
+							_mainViewModel = new MainViewModel(Api, GetReportManager(), _settingsViewModel, ShowProgressDialog, _initValidationErrors);
 							_mainView = new MainView(_mainViewModel);
 						}
 
@@ -103,8 +103,8 @@ namespace YearInReview
 				MenuSection = pluginMenuSection,
 				Action = _ =>
 				{
-					var view = new MainView(new MainViewModel(Api, GetReportManager(), _settingsViewModel, _initValidationErrors));
-					OpenViewAsDialog(view, pluginName);
+					var view = new MainView(new MainViewModel(Api, GetReportManager(), _settingsViewModel, ShowProgressDialog, _initValidationErrors));
+					OpenViewAsDialog(view, pluginName, true, true);
 				}
 			};
 		}
@@ -253,16 +253,40 @@ namespace YearInReview
 			return _reportManager;
 		}
 
-		private void OpenViewAsDialog(
-			PluginUserControl view,
+		private ProgressViewModel ShowProgressDialog()
+		{
+			var progressViewModel = new ProgressViewModel(Api);
+			Api.MainView.UIDispatcher.Invoke(() =>
+				{
+					var window = OpenViewAsDialog(
+						new ProgressView(progressViewModel),
+						ResourceProvider.GetString("LOC_YearInReview_ProgressTitle"),
+						false,
+						false,
+						100,
+						250);
+
+					progressViewModel.SetWindow(window);
+				}
+			);
+
+			return progressViewModel;
+		}
+
+		private Window OpenViewAsDialog(
+			UserControl view,
 			string title,
+			bool showMaximizeButton,
+			bool waitToClose,
 			double height = DefaultDialogWindowHeight,
 			double width = DefaultDialogWindowWidth
 		)
 		{
 			var window = PlayniteApi.Dialogs.CreateWindow(new WindowCreationOptions
 			{
-				ShowMinimizeButton = false
+				ShowCloseButton = true,
+				ShowMaximizeButton = showMaximizeButton,
+				ShowMinimizeButton = false,
 			});
 			window.Height = height;
 			window.Width = width;
@@ -270,7 +294,16 @@ namespace YearInReview
 			window.Content = view;
 			window.Owner = PlayniteApi.Dialogs.GetCurrentAppWindow();
 			window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-			window.ShowDialog();
+			if (waitToClose)
+			{
+				window.ShowDialog();
+			}
+			else
+			{
+				window.Show();
+			}
+
+			return window;
 		}
 	}
 }

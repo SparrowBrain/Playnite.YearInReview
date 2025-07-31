@@ -82,8 +82,6 @@ namespace YearInReview.Model.Reports
 				throw new InvalidOperationException($"Cannot regenerate not own report (reportId: {id}).");
 			}
 
-			_reportPersistence.DeleteReport(persistedReport.FilePath);
-
 			var newReport = await _reportGenerator.Generate(persistedReport.Year);
 			_reportPersistence.SaveReport(newReport, _settingsViewModel.Settings.SaveWithImages);
 

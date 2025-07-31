@@ -14,7 +14,5 @@ namespace YearInReview.Model.Reports.Persistence
 		void ExportReport(Report1970 report, string exportPath, bool exportWithImages);
 
 		PersistedReport ImportReport(Report1970 importPath);
-
-		void DeleteReport(string filePath);
 	}
 }

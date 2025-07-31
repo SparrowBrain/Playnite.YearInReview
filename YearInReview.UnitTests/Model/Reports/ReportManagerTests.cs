@@ -186,7 +186,6 @@ namespace YearInReview.UnitTests.Model.Reports
 			await sut.RegenerateReport(persistedReport.Id);
 
 			// Assert
-			A.CallTo(() => reportPersistence.DeleteReport(persistedReport.FilePath)).MustHaveHappenedOnceExactly();
 			A.CallTo(() => reportPersistence.SaveReport(newReport, settingsViewModel.Settings.SaveWithImages)).MustHaveHappenedOnceExactly();
 		}
 
