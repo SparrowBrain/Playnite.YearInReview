@@ -30,7 +30,11 @@
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="{DynamicResource LOC_YearInReview_Settings_Username}" />
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                    <TextBlock Text="{DynamicResource LOC_YearInReview_Settings_Username}" />
+                    <TextBlock Text="ℹ" ToolTip="{DynamicResource LOC_YearInReview_Settings_Username_Tooltip}"></TextBlock>
+                </StackPanel>
+                
                 <TextBox Grid.Column="1" Text="{Binding Settings.Username}" />
             </Grid>
         </GroupBox>
@@ -40,7 +44,7 @@
                 <CheckBox IsChecked="{Binding Settings.ShowNewReportNotifications}" Content="{DynamicResource LOC_YearInReview_Settings_ShowNewReportNotifications}" />
             </StackPanel>
         </GroupBox>
-        <GroupBox Header="{DynamicResource LOC_YearInReview_Settings_PersistenceSettingsHeader}">
+        <GroupBox Header="{DynamicResource LOC_YearInReview_Settings_ReportGenerationSettingsHeader}">
             <StackPanel>
                 <CheckBox IsChecked="{Binding Settings.SaveWithImages}" Content="{DynamicResource LOC_YearInReview_Settings_SaveWithImages}" />
             </StackPanel>

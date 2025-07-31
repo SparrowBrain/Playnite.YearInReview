@@ -62,12 +62,13 @@
     <sys:String x:Key="LOC_YearInReview_Settings_Error_UsernameEmpty">Username cannot be empty.</sys:String>
     <sys:String x:Key="LOC_YearInReview_Settings_ExportSettingsHeader">Export</sys:String>
     <sys:String x:Key="LOC_YearInReview_Settings_ExportWithImages">Export With Images</sys:String>
-    <sys:String x:Key="LOC_YearInReview_Settings_PersistenceSettingsHeader">Persistence</sys:String>
+    <sys:String x:Key="LOC_YearInReview_Settings_ReportGenerationSettingsHeader">Report Generation</sys:String>
     <sys:String x:Key="LOC_YearInReview_Settings_SaveWithImages">Save with images</sys:String>
     <sys:String x:Key="LOC_YearInReview_Settings_ShowNewReportNotifications">Show new report notifications</sys:String>
     <sys:String x:Key="LOC_YearInReview_Settings_ShowSidebarItem">Show sidebar item</sys:String>
     <sys:String x:Key="LOC_YearInReview_Settings_UserInterfaceSettingsHeader">User Interface</sys:String>
     <sys:String x:Key="LOC_YearInReview_Settings_Username">Username</sys:String>
+    <sys:String x:Key="LOC_YearInReview_Settings_Username_Tooltip">How would you like to be called?</sys:String>
     <sys:String x:Key="LOC_YearInReview_Settings_UserSettingsHeader">User</sys:String>
     <sys:String x:Key="LOC_YearInReview_ShowYearInReviewMenuItem">Show Year in review</sys:String>
     <sys:String x:Key="LOC_YearInReview_ValidationErrors_Header">Year In Review cannot run because of these issues:</sys:String>

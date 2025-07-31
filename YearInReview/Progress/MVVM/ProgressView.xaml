@@ -16,7 +16,7 @@
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
-        <ProgressBar Grid.Row="0" IsIndeterminate="True"></ProgressBar>
+        <ProgressBar Grid.Row="0" IsIndeterminate="True" Margin="5"></ProgressBar>
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Content="{DynamicResource LOC_YearInReview_ProgressHide}" Command="{Binding Hide}"></Button>
         </StackPanel>
