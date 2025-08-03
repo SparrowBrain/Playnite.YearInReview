@@ -93,8 +93,8 @@ namespace YearInReview.Infrastructure.UserControls
 
 				var path = CreateRadialSlice(centerX, centerY, radius, startAngle, endAngle, maxRadius);
 
-				path.Fill = new SolidColorBrush(Color.FromArgb(180, (byte)(50 + hour * 8), 120, 200));
-				path.Stroke = TryFindResource("PanelSeparatorBrush") as Brush ?? Brushes.White;
+				path.Fill = new SolidColorBrush(Color.FromArgb(255, (byte)(50 + hour * 8), 120, 200));
+				path.Stroke = TryFindResource("PanelSeparatorBrush") as Brush ?? Brushes.Black;
 				path.StrokeThickness = 1;
 
 				AddTooltip(hour, value, path);

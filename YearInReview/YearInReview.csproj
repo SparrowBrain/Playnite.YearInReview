@@ -100,10 +100,6 @@
     <Compile Include="Infrastructure\UserControls\DonutChart.xaml.cs">
       <DependentUpon>DonutChart.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Infrastructure\UserControls\HourlyPlaytime.xaml.cs">
-      <DependentUpon>HourlyPlaytime.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Infrastructure\UserControls\HourlyPlaytimeViewModel.cs" />
     <Compile Include="Infrastructure\UserControls\PlaytimeCalendar.xaml.cs">
       <DependentUpon>PlaytimeCalendar.xaml</DependentUpon>
     </Compile>
@@ -380,10 +376,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Infrastructure\UserControls\DonutChart.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Infrastructure\UserControls\HourlyPlaytime.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
