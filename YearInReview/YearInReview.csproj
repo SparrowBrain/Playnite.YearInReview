@@ -57,13 +57,18 @@
     <Compile Include="Infrastructure\Services\Base64Helpers.cs" />
     <Compile Include="Infrastructure\Services\UriToPhysicalUriConverter.cs" />
     <Compile Include="Infrastructure\Converters\PercentageWithParameterConverter.cs" />
+    <Compile Include="Infrastructure\UserControls\RadialClockGraph.xaml.cs">
+      <DependentUpon>RadialClockGraph.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Model\Exceptions\InvalidReportFileException.cs" />
+    <Compile Include="Model\ExportFormat.cs" />
     <Compile Include="Model\Filters\EmptyActivityFilter.cs" />
     <Compile Include="Model\Filters\IEmptyActivityFilter.cs" />
     <Compile Include="Model\Reports\1970\MVVM\AddedGameViewModel.cs" />
     <Compile Include="Model\Reports\1970\MVVM\FriendPlaytimeLeaderboardViewModel.cs" />
     <Compile Include="Model\Reports\1970\MVVM\ReportTexts.cs" />
     <Compile Include="Model\Reports\1970\ReportAddedGame.cs" />
+    <Compile Include="Infrastructure\Extensions\DependencyObjectExtensions.cs" />
     <Compile Include="Model\Reports\MVVM\ExportWithImagesView.xaml.cs">
       <DependentUpon>ExportWithImagesView.xaml</DependentUpon>
     </Compile>
@@ -383,6 +388,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Infrastructure\UserControls\PlaytimeCalendar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Infrastructure\UserControls\RadialClockGraph.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

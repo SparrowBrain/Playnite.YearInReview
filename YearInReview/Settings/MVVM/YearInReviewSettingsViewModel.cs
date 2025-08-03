@@ -36,7 +36,31 @@ namespace YearInReview.Settings.MVVM
 					ask => ExportWithImagesAsk = ask,
 					never => ExportWithImagesNever = never,
 					always => ExportWithImagesAlways = always);
+
+				InitExportFormatSetting(
+					value.ExportFormat,
+					ask => ExportFormatAsk = ask,
+					png => ExportAsPng = png,
+					json => ExportAsJson = json);
 			}
+		}
+
+		public bool ExportFormatAsk
+		{
+			get => Settings.ExportFormat == ExportFormat.Ask;
+			set => SetExportFormatRadioButtonValue(nameof(ExportFormatAsk), ExportFormat.Ask, value);
+		}
+
+		public bool ExportAsPng
+		{
+			get => Settings.ExportFormat == ExportFormat.Png;
+			set => SetExportFormatRadioButtonValue(nameof(ExportAsPng), ExportFormat.Png, value);
+		}
+
+		public bool ExportAsJson
+		{
+			get => Settings.ExportFormat == ExportFormat.Json;
+			set => SetExportFormatRadioButtonValue(nameof(ExportAsJson), ExportFormat.Json, value);
 		}
 
 		public bool ExportWithImagesAsk
@@ -117,6 +141,34 @@ namespace YearInReview.Settings.MVVM
 			}
 		}
 
+		private void InitExportFormatSetting(ExportFormat choice, Action<bool> assignAsk, Action<bool> assignPng, Action<bool> assignJson)
+		{
+			switch (choice)
+			{
+				case ExportFormat.Ask:
+					assignAsk.Invoke(true);
+					assignPng.Invoke(false);
+					assignJson.Invoke(false);
+					break;
+
+				case ExportFormat.Png:
+					assignAsk.Invoke(false);
+					assignPng.Invoke(true);
+					assignJson.Invoke(false);
+
+					break;
+
+				case ExportFormat.Json:
+					assignAsk.Invoke(false);
+					assignPng.Invoke(false);
+					assignJson.Invoke(true);
+					break;
+
+				default:
+					throw new ArgumentOutOfRangeException(nameof(choice));
+			}
+		}
+
 		private void SetExportWithImagesRadioButtonValue(
 			string propertyName,
 			RememberedChoice radioButtonOption,
@@ -130,6 +182,24 @@ namespace YearInReview.Settings.MVVM
 			if (value)
 			{
 				Settings.ExportWithImages = radioButtonOption;
+			}
+
+			OnPropertyChanged(propertyName);
+		}
+
+		private void SetExportFormatRadioButtonValue(
+			string propertyName,
+			ExportFormat radioButtonOption,
+			bool value)
+		{
+			if (Settings.ExportFormat == radioButtonOption == value)
+			{
+				return;
+			}
+
+			if (value)
+			{
+				Settings.ExportFormat = radioButtonOption;
 			}
 
 			OnPropertyChanged(propertyName);

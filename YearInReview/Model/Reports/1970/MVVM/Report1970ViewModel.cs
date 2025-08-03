@@ -39,9 +39,8 @@ namespace YearInReview.Model.Reports._1970.MVVM
 			PlaytimeCalendarDays = report.PlaytimeCalendarDays
 				.Select(x => new CalendarDayViewModel(x, maxPlaytimeInDay)).ToObservable();
 
-			var maxHourlyPlaytime = report.HourlyPlaytime.Max(x => x.Playtime);
-			HourlyPlaytime = report.HourlyPlaytime
-				.Select(x => new HourlyPlaytimeViewModel(x, maxHourlyPlaytime)).ToObservable();
+			HourlyPlaytime = report.HourlyPlaytime.OrderBy(x => x.Hour)
+				.Select(x => x.Playtime).ToObservable();
 
 			if (allYearReports.Count > 1)
 			{
@@ -87,7 +86,7 @@ namespace YearInReview.Model.Reports._1970.MVVM
 
 		public ObservableCollection<CalendarDayViewModel> PlaytimeCalendarDays { get; set; }
 
-		public ObservableCollection<HourlyPlaytimeViewModel> HourlyPlaytime { get; set; }
+		public ObservableCollection<int> HourlyPlaytime { get; set; }
 
 		public bool ShowFriendLeaderboard => FriendsPlaytimeLeaderboard.Any();
 

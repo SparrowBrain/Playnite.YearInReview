@@ -34,7 +34,7 @@
                     <TextBlock Text="{DynamicResource LOC_YearInReview_Settings_Username}" />
                     <TextBlock Text="ℹ" ToolTip="{DynamicResource LOC_YearInReview_Settings_Username_Tooltip}"></TextBlock>
                 </StackPanel>
-                
+
                 <TextBox Grid.Column="1" Text="{Binding Settings.Username}" />
             </Grid>
         </GroupBox>
@@ -51,6 +51,10 @@
         </GroupBox>
         <GroupBox Header="{DynamicResource LOC_YearInReview_Settings_ExportSettingsHeader}">
             <StackPanel>
+                <TextBlock Text="{DynamicResource LOC_YearInReview_Settings_ExportFormat}" Margin="0,10,0,5"></TextBlock>
+                <RadioButton IsChecked="{Binding ExportFormatAsk}" Content="{DynamicResource LOC_YearInReview_RememberedChoice_Ask}" ></RadioButton>
+                <RadioButton IsChecked="{Binding ExportAsPng}" Content="{DynamicResource LOC_YearInReview_ExportFormat_Png}" ></RadioButton>
+                <RadioButton IsChecked="{Binding ExportAsJson}" Content="{DynamicResource LOC_YearInReview_ExportFormat_Json}" ></RadioButton>
                 <TextBlock Text="{DynamicResource LOC_YearInReview_Settings_ExportWithImages}" Margin="0,10,0,5"></TextBlock>
                 <RadioButton IsChecked="{Binding ExportWithImagesAsk}" Content="{DynamicResource LOC_YearInReview_RememberedChoice_Ask}" ></RadioButton>
                 <RadioButton IsChecked="{Binding ExportWithImagesNever}" Content="{DynamicResource LOC_YearInReview_RememberedChoice_Never}" ></RadioButton>

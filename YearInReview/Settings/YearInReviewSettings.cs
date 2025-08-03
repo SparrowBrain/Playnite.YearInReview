@@ -46,6 +46,8 @@ namespace YearInReview.Settings
 
 		public RememberedChoice ExportWithImages { get; set; }
 
+		public ExportFormat ExportFormat { get; set; }
+
 		public bool SaveWithImages
 		{
 			get => _saveWithImages;

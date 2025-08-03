@@ -46,7 +46,7 @@
         </ResourceDictionary>
     </PluginUserControl.Resources>
 
-    <Grid SizeChanged="MainGrid_SizeChanged">
+    <Grid SizeChanged="MainGrid_SizeChanged" Name="ReportMainGrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="4*"></ColumnDefinition>
@@ -231,9 +231,7 @@
             <TextBlock Text="{Binding Texts.LOC_YearInReview_Report1970_PlaytimeCalendarHeader}" FontSize="25" TextAlignment="Left" Margin="10,48,10,10"></TextBlock>
             <userControls:PlaytimeCalendar ItemsSource="{Binding PlaytimeCalendarDays}" />
             <TextBlock Text="{Binding Texts.LOC_YearInReview_Report1970_HourlyPlaytimeHeader}" FontSize="25" TextAlignment="Left" Margin="10,48,10,10"></TextBlock>
-            <ScrollViewer HorizontalScrollBarVisibility="Auto" PreviewMouseWheel="HourlyPlaytimeScrollViewer_PreviewMouseWheel">
-                <userControls:HourlyPlaytime ItemsSource="{Binding HourlyPlaytime}" />
-            </ScrollViewer>
+            <userControls:RadialClockGraph HourlyData="{Binding HourlyPlaytime}"></userControls:RadialClockGraph>
 
             <StackPanel Visibility="{Binding ShowFriendLeaderboard, Converter={StaticResource BoolToCollapsedVisibilityConverter}}">
                 <TextBlock Text="{Binding Texts.LOC_YearInReview_Report1970_FriendsLeaderboardHeader}" FontSize="25" TextAlignment="Left" Margin="10,48,10,10"></TextBlock>

@@ -8,6 +8,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using YearInReview.Model.Exceptions;
 using YearInReview.Model.Reports._1970;
 using YearInReview.Model.Reports._1970.MVVM;
@@ -114,22 +116,38 @@ namespace YearInReview.Model.Reports.MVVM
 		public ICommand ExportReport => new RelayCommand(() =>
 		{
 			var settings = _settingsViewModel.Settings;
-			switch (settings.ExportWithImages)
+			switch (settings.ExportFormat)
 			{
-				case RememberedChoice.Ask:
+				case ExportFormat.Ask:
 					ShowExportDialog();
 					break;
 
-				case RememberedChoice.Never:
-					ExportActiveReport(false);
+				case ExportFormat.Json:
+					switch (settings.ExportWithImages)
+					{
+						case RememberedChoice.Ask:
+							ShowExportDialog();
+							break;
+
+						case RememberedChoice.Never:
+							ExportActiveReportAsJson(false);
+							break;
+
+						case RememberedChoice.Always:
+							ExportActiveReportAsJson(true);
+							break;
+
+						default:
+							goto case RememberedChoice.Ask;
+					}
 					break;
 
-				case RememberedChoice.Always:
-					ExportActiveReport(true);
+				case ExportFormat.Png:
+					ExportActiveReportAsImage();
 					break;
 
 				default:
-					goto case RememberedChoice.Ask;
+					goto case ExportFormat.Ask;
 			}
 		});
 
@@ -243,11 +261,17 @@ namespace YearInReview.Model.Reports.MVVM
 
 		private void ActivateReport(Report1970 report, bool isOwn, List<PersistedReport> allYearReports)
 		{
-			var viewModel = new Report1970ViewModel(_api, report, isOwn, allYearReports);
-			var view = new Report1970View(viewModel);
+			var view = CreateReportView(report, isOwn, allYearReports);
 
 			ShowOwnReportActionButtons = isOwn;
 			ActiveReport = view;
+		}
+
+		private Report1970View CreateReportView(Report1970 report, bool isOwn, List<PersistedReport> allYearReports)
+		{
+			var viewModel = new Report1970ViewModel(_api, report, isOwn, allYearReports);
+			var view = new Report1970View(viewModel);
+			return view;
 		}
 
 		private void DisplayMostRecentUserReport()
@@ -264,7 +288,7 @@ namespace YearInReview.Model.Reports.MVVM
 
 		private void ShowExportDialog()
 		{
-			var viewModel = new ExportWithImagesViewModel(_settingsViewModel, ExportActiveReport);
+			var viewModel = new ExportWithImagesViewModel(_settingsViewModel, ExportActiveReportAsJson, ExportActiveReportAsImage);
 			var view = new ExportWithImagesView(viewModel);
 
 			var window = _api.Dialogs.CreateWindow(new WindowCreationOptions()
@@ -287,7 +311,7 @@ namespace YearInReview.Model.Reports.MVVM
 			window.ShowDialog();
 		}
 
-		private void ExportActiveReport(bool exportWithImages)
+		private void ExportActiveReportAsJson(bool exportWithImages)
 		{
 			try
 			{
@@ -297,12 +321,58 @@ namespace YearInReview.Model.Reports.MVVM
 					return;
 				}
 
-				var reportId = ((Report1970ViewModel)ActiveReport.DataContext).Id;
-				_reportManager.ExportReport(reportId, exportPath, exportWithImages);
+				_reportManager.ExportReport(ActiveReportId, exportPath, exportWithImages);
 			}
 			catch (Exception ex)
 			{
 				_logger.Error(ex, "Error while trying to export report");
+				_api.Dialogs.ShowErrorMessage(ResourceProvider.GetString("LOC_YearInReview_Notification_ExportError"));
+			}
+		}
+
+		private void ExportActiveReportAsImage()
+		{
+			try
+			{
+				var exportPath = _api.Dialogs.SaveFile("PNG files|*.png");
+				if (string.IsNullOrEmpty(exportPath))
+				{
+					return;
+				}
+
+				var report = _reportManager.GetReport(ActiveReportId);
+				var allYearReports = _reportManager.GetAllPreLoadedReports().Where(x => x.Year == report.Metadata.Year).ToList();
+				var isOwn = allYearReports.Any(x => x.IsOwn && x.Id == report.Metadata.Id);
+
+				var frameworkElement = ActiveReport;
+				frameworkElement.Background = _api.Resources.GetResource("WindowBackgourndBrush") as Brush;
+				frameworkElement.Arrange(new Rect(0, 0, frameworkElement.ActualWidth, frameworkElement.ActualHeight + 10));
+
+				var targetWidth = (int)frameworkElement.ActualWidth;
+				var targetHeight = (int)frameworkElement.ActualHeight;
+
+				if (targetWidth == 0 || targetHeight == 0)
+				{
+					throw new Exception("Zero dimensions in exporting image.");
+				}
+
+				var bitmapSource = new RenderTargetBitmap(targetWidth, targetHeight, 96, 96, PixelFormats.Pbgra32);
+				bitmapSource.Render(frameworkElement);
+
+				var bitmapEncoder = new PngBitmapEncoder();
+				var bitmapFrame = BitmapFrame.Create(bitmapSource);
+				bitmapEncoder.Frames.Add(bitmapFrame);
+
+				var memoryStream = new MemoryStream();
+				bitmapEncoder.Save(memoryStream);
+
+				File.WriteAllBytes(exportPath, memoryStream.ToArray());
+
+				ActivateReport(report, isOwn, allYearReports);
+			}
+			catch (Exception ex)
+			{
+				_logger.Error(ex, "Error while trying to export report as image");
 				_api.Dialogs.ShowErrorMessage(ResourceProvider.GetString("LOC_YearInReview_Notification_ExportError"));
 			}
 		}

@@ -10,21 +10,45 @@ namespace YearInReview.Model.Reports.MVVM
 	public class ExportWithImagesViewModel : ObservableObject
 	{
 		private readonly YearInReviewSettingsViewModel _settingsViewModel;
-		private readonly Action<bool> _exportAction;
+		private readonly Action<bool> _exportAsJsonAction;
+		private readonly Action _exportAsPngAction;
 
 		private Window _window;
 		private bool _isExportWithImages;
 		private bool _rememberChoice;
+		private bool _exportAsPng;
+		private bool _exportAsJson;
 
-		public ExportWithImagesViewModel(YearInReviewSettingsViewModel settingsViewModel, Action<bool> exportAction)
+		public ExportWithImagesViewModel(YearInReviewSettingsViewModel settingsViewModel, Action<bool> exportAsJsonAction, Action exportAsPngAction)
 		{
 			_settingsViewModel = settingsViewModel;
-			_exportAction = exportAction;
+			_exportAsJsonAction = exportAsJsonAction;
+			_exportAsPngAction = exportAsPngAction;
+			if (settingsViewModel.Settings.ExportFormat == ExportFormat.Json)
+			{
+				ExportAsJson = true;
+			}
+			else
+			{
+				ExportAsPng = true;
+			}
 		}
 
 		public void AssociateWindow(Window window)
 		{
 			_window = window;
+		}
+
+		public bool ExportAsPng
+		{
+			get => _exportAsPng;
+			set => SetValue(ref _exportAsPng, value);
+		}
+
+		public bool ExportAsJson
+		{
+			get => _exportAsJson;
+			set => SetValue(ref _exportAsJson, value);
 		}
 
 		public bool IsExportWithImages
@@ -54,10 +78,27 @@ namespace YearInReview.Model.Reports.MVVM
 			if (RememberChoice)
 			{
 				_settingsViewModel.Settings.ExportWithImages = IsExportWithImages ? RememberedChoice.Always : RememberedChoice.Never;
+				_settingsViewModel.Settings.ExportFormat = ExportAsPng
+					? ExportFormat.Png
+					: ExportAsJson
+						? ExportFormat.Json
+						: ExportFormat.Ask;
 				_settingsViewModel.EndEdit();
 			}
 
-			_exportAction(IsExportWithImages);
+			if (ExportAsJson)
+			{
+				_exportAsJsonAction(IsExportWithImages);
+			}
+			else if (ExportAsPng)
+			{
+				_exportAsPngAction();
+			}
+			else
+			{
+				throw new InvalidOperationException("No export action defined.");
+			}
+
 			_window?.Close();
 		});
 
