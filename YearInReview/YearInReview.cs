@@ -114,8 +114,8 @@ namespace YearInReview
 			_startupSettingsValidator.EnsureCorrectVersionSettingsExist();
 			RunValidationInitialize();
 
-			GetSettings(false);
-			HandleSidebarItemVisibilityAfterSettingsSaved();
+			UpdateSidebarItemVisibility();
+			UpdateReadableTimeFormatterSettings();
 		}
 
 		public override ISettings GetSettings(bool firstRunSettings)
@@ -123,7 +123,8 @@ namespace YearInReview
 			if (_settingsViewModel == null)
 			{
 				_settingsViewModel = new YearInReviewSettingsViewModel(this);
-				_settingsViewModel.SettingsSaved += HandleSidebarItemVisibilityAfterSettingsSaved;
+				_settingsViewModel.SettingsSaved += UpdateSidebarItemVisibility;
+				_settingsViewModel.SettingsSaved += UpdateReadableTimeFormatterSettings;
 			}
 
 			return _settingsViewModel;
@@ -178,9 +179,16 @@ namespace YearInReview
 			});
 		}
 
-		private void HandleSidebarItemVisibilityAfterSettingsSaved()
+		private void UpdateSidebarItemVisibility()
 		{
-			_sidebarItem.Visible = _settingsViewModel.Settings.ShowSidebarItem;
+			var settings = GetSettings(false) as YearInReviewSettingsViewModel;
+			_sidebarItem.Visible = settings?.Settings.ShowSidebarItem ?? true;
+		}
+
+		private void UpdateReadableTimeFormatterSettings()
+		{
+			var settings = GetSettings(false) as YearInReviewSettingsViewModel;
+			ReadableTimeFormatter.DisplayLargeTimeInHours = settings?.Settings.DisplayLargeTimeInHours ?? false;
 		}
 
 		private void HandleValidationAfterSettingsSaved()

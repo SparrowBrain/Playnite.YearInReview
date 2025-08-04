@@ -1,5 +1,6 @@
 ﻿v1
 SaveWithImages
+DisplayLargeTimeInHours
 
 v0
 Username

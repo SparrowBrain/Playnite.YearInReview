@@ -11,6 +11,7 @@ namespace YearInReview.Settings
 		private bool _showSidebarItem;
 		private bool _showNewReportNotifications;
 		private bool _saveWithImages;
+		private bool _displayLargeTimeInHours;
 
 		public YearInReviewSettings()
 		{
@@ -22,6 +23,7 @@ namespace YearInReview.Settings
 			ShowSidebarItem = true,
 			ShowNewReportNotifications = true,
 			SaveWithImages = true,
+			DisplayLargeTimeInHours = true,
 		};
 
 		public int Version { get; }
@@ -42,6 +44,12 @@ namespace YearInReview.Settings
 		{
 			get => _showNewReportNotifications;
 			set => SetValue(ref _showNewReportNotifications, value);
+		}
+
+		public bool DisplayLargeTimeInHours
+		{
+			get => _displayLargeTimeInHours;
+			set => SetValue(ref _displayLargeTimeInHours, value);
 		}
 
 		public RememberedChoice ExportWithImages { get; set; }

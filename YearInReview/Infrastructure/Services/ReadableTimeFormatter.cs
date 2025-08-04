@@ -4,11 +4,13 @@ using System.Text;
 
 namespace YearInReview.Infrastructure.Services
 {
-	public class ReadableTimeFormatter
+	public static class ReadableTimeFormatter
 	{
 		private const string NonBreakableSpace = "\u00A0";
 		private const string BreakableSpace = " ";
-		
+
+		public static bool DisplayLargeTimeInHours { get; set; }
+
 		public static string FormatTime(int seconds, bool nonLineBreaking = false)
 		{
 			if (seconds < 60)
@@ -19,16 +21,33 @@ namespace YearInReview.Infrastructure.Services
 			var timeSpan = TimeSpan.FromSeconds(seconds);
 			var readableText = new StringBuilder();
 
-			if (timeSpan.Days > 0)
+			if (DisplayLargeTimeInHours)
 			{
-				readableText.Append(string.Format(ResourceProvider.GetString("LOC_YearInReview_ReadableTime_DayPart"), timeSpan.Days));
-				readableText.Append(BreakableSpace);
+				if (Math.Floor(timeSpan.TotalHours) > 0)
+				{
+					readableText.Append(string.Format(
+						ResourceProvider.GetString("LOC_YearInReview_ReadableTime_HourPart"),
+						Math.Floor(timeSpan.TotalHours)));
+					readableText.Append(BreakableSpace);
+				}
 			}
-			if (timeSpan.Hours > 0)
+			else
 			{
-				readableText.Append(string.Format(ResourceProvider.GetString("LOC_YearInReview_ReadableTime_HourPart"), timeSpan.Hours));
-				readableText.Append(BreakableSpace);
+				if (timeSpan.Days > 0)
+				{
+					readableText.Append(string.Format(
+						ResourceProvider.GetString("LOC_YearInReview_ReadableTime_DayPart"), timeSpan.Days));
+					readableText.Append(BreakableSpace);
+				}
+
+				if (timeSpan.Hours > 0)
+				{
+					readableText.Append(string.Format(
+						ResourceProvider.GetString("LOC_YearInReview_ReadableTime_HourPart"), timeSpan.Hours));
+					readableText.Append(BreakableSpace);
+				}
 			}
+
 			if (timeSpan.Minutes > 0)
 			{
 				readableText.Append(string.Format(ResourceProvider.GetString("LOC_YearInReview_ReadableTime_MinutePart"), timeSpan.Minutes));
@@ -39,7 +58,7 @@ namespace YearInReview.Infrastructure.Services
 			{
 				readableText.Replace(BreakableSpace, NonBreakableSpace);
 			}
-			
+
 			return readableText.ToString().Trim();
 		}
 	}

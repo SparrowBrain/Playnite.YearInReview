@@ -2,6 +2,7 @@
 using Playnite.SDK.Data;
 using System;
 using System.Collections.Generic;
+using YearInReview.Infrastructure.Services;
 using YearInReview.Model;
 
 namespace YearInReview.Settings.MVVM

@@ -61,6 +61,7 @@
     <sys:String x:Key="LOC_YearInReview_ReadableTime_DayPart">{0} d</sys:String>
     <sys:String x:Key="LOC_YearInReview_ReadableTime_HourPart">{0} h</sys:String>
     <sys:String x:Key="LOC_YearInReview_ReadableTime_MinutePart">{0} min</sys:String>
+    <sys:String x:Key="LOC_YearInReview_Settings_DisplayLargeTimeInHours">Display large amount of time in hours (as opposed to days)</sys:String>
     <sys:String x:Key="LOC_YearInReview_Settings_Error_UsernameEmpty">Username cannot be empty.</sys:String>
     <sys:String x:Key="LOC_YearInReview_Settings_ExportFormat">Export Format</sys:String>
     <sys:String x:Key="LOC_YearInReview_Settings_ExportSettingsHeader">Export</sys:String>
