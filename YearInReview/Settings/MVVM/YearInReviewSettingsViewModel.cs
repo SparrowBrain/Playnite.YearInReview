@@ -83,6 +83,8 @@ namespace YearInReview.Settings.MVVM
 			set => SetExportWithImagesRadioButtonValue(nameof(ExportWithImagesAlways), RememberedChoice.Always, value);
 		}
 
+		public bool ShowExportWithImages => Settings.ExportFormat == ExportFormat.Json;
+
 		public void BeginEdit()
 		{
 			_editingClone = Serialization.GetClone(Settings);
@@ -215,6 +217,7 @@ namespace YearInReview.Settings.MVVM
 			}
 
 			OnPropertyChanged(propertyName);
+			OnPropertyChanged(nameof(ShowExportWithImages));
 		}
 	}
 }

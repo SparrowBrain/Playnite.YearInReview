@@ -3,9 +3,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:converters="clr-namespace:YearInReview.Infrastructure.Converters"
              mc:Ignorable="d"
              d:DesignHeight="400" d:DesignWidth="600">
     <UserControl.Resources>
+        <converters:BoolToCollapsedVisibilityConverter x:Key="BoolToCollapsedVisibilityConverter" />
         <Style TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}">
             <Setter Property="Margin" Value="0,5,5,0" />
             <Setter Property="TextWrapping" Value="Wrap"></Setter>
@@ -57,10 +59,12 @@
                 <RadioButton IsChecked="{Binding ExportFormatAsk}" Content="{DynamicResource LOC_YearInReview_RememberedChoice_Ask}" ></RadioButton>
                 <RadioButton IsChecked="{Binding ExportAsPng}" Content="{DynamicResource LOC_YearInReview_ExportFormat_Png}" ></RadioButton>
                 <RadioButton IsChecked="{Binding ExportAsJson}" Content="{DynamicResource LOC_YearInReview_ExportFormat_Json}" ></RadioButton>
-                <TextBlock Text="{DynamicResource LOC_YearInReview_Settings_ExportWithImages}" Margin="0,10,0,5"></TextBlock>
-                <RadioButton IsChecked="{Binding ExportWithImagesAsk}" Content="{DynamicResource LOC_YearInReview_RememberedChoice_Ask}" ></RadioButton>
-                <RadioButton IsChecked="{Binding ExportWithImagesNever}" Content="{DynamicResource LOC_YearInReview_RememberedChoice_Never}" ></RadioButton>
-                <RadioButton IsChecked="{Binding ExportWithImagesAlways}" Content="{DynamicResource LOC_YearInReview_RememberedChoice_Always}" ></RadioButton>
+                <StackPanel Visibility="{Binding ShowExportWithImages, Converter={StaticResource BoolToCollapsedVisibilityConverter}}">
+                    <TextBlock Text="{DynamicResource LOC_YearInReview_Settings_ExportWithImages}" Margin="0,10,0,5"></TextBlock>
+                    <RadioButton IsChecked="{Binding ExportWithImagesAsk}" Content="{DynamicResource LOC_YearInReview_RememberedChoice_Ask}" ></RadioButton>
+                    <RadioButton IsChecked="{Binding ExportWithImagesNever}" Content="{DynamicResource LOC_YearInReview_RememberedChoice_Never}" ></RadioButton>
+                    <RadioButton IsChecked="{Binding ExportWithImagesAlways}" Content="{DynamicResource LOC_YearInReview_RememberedChoice_Always}" ></RadioButton>
+                </StackPanel>
             </StackPanel>
         </GroupBox>
     </StackPanel>
