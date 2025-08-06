@@ -89,6 +89,7 @@ namespace YearInReview.UnitTests.Validation
 			List<Activity> activities)
 		{
 			// Arrange
+			_settings.ShowCurrentYearReport = false;
 			SetupSuccessfulValidation();
 			SetupGameActivitiesForYear(activities, currentYear, currentYear);
 			A.CallTo(() => _reportPersistence.PreLoadAllReports()).Returns(new List<PersistedReport>());
@@ -98,6 +99,42 @@ namespace YearInReview.UnitTests.Validation
 
 			// Assert
 			Assert.Contains(result, x => x.Id == InitValidationError.NoActivityInPreviousYears);
+		}
+
+		[Theory]
+		[AutoFakeItEasyData]
+		public async Task Validate_AddsError_WhenNoReportsFoundAndNoGameActivityAtAllExists(
+			int currentYear)
+		{
+			// Arrange
+			SetupSuccessfulValidation();
+			SetupGameActivitiesForYear(new List<Activity>(), currentYear, currentYear);
+			A.CallTo(() => _reportPersistence.PreLoadAllReports()).Returns(new List<PersistedReport>());
+
+			// Act
+			var result = await _sut.IsOkToRun();
+
+			// Assert
+			Assert.Contains(result, x => x.Id == InitValidationError.NoActivityAtAll);
+		}
+
+		[Theory]
+		[AutoFakeItEasyData]
+		public async Task Validate_ValidationSuccess_WhenNoReportsFoundAndNoGameActivityForPreviousYearsExistsButShowingCurrentYear(
+			int currentYear,
+			List<Activity> activities)
+		{
+			// Arrange
+			_settings.ShowCurrentYearReport = true;
+			SetupSuccessfulValidation();
+			SetupGameActivitiesForYear(activities, currentYear, currentYear);
+			A.CallTo(() => _reportPersistence.PreLoadAllReports()).Returns(new List<PersistedReport>());
+
+			// Act
+			var result = await _sut.IsOkToRun();
+
+			// Assert
+			Assert.Empty(result);
 		}
 
 		[Theory]

@@ -65,6 +65,12 @@ namespace YearInReview.Model.Reports
 			return report;
 		}
 
+		public async Task<Report1970> GetNotPersistedReport(int year)
+		{
+			var report = await _reportGenerator.Generate(year);
+			return report;
+		}
+
 		public IReadOnlyCollection<PersistedReport> GetAllPreLoadedReports()
 		{
 			return _reportCache.Values.ToList();

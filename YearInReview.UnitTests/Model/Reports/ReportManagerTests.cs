@@ -130,6 +130,24 @@ namespace YearInReview.UnitTests.Model.Reports
 
 		[Theory]
 		[AutoFakeItEasyData]
+		public async Task GetNotPersistedReport_GeneratesReport(
+			[Frozen] IReportGenerator reportGenerator,
+			int year,
+			Report1970 expected,
+			ReportManager sut)
+		{
+			// Arrange
+			A.CallTo(() => reportGenerator.Generate(year)).Returns(expected);
+
+			// Act
+			var actual = await sut.GetNotPersistedReport(year);
+
+			// Assert
+			Assert.Equal(expected, actual);
+		}
+
+		[Theory]
+		[AutoFakeItEasyData]
 		public async Task RegenerateReport_ThrowsException_WhenReportNotFound(
 			Guid reportId,
 			ReportManager sut)

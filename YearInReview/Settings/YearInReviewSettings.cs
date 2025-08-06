@@ -12,6 +12,7 @@ namespace YearInReview.Settings
 		private bool _showNewReportNotifications;
 		private bool _saveWithImages;
 		private bool _displayLargeTimeInHours;
+		private bool _showCurrentYearReport;
 
 		public YearInReviewSettings()
 		{
@@ -50,6 +51,12 @@ namespace YearInReview.Settings
 		{
 			get => _displayLargeTimeInHours;
 			set => SetValue(ref _displayLargeTimeInHours, value);
+		}
+
+		public bool ShowCurrentYearReport
+		{
+			get => _showCurrentYearReport;
+			set => SetValue(ref _showCurrentYearReport, value);
 		}
 
 		public RememberedChoice ExportWithImages { get; set; }

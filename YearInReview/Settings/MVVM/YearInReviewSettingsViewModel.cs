@@ -2,7 +2,6 @@
 using Playnite.SDK.Data;
 using System;
 using System.Collections.Generic;
-using YearInReview.Infrastructure.Services;
 using YearInReview.Model;
 
 namespace YearInReview.Settings.MVVM
@@ -23,6 +22,8 @@ namespace YearInReview.Settings.MVVM
 		}
 
 		public event Action SettingsSaved;
+
+		public event Action CurrentYearReportGenerationChanged;
 
 		public YearInReviewSettings Settings
 		{
@@ -96,6 +97,11 @@ namespace YearInReview.Settings.MVVM
 		{
 			_plugin.SavePluginSettings(Settings);
 			OnSettingsSaved();
+
+			if (_editingClone.ShowCurrentYearReport != Settings.ShowCurrentYearReport)
+			{
+				OnCurrentYearReportGenerationChanged();
+			}
 		}
 
 		public bool VerifySettings(out List<string> errors)
@@ -112,6 +118,11 @@ namespace YearInReview.Settings.MVVM
 		protected virtual void OnSettingsSaved()
 		{
 			SettingsSaved?.Invoke();
+		}
+
+		protected virtual void OnCurrentYearReportGenerationChanged()
+		{
+			CurrentYearReportGenerationChanged?.Invoke();
 		}
 
 		private void InitRememberedChoiceSetting(RememberedChoice choice, Action<bool> assignAsk, Action<bool> assignNever, Action<bool> assignAlways)

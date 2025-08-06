@@ -43,6 +43,7 @@
                 <CheckBox IsChecked="{Binding Settings.ShowSidebarItem}" Content="{DynamicResource LOC_YearInReview_Settings_ShowSidebarItem}" />
                 <CheckBox IsChecked="{Binding Settings.ShowNewReportNotifications}" Content="{DynamicResource LOC_YearInReview_Settings_ShowNewReportNotifications}" />
                 <CheckBox IsChecked="{Binding Settings.DisplayLargeTimeInHours}" Content="{DynamicResource LOC_YearInReview_Settings_DisplayLargeTimeInHours}" />
+                <CheckBox IsChecked="{Binding Settings.ShowCurrentYearReport}" Content="{DynamicResource LOC_YearInReview_Settings_ShowCurrentYearReport}" />
             </StackPanel>
         </GroupBox>
         <GroupBox Header="{DynamicResource LOC_YearInReview_Settings_ReportGenerationSettingsHeader}">

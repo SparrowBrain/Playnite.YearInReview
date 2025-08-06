@@ -257,13 +257,53 @@ namespace YearInReview.Model.Reports.MVVM
 					}
 				})
 			}).ToObservable();
+
+			if (_settingsViewModel.Settings.ShowCurrentYearReport)
+			{
+				var currentYear = DateTime.Now.Year;
+				YearButtons.Insert(0, new YearButtonViewModel()
+				{
+					Year = currentYear,
+					SwitchYearCommand = new RelayCommand(() =>
+					{
+						try
+						{
+							ReportButtons = new List<ReportButtonViewModel>()
+							{
+								new ReportButtonViewModel()
+								{
+									Username = _settingsViewModel.Settings.Username,
+									DisplayCommand = new RelayCommand(async () =>
+									{
+										try
+										{
+											var report = await _reportManager.GetNotPersistedReport(currentYear);
+											var allYearReports = preLoadedReports.Where(p => p.Year == currentYear).ToList();
+											ActivateReport(report, true, allYearReports);
+										}
+										catch (Exception ex)
+										{
+											_logger.Error(ex, "Error while trying to display current year report");
+										}
+									})
+								}
+							}.ToObservable();
+							ReportButtons.FirstOrDefault()?.DisplayCommand.Execute(null);
+						}
+						catch (Exception ex)
+						{
+							_logger.Error(ex, "Error while trying to display report");
+						}
+					})
+				});
+			}
 		}
 
 		private void ActivateReport(Report1970 report, bool isOwn, List<PersistedReport> allYearReports)
 		{
 			var view = CreateReportView(report, isOwn, allYearReports);
 
-			ShowOwnReportActionButtons = isOwn;
+			ShowOwnReportActionButtons = isOwn && report.Metadata.Year != DateTime.Now.Year;
 			ActiveReport = view;
 		}
 

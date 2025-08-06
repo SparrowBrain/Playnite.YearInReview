@@ -19,7 +19,8 @@
     <sys:String x:Key="LOC_YearInReview_Notification_ImportError_AlreadyExists">Report you are trying to import is already in Playnite. Skipping.</sys:String>
     <sys:String x:Key="LOC_YearInReview_Notification_ImportError_InvalidFile">Trying to import invalid report file. Please double-check that you're importing file exported with YearInReview extension.</sys:String>
     <sys:String x:Key="LOC_YearInReview_Notification_InstallGameActivity">GameActivity extension not installed. It is mandatory for YearInReview extension to work.</sys:String>
-    <sys:String x:Key="LOC_YearInReview_Notification_NoActivityInPreviousYears">No GameActivity sessions found in previous years. Cannot generate any reports. Keep on playing and wait for the New Year! :)</sys:String>
+    <sys:String x:Key="LOC_YearInReview_Notification_NoActivityAtAll">No GameActivity sessions found. Cannot generate any reports. Keep on playing! :)</sys:String>
+    <sys:String x:Key="LOC_YearInReview_Notification_NoActivityInPreviousYears">No GameActivity sessions found in previous years. Consider enabling current year report generation in settings. Or keep on playing and wait for the New Year! :)</sys:String>
     <sys:String x:Key="LOC_YearInReview_Notification_ReportGenerated">Report generated for year {0}</sys:String>
     <sys:String x:Key="LOC_YearInReview_Notification_ReportRegenerationError">Failed to regenerate report. See extensions.log for more details.</sys:String>
     <sys:String x:Key="LOC_YearInReview_Notification_SetUsername">Please set your username in the Year In Review plugin settings.</sys:String>
@@ -68,6 +69,7 @@
     <sys:String x:Key="LOC_YearInReview_Settings_ExportWithImages">Export With Images</sys:String>
     <sys:String x:Key="LOC_YearInReview_Settings_ReportGenerationSettingsHeader">Report Generation</sys:String>
     <sys:String x:Key="LOC_YearInReview_Settings_SaveWithImages">Save with images</sys:String>
+    <sys:String x:Key="LOC_YearInReview_Settings_ShowCurrentYearReport">Show current year report</sys:String>
     <sys:String x:Key="LOC_YearInReview_Settings_ShowNewReportNotifications">Show new report notifications</sys:String>
     <sys:String x:Key="LOC_YearInReview_Settings_ShowSidebarItem">Show sidebar item</sys:String>
     <sys:String x:Key="LOC_YearInReview_Settings_UserInterfaceSettingsHeader">User Interface</sys:String>

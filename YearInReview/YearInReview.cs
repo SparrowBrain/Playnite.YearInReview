@@ -125,6 +125,7 @@ namespace YearInReview
 				_settingsViewModel = new YearInReviewSettingsViewModel(this);
 				_settingsViewModel.SettingsSaved += UpdateSidebarItemVisibility;
 				_settingsViewModel.SettingsSaved += UpdateReadableTimeFormatterSettings;
+				_settingsViewModel.SettingsSaved += RunValidationInitialize;
 			}
 
 			return _settingsViewModel;

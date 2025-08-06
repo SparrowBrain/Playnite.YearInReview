@@ -42,7 +42,7 @@ namespace YearInReview.Validation
 
 			if (errors.All(x => x.Id != InitValidationError.GameActivityExtensionNotInstalled))
 			{
-				await ValidateGameActivitySessionsExistForPreviousYears(errors);
+				await ValidateActivityExistence(errors);
 			}
 
 			return errors;
@@ -81,25 +81,42 @@ namespace YearInReview.Validation
 				() => _plugin.OpenSettingsView());
 		}
 
-		private async Task ValidateGameActivitySessionsExistForPreviousYears(List<InitValidationError> errors)
+		private async Task ValidateActivityExistence(List<InitValidationError> errors)
 		{
 			var persistedReports = _reportPersistence.PreLoadAllReports();
-			if (persistedReports.Count == 0)
+			if (persistedReports.Count != 0)
 			{
-				var currentYear = _dateTimeProvider.GetNow().Year;
-				var games = _playniteApi.Database.Games;
-				var activities = await _gameActivityExtension.GetActivityForGames(games);
-				if (activities.All(x => x.Items.All(session => session.DateSession.Year >= currentYear)))
-				{
-					_logger.Warn("No GameActivity sessions found for previous years. Cannot run YearInReview.");
+				return;
+			}
 
-					var message = ResourceProvider.GetString("LOC_YearInReview_Notification_NoActivityInPreviousYears");
-					errors.Add(new InitValidationError()
-					{
-						Id = InitValidationError.NoActivityInPreviousYears,
-						Message = message,
-					});
-				}
+			var currentYear = _dateTimeProvider.GetNow().Year;
+			var games = _playniteApi.Database.Games;
+			var activities = await _gameActivityExtension.GetActivityForGames(games);
+			if (!activities.Any())
+			{
+				_logger.Warn("No GameActivity sessions found. Cannot run YearInReview.");
+				var message = ResourceProvider.GetString("LOC_YearInReview_Notification_NoActivityAtAll");
+				errors.Add(new InitValidationError()
+				{
+					Id = InitValidationError.NoActivityAtAll,
+					Message = message,
+				});
+				return;
+			}
+
+			var settings = _plugin.LoadPluginSettings<YearInReviewSettings>();
+			if (activities.All(x => x.Items.All(session => session.DateSession.Year >= currentYear))
+			    && !settings.ShowCurrentYearReport)
+			{
+				_logger.Warn("No GameActivity sessions found for previous years. Cannot run YearInReview.");
+
+				var message = ResourceProvider.GetString("LOC_YearInReview_Notification_NoActivityInPreviousYears");
+				errors.Add(new InitValidationError()
+				{
+					Id = InitValidationError.NoActivityInPreviousYears,
+					Message = message,
+					CallToAction = () => _plugin.OpenSettingsView()
+				});
 			}
 		}
 

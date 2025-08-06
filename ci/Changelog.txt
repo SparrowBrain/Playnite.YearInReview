@@ -2,9 +2,9 @@
 - User reports are now saved with an image by default
 - Added an ability to export reports as PNG files
 - Added a button to regenerate a report
-- Added an option to show playtime in hours instead of days (on by default)
---- Added an ability to see dynamic current year report
+- Added an ability to see dynamic current year report
 - Added a tooltip to explain username in settings
+- Playtime is now shown in hours instead of days (optional)
 - Hourly playtime is now a radial graph
 ---- Playnie library games are now grouped by platform????
 ---- Report generated notification now opens the report when clicked
