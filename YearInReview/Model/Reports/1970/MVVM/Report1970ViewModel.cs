@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
+using YearInReview.Infrastructure.Services;
 using YearInReview.Infrastructure.UserControls;
 using YearInReview.Model.Reports.Persistence;
 
@@ -11,11 +12,11 @@ namespace YearInReview.Model.Reports._1970.MVVM
 {
 	public class Report1970ViewModel : ObservableObject
 	{
-		private readonly IPlayniteAPI _api;
+		private readonly INavigator _navigator;
 
-		public Report1970ViewModel(IPlayniteAPI api, Report1970 report, bool isOwn, List<PersistedReport> allYearReports)
+		public Report1970ViewModel(INavigator navigator, Report1970 report, bool isOwn, List<PersistedReport> allYearReports)
 		{
-			_api = api;
+			_navigator = navigator;
 
 			Id = report.Metadata.Id;
 			Year = report.Metadata.Year;
@@ -25,10 +26,10 @@ namespace YearInReview.Model.Reports._1970.MVVM
 
 			AddedGamesCount = report.AddedGamesCount;
 
-			NotableAddedGames = report.NotableAddedGames.Select(x => new AddedGameViewModel(api, x)).ToList().ToObservable();
+			NotableAddedGames = report.NotableAddedGames.Select(x => new AddedGameViewModel(navigator, x)).ToList().ToObservable();
 
 			MostPlayedGames = report.MostPlayedGames
-				.Select((t, i) => new GameViewModel(api, i + 1, t, MostPlayedGame.TimePlayed)).ToList()
+				.Select((t, i) => new GameViewModel(navigator, i + 1, t, MostPlayedGame.TimePlayed)).ToList()
 				.ToObservable();
 
 			var maxSourcePlaytime = report.MostPlayedSources.OrderByDescending(x => x.TimePlayed).FirstOrDefault()?.TimePlayed ?? 0;
@@ -100,8 +101,7 @@ namespace YearInReview.Model.Reports._1970.MVVM
 		public ICommand OpenMostPlayedDetails =>
 			new RelayCommand(() =>
 			{
-				_api.MainView.SelectGame(MostPlayedGame.Id);
-				_api.MainView.SwitchToLibraryView();
+				_navigator.ShowGame(MostPlayedGame.Id, MostPlayedGame.Name);
 			});
 
 		public ReportTexts Texts { get; set; }

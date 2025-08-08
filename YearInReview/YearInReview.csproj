@@ -55,6 +55,8 @@
     <Compile Include="Infrastructure\Serialization\ImageContractResolver.cs" />
     <Compile Include="Infrastructure\Serialization\Base64ImageConverter.cs" />
     <Compile Include="Infrastructure\Services\Base64Helpers.cs" />
+    <Compile Include="Infrastructure\Services\INavigator.cs" />
+    <Compile Include="Infrastructure\Services\Navigator.cs" />
     <Compile Include="Infrastructure\Services\UriToPhysicalUriConverter.cs" />
     <Compile Include="Infrastructure\Converters\PercentageWithParameterConverter.cs" />
     <Compile Include="Infrastructure\UserControls\RadialClockGraph.xaml.cs">

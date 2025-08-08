@@ -103,6 +103,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Infrastructure\Services\NavigatorTests.cs" />
     <Compile Include="Model\Filters\EmptyActivityFilterTests.cs" />
     <Compile Include="Settings\Old\SettingsV0Tests.cs" />
     <Compile Include="Settings\SettingsMigratorTests.cs" />

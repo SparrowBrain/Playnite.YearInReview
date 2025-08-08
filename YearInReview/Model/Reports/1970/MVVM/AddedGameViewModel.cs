@@ -2,18 +2,21 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Input;
+using YearInReview.Infrastructure.Services;
 
 namespace YearInReview.Model.Reports._1970.MVVM
 {
 	public class AddedGameViewModel : ObservableObject
 	{
-		private readonly IPlayniteAPI _api;
+		private readonly INavigator _navigator;
+		private readonly string _name;
 
-		public AddedGameViewModel(IPlayniteAPI api, ReportAddedGame game)
+		public AddedGameViewModel(INavigator navigator, ReportAddedGame game)
 		{
-			_api = api;
+			_navigator = navigator;
 
 			Id = game.Id;
+			_name = game.Name;
 			NameWithLibrary = $"{game.Name} ({game.SourceName})";
 			CoverImage = game.CoverImage;
 			CriticScoreText = string.Format(ResourceProvider.GetString("LOC_YearInReview_Report1970_AddedGameCriticScoreText"),
@@ -35,8 +38,7 @@ namespace YearInReview.Model.Reports._1970.MVVM
 		public ICommand OpenDetails =>
 			new RelayCommand(() =>
 			{
-				_api.MainView.SelectGame(Id);
-				_api.MainView.SwitchToLibraryView();
+				_navigator.ShowGame(Id, _name);
 			});
 	}
 }

@@ -1,17 +1,18 @@
-﻿using System;
+﻿using Playnite.SDK;
+using System;
 using System.Collections.Generic;
 using System.Windows.Input;
-using Playnite.SDK;
+using YearInReview.Infrastructure.Services;
 
 namespace YearInReview.Model.Reports._1970.MVVM
 {
 	public class GameViewModel : ObservableObject
 	{
-		private readonly IPlayniteAPI _api;
+		private readonly INavigator _navigator;
 
-		public GameViewModel(IPlayniteAPI api, int position, ReportGameWithTime game, int maxPlayTime)
+		public GameViewModel(INavigator navigator, int position, ReportGameWithTime game, int maxPlayTime)
 		{
-			_api = api;
+			_navigator = navigator;
 
 			Id = game.Id;
 			Position = position;
@@ -36,8 +37,7 @@ namespace YearInReview.Model.Reports._1970.MVVM
 		public ICommand OpenDetails =>
 			new RelayCommand(() =>
 			{
-				_api.MainView.SelectGame(Id);
-				_api.MainView.SwitchToLibraryView();
+				_navigator.ShowGame(Id, Name);
 			});
 	}
 }

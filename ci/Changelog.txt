@@ -6,7 +6,7 @@
 - Added a tooltip to explain username in settings
 - Playtime is now shown in hours instead of days (optional)
 - Hourly playtime is now a radial graph
----- Playnie library games are now grouped by platform????
+- Clicking on a game in friend's report will now try to open game details
 ---- Report generated notification now opens the report when clicked
 
 v1.0.2

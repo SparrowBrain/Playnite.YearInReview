@@ -3,12 +3,13 @@ using Playnite.SDK;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace YearInReview.UnitTests
 {
 	public class TestableItemCollection<T> : IItemCollection<T> where T : DatabaseObject
 	{
-		private List<T> _items;
+		private readonly List<T> _items;
 
 		public TestableItemCollection(List<T> items)
 		{
@@ -68,7 +69,7 @@ namespace YearInReview.UnitTests
 
 		public T Get(Guid id)
 		{
-			throw new NotImplementedException();
+			return _items.FirstOrDefault(x => x.Id == id);
 		}
 
 		public List<T> Get(IList<Guid> ids)

@@ -80,7 +80,7 @@ namespace YearInReview
 
 						if (_mainView == null || _mainViewModel == null)
 						{
-							_mainViewModel = new MainViewModel(Api, GetReportManager(), _settingsViewModel, ShowProgressDialog, _initValidationErrors);
+							_mainViewModel = new MainViewModel(Api, GetReportManager(), new Navigator(Api), _settingsViewModel, ShowProgressDialog, _initValidationErrors);
 							_mainView = new MainView(_mainViewModel);
 						}
 
@@ -103,7 +103,7 @@ namespace YearInReview
 				MenuSection = pluginMenuSection,
 				Action = _ =>
 				{
-					var view = new MainView(new MainViewModel(Api, GetReportManager(), _settingsViewModel, ShowProgressDialog, _initValidationErrors));
+					var view = new MainView(new MainViewModel(Api, GetReportManager(), new Navigator(Api), _settingsViewModel, ShowProgressDialog, _initValidationErrors));
 					OpenViewAsDialog(view, pluginName, true, true);
 				}
 			};

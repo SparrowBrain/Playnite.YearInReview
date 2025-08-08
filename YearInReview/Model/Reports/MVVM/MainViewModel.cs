@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using YearInReview.Infrastructure.Services;
 using YearInReview.Model.Exceptions;
 using YearInReview.Model.Reports._1970;
 using YearInReview.Model.Reports._1970.MVVM;
@@ -27,6 +28,7 @@ namespace YearInReview.Model.Reports.MVVM
 		private readonly ILogger _logger = LogManager.GetLogger();
 		private readonly IPlayniteAPI _api;
 		private readonly ReportManager _reportManager;
+		private readonly INavigator _navigator;
 		private readonly YearInReviewSettingsViewModel _settingsViewModel;
 		private readonly Func<ProgressViewModel> _progressViewModelFactory;
 
@@ -39,12 +41,14 @@ namespace YearInReview.Model.Reports.MVVM
 		public MainViewModel(
 			IPlayniteAPI api,
 			ReportManager reportManager,
+			INavigator navigator,
 			YearInReviewSettingsViewModel settingsViewModel,
 			Func<ProgressViewModel> progressViewModelFactory,
 			IReadOnlyCollection<InitValidationError> validationErrors)
 		{
 			_api = api;
 			_reportManager = reportManager;
+			_navigator = navigator;
 			_settingsViewModel = settingsViewModel;
 			_progressViewModelFactory = progressViewModelFactory;
 			SetValidationErrors(validationErrors);
@@ -309,7 +313,7 @@ namespace YearInReview.Model.Reports.MVVM
 
 		private Report1970View CreateReportView(Report1970 report, bool isOwn, List<PersistedReport> allYearReports)
 		{
-			var viewModel = new Report1970ViewModel(_api, report, isOwn, allYearReports);
+			var viewModel = new Report1970ViewModel(_navigator, report, isOwn, allYearReports);
 			var view = new Report1970View(viewModel);
 			return view;
 		}
