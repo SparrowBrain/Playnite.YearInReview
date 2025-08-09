@@ -1,6 +1,8 @@
 ﻿v1
 SaveWithImages
 DisplayLargeTimeInHours
+ShowCurrentYearReport
+ExportFormat
 
 v0
 Username

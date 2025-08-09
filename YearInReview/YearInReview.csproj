@@ -180,7 +180,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
-    <None Include="Settings\Old\SettingsVersions.md" />
+    <Content Include="Settings\Old\SettingsVersions.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Localization\ar_SA.xaml">
