@@ -1,5 +1,22 @@
 AddonId: SparrowBrain_YearInReview
 Packages:
+  - Version: 1.1.0
+    RequiredApiVersion: 6.11.0
+    ReleaseDate: 2025-08-09
+    PackageUrl: https://github.com/SparrowBrain/Playnite.YearInReview/releases/download/v1.1.0/SparrowBrain_YearInReview_1_1_0.pext
+    Changelog:
+      - User reports are now saved with an image by default
+      - Added an ability to export reports as PNG files
+      - Added a button to regenerate a report
+      - Added an ability to see dynamic current year report
+      - Added a tooltip to explain username in settings
+      - Playtime is now shown in hours instead of days (optional)
+      - Hourly playtime is now a radial graph
+      - Clicking on a game in friend's report will now try to open game details
+      - Report generated notification now opens the report when clicked
+      - Added Brazilian Portuguese translations (thank you The Nutellas!)
+      - Added French translations (thank you Lacro59!)
+      - Added Chinese Simplified translations (thank you 3229643404!)
   - Version: 1.0.2
     RequiredApiVersion: 6.11.0
     ReleaseDate: 2025-02-06
