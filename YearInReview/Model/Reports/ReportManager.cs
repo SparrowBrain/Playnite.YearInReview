@@ -13,13 +13,10 @@ namespace YearInReview.Model.Reports
 {
 	public class ReportManager
 	{
-		private const string ReportNotificationId = "year_in_review_report_generation";
-
 		private readonly ILogger _logger = LogManager.GetLogger();
 		private readonly IReportPersistence _reportPersistence;
 		private readonly IReportGenerator _reportGenerator;
 		private readonly IDateTimeProvider _dateTimeProvider;
-		private readonly IPlayniteAPI _playniteApi;
 		private readonly ISettingsViewModel _settingsViewModel;
 
 		private Dictionary<Guid, PersistedReport> _reportCache = new Dictionary<Guid, PersistedReport>();
@@ -28,17 +25,16 @@ namespace YearInReview.Model.Reports
 			IReportPersistence reportPersistence,
 			IReportGenerator reportGenerator,
 			IDateTimeProvider dateTimeProvider,
-			IPlayniteAPI playniteApi,
 			ISettingsViewModel settingsViewModel)
 		{
 			_reportPersistence = reportPersistence;
 			_reportGenerator = reportGenerator;
 			_dateTimeProvider = dateTimeProvider;
-			_playniteApi = playniteApi;
 			_settingsViewModel = settingsViewModel;
 		}
 
-		// TODO Don't forget. There's probably gonna be race condition between report manager and UI.
+		public event Action<IReadOnlyCollection<Report1970>> ReportsGenerated;
+
 		public async Task Init()
 		{
 			var reports = _reportPersistence.PreLoadAllReports();
@@ -130,7 +126,7 @@ namespace YearInReview.Model.Reports
 				_reportPersistence.SaveReport(report, _settingsViewModel.Settings.SaveWithImages);
 			}
 
-			ShowReportsGeneratedNotification(generatedReports);
+			OnReportsGenerated(generatedReports);
 
 			var reports = _reportPersistence.PreLoadAllReports();
 			return reports;
@@ -153,35 +149,12 @@ namespace YearInReview.Model.Reports
 					_reportPersistence.SaveReport(report, _settingsViewModel.Settings.SaveWithImages);
 				}
 
-				ShowReportsGeneratedNotification(generatedReports);
+				OnReportsGenerated(generatedReports);
 
 				reports = _reportPersistence.PreLoadAllReports();
 			}
 
 			return reports;
-		}
-
-		private void ShowReportsGeneratedNotification(IReadOnlyCollection<Report1970> reports)
-		{
-			if (reports.Count == 0 || !_settingsViewModel.Settings.ShowNewReportNotifications)
-			{
-				return;
-			}
-
-			var lastReport = reports.OrderByDescending(x => x.Metadata.Year).First();
-
-			var description = string.Format(
-				ResourceProvider.GetString("LOC_YearInReview_Notification_ReportGenerated"),
-				lastReport.Metadata.Year
-			);
-
-			_playniteApi.Notifications.Add(
-				new NotificationMessage(
-					ReportNotificationId,
-					description,
-					NotificationType.Info
-				)
-			);
 		}
 
 		private void ValidateReport(Report1970 report)
@@ -198,6 +171,11 @@ namespace YearInReview.Model.Reports
 			{
 				throw new ReportAlreadyExistsException($"Trying to import report {report.Metadata.Id} that is already in cache.");
 			}
+		}
+
+		protected virtual void OnReportsGenerated(IReadOnlyCollection<Report1970> reports)
+		{
+			ReportsGenerated?.Invoke(reports);
 		}
 	}
 }

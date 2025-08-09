@@ -1,4 +1,4 @@
--------v1.1.0
+v1.1.0
 - User reports are now saved with an image by default
 - Added an ability to export reports as PNG files
 - Added a button to regenerate a report
@@ -7,7 +7,7 @@
 - Playtime is now shown in hours instead of days (optional)
 - Hourly playtime is now a radial graph
 - Clicking on a game in friend's report will now try to open game details
----- Report generated notification now opens the report when clicked
+- Report generated notification now opens the report when clicked
 
 v1.0.2
 - Fixed a failure to generate reports when zero time activities are found

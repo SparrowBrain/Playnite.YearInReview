@@ -101,11 +101,7 @@ namespace YearInReview
 			{
 				Description = ResourceProvider.GetString("LOC_YearInReview_ShowYearInReviewMenuItem"),
 				MenuSection = pluginMenuSection,
-				Action = _ =>
-				{
-					var view = new MainView(new MainViewModel(Api, GetReportManager(), new Navigator(Api), _settingsViewModel, ShowProgressDialog, _initValidationErrors));
-					OpenViewAsDialog(view, pluginName, true, true);
-				}
+				Action = _ => { OpenReportsDialog(); }
 			};
 		}
 
@@ -257,9 +253,17 @@ namespace YearInReview
 				specificYearActivityFilter,
 				emptyActivityFilter,
 				composer);
-			_reportManager = new ReportManager(reportPersistence, reportGenerator, dateTimeProvider, Api, _settingsViewModel);
+			_reportManager = new ReportManager(reportPersistence, reportGenerator, dateTimeProvider, _settingsViewModel);
+			_reportManager.ReportsGenerated += ShowReportsGeneratedNotification;
 
 			return _reportManager;
+		}
+
+		private void OpenReportsDialog()
+		{
+			var pluginName = ResourceProvider.GetString("LOC_YearInReview_PluginName");
+			var view = new MainView(new MainViewModel(Api, GetReportManager(), new Navigator(Api), _settingsViewModel, ShowProgressDialog, _initValidationErrors));
+			OpenViewAsDialog(view, pluginName, true, true);
 		}
 
 		private ProgressViewModel ShowProgressDialog()
@@ -288,8 +292,7 @@ namespace YearInReview
 			bool showMaximizeButton,
 			bool waitToClose,
 			double height = DefaultDialogWindowHeight,
-			double width = DefaultDialogWindowWidth
-		)
+			double width = DefaultDialogWindowWidth)
 		{
 			var window = PlayniteApi.Dialogs.CreateWindow(new WindowCreationOptions
 			{
@@ -313,6 +316,30 @@ namespace YearInReview
 			}
 
 			return window;
+		}
+
+		private void ShowReportsGeneratedNotification(IReadOnlyCollection<Report1970> reports)
+		{
+			if (reports.Count == 0 || !_settingsViewModel.Settings.ShowNewReportNotifications)
+			{
+				return;
+			}
+
+			var lastReport = reports.OrderByDescending(x => x.Metadata.Year).First();
+
+			var description = string.Format(
+				ResourceProvider.GetString("LOC_YearInReview_Notification_ReportGenerated"),
+				lastReport.Metadata.Year
+			);
+
+			Api.Notifications.Add(
+				new NotificationMessage(
+					"year_in_review_report_generation",
+					description,
+					NotificationType.Info,
+					OpenReportsDialog
+				)
+			);
 		}
 	}
 }
