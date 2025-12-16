@@ -29,7 +29,7 @@
     <sys:String x:Key="LOC_YearInReview_Report1970_AddedGamesCountHeader_Friend">Voyons à quel point la bibliothèque de {0} s'est agrandie cette année</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_AddedGamesCountMessage">Vous avez ajouté {0} jeux cette année à votre bibliothèque.</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_AddedGamesCountMessage_Friend">{0} a ajouté {1} jeux à sa bibliothèque cette année.</sys:String>
-    <sys:String x:Key="LOC_YearInReview_Report1970_HourlyPlaytimeHeader">Et voici la répartition de ton temps de jeu au fil de la journée</sys:String>
+    <sys:String x:Key="LOC_YearInReview_Report1970_HourlyPlaytimeHeader">Et voici la répartition de votre temps de jeu au fil de la journée</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_HourlyPlaytimeHeader_Friend">Et voici la répartition du temps de jeu de {0} au fil de la journée</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_Intro">Voici l'année {0}, {1} !</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_IntroSubtext">Au total, vous avez passé {0} à jouer. Maintenant, voyons ce à quoi vous avez joué en {1}.</sys:String>
@@ -71,3 +71,4 @@
     <sys:String x:Key="LOC_YearInReview_ShowYearInReviewMenuItem">Voir l'année en revue</sys:String>
     <sys:String x:Key="LOC_YearInReview_ValidationErrors_Header">YearInReview ne peut pas être exécuté en raison des problèmes suivants :</sys:String>
 </ResourceDictionary>
+
