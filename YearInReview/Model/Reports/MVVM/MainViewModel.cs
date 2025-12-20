@@ -36,7 +36,8 @@ namespace YearInReview.Model.Reports.MVVM
 		private ObservableCollection<YearButtonViewModel> _yearButtons = new ObservableCollection<YearButtonViewModel>();
 		private ObservableCollection<ReportButtonViewModel> _reportButtons = new ObservableCollection<ReportButtonViewModel>();
 		private ObservableCollection<ValidationErrorViewModel> _validationErrors;
-		private bool _showOwnReportActionButtons;
+		private bool _showRegenerateButton;
+		private bool _showExportButton;
 
 		public MainViewModel(
 			IPlayniteAPI api,
@@ -80,10 +81,16 @@ namespace YearInReview.Model.Reports.MVVM
 			set => SetValue(ref _reportButtons, value);
 		}
 
-		public bool ShowOwnReportActionButtons
+		public bool ShowRegenerateButton
 		{
-			get => _showOwnReportActionButtons;
-			set => SetValue(ref _showOwnReportActionButtons, value);
+			get => _showRegenerateButton;
+			set => SetValue(ref _showRegenerateButton, value);
+		}
+
+		public bool ShowExportButton
+		{
+			get => _showExportButton;
+			set => SetValue(ref _showExportButton, value);
 		}
 
 		public ICommand RegenerateReport => new RelayCommand(() =>
@@ -281,7 +288,7 @@ namespace YearInReview.Model.Reports.MVVM
 									{
 										try
 										{
-											var report = await _reportManager.GetNotPersistedReport(currentYear);
+											var report = await _reportManager.GenerateNotPersistedReport(currentYear);
 											var allYearReports = preLoadedReports.Where(p => p.Year == currentYear).ToList();
 											ActivateReport(report, true, allYearReports);
 										}
@@ -307,7 +314,8 @@ namespace YearInReview.Model.Reports.MVVM
 		{
 			var view = CreateReportView(report, isOwn, allYearReports);
 
-			ShowOwnReportActionButtons = isOwn && report.Metadata.Year != DateTime.Now.Year;
+			ShowRegenerateButton = isOwn && report.Metadata.Year != DateTime.Now.Year;
+			ShowExportButton = isOwn;
 			ActiveReport = view;
 		}
 
@@ -386,31 +394,15 @@ namespace YearInReview.Model.Reports.MVVM
 
 				var report = _reportManager.GetReport(ActiveReportId);
 				var allYearReports = _reportManager.GetAllPreLoadedReports().Where(x => x.Year == report.Metadata.Year).ToList();
-				var isOwn = allYearReports.Any(x => x.IsOwn && x.Id == report.Metadata.Id);
-
-				var frameworkElement = ActiveReport;
-				frameworkElement.Background = _api.Resources.GetResource("WindowBackgourndBrush") as Brush;
-				frameworkElement.Arrange(new Rect(0, 0, frameworkElement.ActualWidth, frameworkElement.ActualHeight + 10));
-
-				var targetWidth = (int)frameworkElement.ActualWidth;
-				var targetHeight = (int)frameworkElement.ActualHeight;
-
-				if (targetWidth == 0 || targetHeight == 0)
+				var persistedReport = allYearReports.FirstOrDefault(x => x.Id == ActiveReportId);
+				var isOwn = persistedReport != null && persistedReport.IsOwn;
+				if (persistedReport == null)
 				{
-					throw new Exception("Zero dimensions in exporting image.");
+					var notPersistedReport = _reportManager.GetNotPersistedReport(report.Metadata.Year);
+					isOwn = notPersistedReport != null;
 				}
 
-				var bitmapSource = new RenderTargetBitmap(targetWidth, targetHeight, 96, 96, PixelFormats.Pbgra32);
-				bitmapSource.Render(frameworkElement);
-
-				var bitmapEncoder = new PngBitmapEncoder();
-				var bitmapFrame = BitmapFrame.Create(bitmapSource);
-				bitmapEncoder.Frames.Add(bitmapFrame);
-
-				var memoryStream = new MemoryStream();
-				bitmapEncoder.Save(memoryStream);
-
-				File.WriteAllBytes(exportPath, memoryStream.ToArray());
+				GenerateAndSavePng(exportPath);
 
 				ActivateReport(report, isOwn, allYearReports);
 			}
@@ -427,6 +419,33 @@ namespace YearInReview.Model.Reports.MVVM
 
 			var report = _reportManager.GetReport(reportId);
 			DisplaySpecificUserReport(report.Metadata.Year, report.Metadata.Username);
+		}
+
+		private void GenerateAndSavePng(string exportPath)
+		{
+			var frameworkElement = ActiveReport;
+			frameworkElement.Background = _api.Resources.GetResource("WindowBackgourndBrush") as Brush;
+			frameworkElement.Arrange(new Rect(0, 0, frameworkElement.ActualWidth, frameworkElement.ActualHeight + 10));
+
+			var targetWidth = (int)frameworkElement.ActualWidth;
+			var targetHeight = (int)frameworkElement.ActualHeight;
+
+			if (targetWidth == 0 || targetHeight == 0)
+			{
+				throw new Exception("Zero dimensions in exporting image.");
+			}
+
+			var bitmapSource = new RenderTargetBitmap(targetWidth, targetHeight, 96, 96, PixelFormats.Pbgra32);
+			bitmapSource.Render(frameworkElement);
+
+			var bitmapEncoder = new PngBitmapEncoder();
+			var bitmapFrame = BitmapFrame.Create(bitmapSource);
+			bitmapEncoder.Frames.Add(bitmapFrame);
+
+			var memoryStream = new MemoryStream();
+			bitmapEncoder.Save(memoryStream);
+
+			File.WriteAllBytes(exportPath, memoryStream.ToArray());
 		}
 	}
 }

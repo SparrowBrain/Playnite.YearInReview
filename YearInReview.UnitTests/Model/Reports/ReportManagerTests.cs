@@ -130,7 +130,26 @@ namespace YearInReview.UnitTests.Model.Reports
 
 		[Theory]
 		[AutoFakeItEasyData]
-		public async Task GetNotPersistedReport_GeneratesReport(
+		public async Task GetReport_ReturnsReportFromMemory_WhenReportIsNotPersisted(
+			[Frozen] IReportGenerator reportGenerator,
+			Report1970 expected,
+			int year,
+			ReportManager sut)
+		{
+			// Arrange
+			A.CallTo(() => reportGenerator.Generate(year)).Returns(expected);
+			await sut.GenerateNotPersistedReport(year);
+
+			// Act
+			var actual = sut.GetReport(expected.Metadata.Id);
+
+			// Assert
+			Assert.Equal(expected, actual);
+		}
+
+		[Theory]
+		[AutoFakeItEasyData]
+		public async Task GenerateNotPersistedReport_GeneratesReport(
 			[Frozen] IReportGenerator reportGenerator,
 			int year,
 			Report1970 expected,
@@ -140,10 +159,44 @@ namespace YearInReview.UnitTests.Model.Reports
 			A.CallTo(() => reportGenerator.Generate(year)).Returns(expected);
 
 			// Act
-			var actual = await sut.GetNotPersistedReport(year);
+			var actual = await sut.GenerateNotPersistedReport(year);
 
 			// Assert
 			Assert.Equal(expected, actual);
+		}
+
+		[Theory]
+		[AutoFakeItEasyData]
+		public async Task GenerateNotPersistedReport_StoresReportInMemory(
+			[Frozen] IReportGenerator reportGenerator,
+			int year,
+			Report1970 expected,
+			ReportManager sut)
+		{
+			// Arrange
+			A.CallTo(() => reportGenerator.Generate(year)).Returns(expected);
+
+			// Act
+			var returned = await sut.GenerateNotPersistedReport(year);
+
+			// Assert
+			var stored = sut.GetNotPersistedReport(year);
+			Assert.Equal(returned, stored);
+		}
+
+		[Theory]
+		[AutoFakeItEasyData]
+		public void GetNotPersistedReport_ReturnsNull_WhenNothingWasGenerated(
+			[Frozen] IReportGenerator reportGenerator,
+			int year,
+			Report1970 expected,
+			ReportManager sut)
+		{
+			// Act
+			var actual = sut.GetNotPersistedReport(year);
+
+			// Assert
+			Assert.Null(actual);
 		}
 
 		[Theory]
@@ -233,7 +286,7 @@ namespace YearInReview.UnitTests.Model.Reports
 			// Assert
 			var exception = Record.Exception(() => sut.GetReport(oldReport.Id));
 			Assert.NotNull(exception);
-			Assert.IsType<Exception>(exception);
+			Assert.IsType<InvalidOperationException>(exception);
 			Assert.Equal($"Report {oldReport.Id} not persisted in cache.", exception.Message);
 
 			var actual = sut.GetReport(newId);
@@ -278,6 +331,28 @@ namespace YearInReview.UnitTests.Model.Reports
 
 			// Assert
 			A.CallTo(() => reportPersistence.ExportReport(report, reportPath, exportWithImages)).MustHaveHappened();
+		}
+
+		[Theory]
+		[AutoFakeItEasyData]
+		public async Task ExportReport_PersistsReport_WhenReportIsNonPersisted(
+			[Frozen] IReportPersistence reportPersistence,
+			[Frozen] IReportGenerator reportGenerator,
+			Report1970 notPersistedReport,
+			string reportPath,
+			bool exportWithImages,
+			int year,
+			ReportManager sut)
+		{
+			// Arrange
+			A.CallTo(() => reportGenerator.Generate(year)).Returns(notPersistedReport);
+			await sut.GenerateNotPersistedReport(year);
+
+			// Act
+			sut.ExportReport(notPersistedReport.Metadata.Id, reportPath, exportWithImages);
+
+			// Assert
+			A.CallTo(() => reportPersistence.ExportReport(notPersistedReport, reportPath, exportWithImages)).MustHaveHappened();
 		}
 
 		[Theory]

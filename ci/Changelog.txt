@@ -1,3 +1,7 @@
+v1.2.0
+- Added ability to export current year
+---- French translations updated (thank you  Nebroc351!)
+
 v1.1.0
 - User reports are now saved with an image by default
 - Added an ability to export reports as PNG files

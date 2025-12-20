@@ -20,6 +20,7 @@ namespace YearInReview.Model.Reports
 		private readonly ISettingsViewModel _settingsViewModel;
 
 		private Dictionary<Guid, PersistedReport> _reportCache = new Dictionary<Guid, PersistedReport>();
+		private Report1970 _notPersistedReport;
 
 		public ReportManager(
 			IReportPersistence reportPersistence,
@@ -52,19 +53,32 @@ namespace YearInReview.Model.Reports
 
 		public Report1970 GetReport(Guid id)
 		{
-			if (!_reportCache.TryGetValue(id, out var persistedReport))
+			Report1970 report;
+			if (_reportCache.TryGetValue(id, out var persistedReport))
 			{
-				throw new Exception($"Report {id} not persisted in cache.");
+				report = _reportPersistence.LoadReport(persistedReport.FilePath);
+			}
+			else if (id == _notPersistedReport?.Metadata.Id)
+			{
+				report = _notPersistedReport;
+			}
+			else
+			{
+				throw new InvalidOperationException($"Report {id} not persisted in cache.");
 			}
 
-			var report = _reportPersistence.LoadReport(persistedReport.FilePath);
 			return report;
 		}
-
-		public async Task<Report1970> GetNotPersistedReport(int year)
+		
+		public async Task<Report1970> GenerateNotPersistedReport(int year)
 		{
-			var report = await _reportGenerator.Generate(year);
-			return report;
+			_notPersistedReport = await _reportGenerator.Generate(year);
+			return _notPersistedReport;
+		}
+
+		public Report1970 GetNotPersistedReport(int year)
+		{
+			return _notPersistedReport;
 		}
 
 		public IReadOnlyCollection<PersistedReport> GetAllPreLoadedReports()
@@ -96,12 +110,20 @@ namespace YearInReview.Model.Reports
 
 		public void ExportReport(Guid id, string exportPath, bool exportWithImages)
 		{
-			if (!_reportCache.TryGetValue(id, out var persistedReport))
+			Report1970 report;
+			if (_reportCache.TryGetValue(id, out var persistedReport))
+			{
+				report = _reportPersistence.LoadReport(persistedReport.FilePath);
+			}
+			else if (id == _notPersistedReport?.Metadata.Id)
+			{
+				report = _notPersistedReport;
+			}
+			else
 			{
 				throw new InvalidOperationException($"Report {id} not persisted in cache.");
 			}
 
-			var report = _reportPersistence.LoadReport(persistedReport.FilePath);
 			_reportPersistence.ExportReport(report, exportPath, exportWithImages);
 			_logger.Info($"Report {id} exported to \"{exportPath}\"");
 		}
