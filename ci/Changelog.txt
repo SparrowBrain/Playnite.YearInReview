@@ -1,6 +1,8 @@
 v1.2.0
 - Added ability to export current year
 - French translations updated (thank you Blazes35 and Nebroc351!)
+- Bulgarian translations added (thank you SnakeHW!)
+- Brazilian Portuguese translations updated (thank you The Nutellas!)
 
 v1.1.0
 - User reports are now saved with an image by default
