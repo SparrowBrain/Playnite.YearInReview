@@ -1,5 +1,5 @@
 v1.2.1
-- Try fix an issue with non-existant images crashing report generation
+- Fixed a bug where report would not generate when image path had spaces
 
 v1.2.0
 - Added ability to export current year

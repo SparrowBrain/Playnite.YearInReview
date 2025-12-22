@@ -23,14 +23,14 @@ namespace YearInReview.Infrastructure.Services
 			{
 				if (File.Exists(databasePath))
 				{
-					uri = new Uri(databasePath);
+					uri = new Uri(databasePath, true);
 				}
 				else
 				{
 					var localPath = YearInReview.Api.Database.GetFullFilePath(databasePath);
 					if (File.Exists(localPath))
 					{
-						uri = new Uri(localPath);
+						uri = new Uri(localPath, true);
 					}
 				}
 			}
