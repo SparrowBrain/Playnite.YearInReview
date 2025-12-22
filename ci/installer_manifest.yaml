@@ -1,5 +1,11 @@
 AddonId: SparrowBrain_YearInReview
 Packages:
+  - Version: 1.2.1
+    RequiredApiVersion: 6.11.0
+    ReleaseDate: 2025-12-22
+    PackageUrl: https://github.com/SparrowBrain/Playnite.YearInReview/releases/download/v1.2.1/SparrowBrain_YearInReview_1_2_1.pext
+    Changelog:
+      - Fixed a bug where report would not generate when image path had spaces
   - Version: 1.2.0
     RequiredApiVersion: 6.11.0
     ReleaseDate: 2025-12-21
