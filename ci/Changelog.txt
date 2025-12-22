@@ -1,3 +1,6 @@
+v1.2.1
+- Try fix an issue with non-existant images crashing report generation
+
 v1.2.0
 - Added ability to export current year
 - French translations updated (thank you Blazes35 and Nebroc351!)

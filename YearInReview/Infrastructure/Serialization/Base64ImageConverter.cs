@@ -25,7 +25,7 @@ namespace YearInReview.Infrastructure.Serialization
 			if (_serializeAsBase64 && value is string uri && !string.IsNullOrEmpty(uri) && !Base64Helpers.IsBase64(uri))
 			{
 				var physicalUri = UriToPhysicalUriConverter.ConvertUriToPhysicalUri(value);
-				if(physicalUri == null)
+				if (physicalUri == null || !File.Exists(physicalUri.AbsolutePath))
 				{
 					writer.WriteValue(value);
 					return;
