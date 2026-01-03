@@ -5,6 +5,8 @@ on:
   workflow_dispatch:
   push:
     branches: [ main ]
+  schedule:
+    - cron: "0 12 15 * *"
 
 jobs:
   synchronize-with-crowdin:
