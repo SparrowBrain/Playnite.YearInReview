@@ -39,7 +39,7 @@
     <sys:String x:Key="LOC_YearInReview_Report1970_HourlyPlaytimeHeader">Et voici une répartition de votre temps de jeu pendant une journée</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_HourlyPlaytimeHeader_Friend">Et voici une répartition du temps de jeu de {0} pendant une journée</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_Intro">Voici l'année {0}, {1} !</sys:String>
-    <sys:String x:Key="LOC_YearInReview_Report1970_IntroSubtext">Au total, vous avez passé {0} à jouer. Maintenant, voyons ce que vous avez joué en {1}.</sys:String>
+    <sys:String x:Key="LOC_YearInReview_Report1970_IntroSubtext">Au total, vous avez passé {0} à jouer. Maintenant, voyons ce à quoi vous avez joué en {1}.</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_IntroSubtext_Friend">Au total, {0} a passé {1} à jouer. Maintenant, voyons ce à quoi il a joué en {2}.</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_FriendsLeaderboardHeader">Voyons comment vous vous classez parmi vos amis en ce qui concerne le temps de jeu</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_FriendsLeaderboardHeader_Friend">Voyons comment {0} se classe parmi vos amis en ce qui concerne le temps de jeu</sys:String>
