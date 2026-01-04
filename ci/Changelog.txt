@@ -1,3 +1,6 @@
+------v1.2.2
+- Added additional logging for GameActivity deserialization failures
+
 v1.2.1
 - Fixed a bug where report would not generate when image path had spaces
 

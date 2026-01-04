@@ -70,7 +70,11 @@ namespace YearInReview.Extensions.GameActivity
 					return JsonConvert.DeserializeObject<Activity>(json);
 				}
 			}
-			catch { return null; }
+			catch (Exception ex)
+			{
+				_logger.Warn(ex, $"Could not deserialize {file}");
+				return null;
+			}
 		}
 	}
 }
