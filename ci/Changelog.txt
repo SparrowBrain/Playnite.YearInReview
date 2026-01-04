@@ -1,4 +1,4 @@
-------v1.3.0
+v1.3.0
 - Added additional logging for GameActivity deserialization failures
 - Added German translations (thank you juliuscaesr!)
 - Updated French translations (thank you Nebroc!)
