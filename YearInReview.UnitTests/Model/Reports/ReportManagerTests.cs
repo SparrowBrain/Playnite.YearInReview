@@ -108,6 +108,44 @@ namespace YearInReview.UnitTests.Model.Reports
 
 		[Theory]
 		[AutoFakeItEasyData]
+		public async Task Init_DoesNotSaveNewReports_WhenTheGeneratedReportIsNull(
+			[Frozen] IReportPersistence reportPersistence,
+			[Frozen] IReportGenerator reportGenerator,
+			[Frozen] IDateTimeProvider dateTimeProvider,
+			int currentYear,
+			DateTime now,
+			List<PersistedReport> persistedReports1,
+			List<PersistedReport> persistedReports2,
+			ReportManager sut)
+		{
+			// Arrange
+			persistedReports1.ForEach(x => x.IsOwn = false);
+
+			var ownReport = persistedReports1.Last();
+			ownReport.IsOwn = true;
+			ownReport.Year = currentYear - 3;
+			A.CallTo(() => reportPersistence.PreLoadAllReports()).ReturnsNextFromSequence(persistedReports1, persistedReports2);
+
+			now = new DateTime(currentYear, now.Month, now.Day, now.Hour, now.Minute, now.Second);
+			A.CallTo(() => dateTimeProvider.GetNow()).Returns(now);
+
+			A.CallTo(() =>
+				reportGenerator.Generate(An<int>.That.Matches(x =>
+					x == currentYear - 1 || x == currentYear - 2))).ReturnsNextFromSequence(
+				(Report1970)null,
+				(Report1970)null);
+
+			// Act
+			await sut.Init();
+
+			// Assert
+			A.CallTo(() => reportPersistence.SaveReport(A<Report1970>._, A<bool>._)).MustNotHaveHappened();
+			var reports = sut.GetAllPreLoadedReports();
+			Assert.Equivalent(persistedReports2, reports);
+		}
+
+		[Theory]
+		[AutoFakeItEasyData]
 		public async Task GetReport_LoadReportFromPersistence_WhenReportsExist(
 			[Frozen] IReportPersistence reportPersistence,
 			List<PersistedReport> persistedReports,

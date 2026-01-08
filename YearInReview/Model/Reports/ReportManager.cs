@@ -69,7 +69,7 @@ namespace YearInReview.Model.Reports
 
 			return report;
 		}
-		
+
 		public async Task<Report1970> GenerateNotPersistedReport(int year)
 		{
 			_notPersistedReport = await _reportGenerator.Generate(year);
@@ -165,7 +165,8 @@ namespace YearInReview.Model.Reports
 					yearsToGenerate.Add(i);
 				}
 
-				var generatedReports = await Task.WhenAll(yearsToGenerate.Select(year => _reportGenerator.Generate(year)));
+				var generatedReportsWithEmpty = await Task.WhenAll(yearsToGenerate.Select(year => _reportGenerator.Generate(year)));
+				var generatedReports = generatedReportsWithEmpty.Where(x => x != null).ToList();
 				foreach (var report in generatedReports)
 				{
 					_reportPersistence.SaveReport(report, _settingsViewModel.Settings.SaveWithImages);
@@ -197,7 +198,10 @@ namespace YearInReview.Model.Reports
 
 		protected virtual void OnReportsGenerated(IReadOnlyCollection<Report1970> reports)
 		{
-			ReportsGenerated?.Invoke(reports);
+			if (reports.Count > 0)
+			{
+				ReportsGenerated?.Invoke(reports);
+			}
 		}
 	}
 }

@@ -152,5 +152,18 @@ namespace YearInReview.UnitTests.Model.Reports._1970
 			// Assert
 			Assert.Equal(games.Count, result.AddedGamesCount);
 		}
+
+		[Theory]
+		[AutoFakeItEasyData]
+		public void Compose_ReturnsNull_WhenNoActivitiesFound(
+			int year,
+			Composer1970 sut)
+		{
+			// Act
+			var result = sut.Compose(year, new List<Activity>());
+
+			// Assert
+			Assert.Null(result);
+		}
 	}
 }

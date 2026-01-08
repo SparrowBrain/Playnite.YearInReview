@@ -37,7 +37,11 @@ namespace YearInReview.Model.Aggregators
 							Id = g.SourceId,
 							Name = "Playnite",
 						}
-						: _playniteApi.Database.Sources.FirstOrDefault(s => s.Id == g.SourceId),
+						: _playniteApi.Database.Sources.FirstOrDefault(s => s.Id == g.SourceId) ?? new GameSource()
+						{
+							Id = g.SourceId,
+							Name = "???",
+						},
 				})
 				.ToList();
 
