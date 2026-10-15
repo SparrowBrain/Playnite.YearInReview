@@ -44,8 +44,8 @@
     <sys:String x:Key="LOC_YearInReview_Report1970_FriendsLeaderboardHeader">让我们看看您在游戏时间方面在朋友中的排名</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_FriendsLeaderboardHeader_Friend">让我们看看 {0} 在游戏时间方面在朋友中的排名</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_MostPlayedGameMessage">看起来 {0} 让您感觉怎么玩都玩不够，你花了 {1} 玩它。</sys:String>
-    <sys:String x:Key="LOC_YearInReview_Report1970_MostPlayedGameMessage_Friend">看起来 {1} 让 {0} 感觉怎么玩都玩不够，他们花了 {2} 玩它。</sys:String>
-    <sys:String x:Key="LOC_YearInReview_Report1970_NotableAddedGamesHeader">一些值得被注意的已添加游戏</sys:String>
+    <sys:String x:Key="LOC_YearInReview_Report1970_MostPlayedGameMessage_Friend">看起来 {0} 无法获得足够的 {1}。他们已经花了 {2} 玩它。</sys:String>
+    <sys:String x:Key="LOC_YearInReview_Report1970_NotableAddedGamesHeader">一些显著添加的游戏</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_PlaytimeCalendarHeader">这是您一年中的游戏时间</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_PlaytimeCalendarHeader_Friend">这是 {0} 一年中的游戏时间</sys:String>
     <sys:String x:Key="LOC_YearInReview_Report1970_PlaytimeCalendarMostPlayedGame">最多： {0} ({1})</sys:String>
